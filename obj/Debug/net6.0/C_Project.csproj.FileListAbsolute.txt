@@ -1,0 +1,15 @@
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/bin/Debug/net6.0/C_Project
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/bin/Debug/net6.0/C_Project.deps.json
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/bin/Debug/net6.0/C_Project.runtimeconfig.json
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/bin/Debug/net6.0/C_Project.dll
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/bin/Debug/net6.0/C_Project.pdb
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/obj/Debug/net6.0/C_Project.csproj.AssemblyReference.cache
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/obj/Debug/net6.0/C_Project.GeneratedMSBuildEditorConfig.editorconfig
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/obj/Debug/net6.0/C_Project.AssemblyInfoInputs.cache
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/obj/Debug/net6.0/C_Project.AssemblyInfo.cs
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/obj/Debug/net6.0/C_Project.csproj.CoreCompileInputs.cache
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/obj/Debug/net6.0/C_Project.dll
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/obj/Debug/net6.0/refint/C_Project.dll
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/obj/Debug/net6.0/C_Project.pdb
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/obj/Debug/net6.0/C_Project.genruntimeconfig.cache
+/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/obj/Debug/net6.0/ref/C_Project.dll

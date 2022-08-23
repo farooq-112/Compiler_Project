@@ -1,0 +1,7 @@
+2 Weeks Assignment For Compiler Construction
+
+1) First Set All The Key words 
+2) Second Define all the Operators and Punctuators
+3) Define RE for Integer String Char Float
+4) ReadFile From Storge and Access the String in this File
+5) Generate the Lexemes of this code where Defines All Classes Line No and Wheather it is a Keyword and Other What ever it was
