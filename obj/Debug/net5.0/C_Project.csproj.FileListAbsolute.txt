@@ -1,0 +1,16 @@
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\obj\Debug\net5.0\C_Project.csprojAssemblyReference.cache
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\obj\Debug\net5.0\C_Project.GeneratedMSBuildEditorConfig.editorconfig
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\obj\Debug\net5.0\C_Project.AssemblyInfoInputs.cache
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\obj\Debug\net5.0\C_Project.AssemblyInfo.cs
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\obj\Debug\net5.0\C_Project.csproj.CoreCompileInputs.cache
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\bin\Debug\net5.0\C_Project.exe
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\bin\Debug\net5.0\C_Project.deps.json
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\bin\Debug\net5.0\C_Project.runtimeconfig.json
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\bin\Debug\net5.0\C_Project.runtimeconfig.dev.json
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\bin\Debug\net5.0\C_Project.dll
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\bin\Debug\net5.0\ref\C_Project.dll
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\bin\Debug\net5.0\C_Project.pdb
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\obj\Debug\net5.0\C_Project.dll
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\obj\Debug\net5.0\ref\C_Project.dll
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\obj\Debug\net5.0\C_Project.pdb
+D:\BSCS 3rd year\6th semester\Miss Maryam Feroz Compiler Construction\Compiler\Compiler_Project\obj\Debug\net5.0\C_Project.genruntimeconfig.cache
