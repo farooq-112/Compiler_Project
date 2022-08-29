@@ -1,5 +1,4 @@
-let languages = [ "Swift", "Java", "Go", "JavaScript" ]
-
+let languages = [ "Swift", "Java", "Go", "JavaScript"]
 for language in languages {
       print( language )
 }
