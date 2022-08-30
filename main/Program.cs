@@ -151,8 +151,13 @@ namespace Program
         // isPunctuator Function Start
         public void isPunctuator(string message)
         {
-            Console.WriteLine("Hello " + message);
-            // No return statement  
+           foreach (char c in message)
+            {
+            if (Constant.punctuator.Contains(c)){
+                Console.WriteLine(c + ":  Punctuator, class :  Punctuator");
+            }
+            }
+            
         }
         // isPunctuator Function End
 
@@ -171,6 +176,7 @@ namespace Program
                     isKeyword(tem);
                     isOperator(tem);
                     isIdentifier(tem);
+                    isPunctuator(tem);
 
                     list.Add(tem.Trim());
                     tem = "";
