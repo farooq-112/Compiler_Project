@@ -370,6 +370,7 @@ namespace Program
                 {
                     string text = double_quote(ref input, ref i);
                     wordList.Add(id, Tuple.Create(lineNumber, text));
+                            Console.WriteLine("hell6o"+id);
                     
                 }
 
@@ -380,6 +381,7 @@ namespace Program
                     if (!Char.IsLetterOrDigit(input[i + 1]) && input[i + 1] != '.')
                     {
                         wordList.Add(id, Tuple.Create(lineNumber, temp));
+                            Console.WriteLine("he4llo"+id);
                         temp = "";
                         i++;
                     }
@@ -398,12 +400,15 @@ namespace Program
 
                             } while (Char.IsDigit(input[i]));
                             wordList.Add(id, Tuple.Create(lineNumber, temp));
+                            Console.WriteLine("hel3lo"+id);
                             temp = "";
                         }
                         else if (!IsAllDigits(temp))
                         {
 
                             wordList.Add(id, Tuple.Create(lineNumber, temp));
+                            
+                            Console.WriteLine("hell2o"+id);
                             temp = "";
                         }
                         i++;
@@ -432,12 +437,18 @@ namespace Program
 
                             wordList.Add(id, Tuple.Create(lineNumber, temp));
                             i++;
+                            Console.WriteLine("hello"+id);
                         }
 
                     }
                     else if (input[i] != '.')
                     {
                         string word = input[i].ToString();
+                            Console.WriteLine("hel12lo"+id);
+                            if(wordList.ContainsKey(id)){  
+                            Console.WriteLine("dict"+wordList[id]);
+                            id++;
+                            }
                         wordList.Add(id, Tuple.Create(lineNumber, word));
                         i++;
                     }

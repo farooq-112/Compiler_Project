@@ -8,24 +8,26 @@
     "net6.0": []
   },
   "packageFolders": {
-    "/Users/farooq/.nuget/packages/": {}
+    "C:\\Users\\SYED-REHAN\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/C_Project.csproj",
+      "projectUniqueName": "D:\\BSCS 3rd year\\6th semester\\Miss Maryam Feroz Compiler Construction\\Compiler\\Compiler_Project\\C_Project.csproj",
       "projectName": "C_Project",
-      "projectPath": "/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/C_Project.csproj",
-      "packagesPath": "/Users/farooq/.nuget/packages/",
-      "outputPath": "/Users/farooq/Documents/unisem6/Compiler Contruction/C_Project/obj/",
+      "projectPath": "D:\\BSCS 3rd year\\6th semester\\Miss Maryam Feroz Compiler Construction\\Compiler\\Compiler_Project\\C_Project.csproj",
+      "packagesPath": "C:\\Users\\SYED-REHAN\\.nuget\\packages\\",
+      "outputPath": "D:\\BSCS 3rd year\\6th semester\\Miss Maryam Feroz Compiler Construction\\Compiler\\Compiler_Project\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/farooq/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\SYED-REHAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -59,7 +61,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.400/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }
