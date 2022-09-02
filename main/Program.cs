@@ -7,8 +7,46 @@ namespace Program
 {
     class Program
     {
+        public IDictionary<char, string> punctuators = new Dictionary<char, string>() {
+            {'(', "("}, {')',")"}, {'{', "{"}, {'}', "}"}, {'[', "["}, {']', "]"}, {';',";"}, {'.', "."}, {',', ","},
+            {'@', "lexical_error"}, {'$', "lexical_error"}, {'^', "lexical_error"}, {':', "lexical_error"}, {'?',"lexical_error"},
+            {'`', "lexical_error"}, {'~', "lexical_error"}, {'\'', "lexical_error"}, {'_', "lexical_error"}, {'\\', "lexical_error"},
+        };
+
+        // Operators
+        // dictionary for operators and its classpart
+        public IDictionary<string, string> operators = new Dictionary<string, string>() {
+            {"+", "PM"}, {"-", "PM"},
+            { "*", "MD"}, {"/", "MD"},
+            { "<", "RO"}, {">", "RO"}, {"<=", "RO"}, {">=", "RO"}, {"!=", "RO"}, {"==", "RO"},
+            {"=", "AO"}, {"+=", "AO"}, {"-=", "AO"},
+            {"&", "Lexeme error"}, {"|", "Lexeme error"},
+            {"!", "LO"}, {"||", "LO"}, {"&&", "LO"},
+        };
+
+        // dictionary for keyword list
+        public IDictionary<string, string> keywords = new Dictionary<string, string>(){
+            {"int","dt"}, {"float","dt"}, {"bool","dt"}, {"string","dt"},
+            {"public","access-modifier"}, {"static","static"}, {"class","class"},
+            {"while","while"}, {"for","for"}, {"struct","struct" },
+            {"if","if"}, {"else","else"}, {"break","break"}, {"continous","continous"},
+            {"true","bool-const"}, {"false","bool-const"},
+        };
+
+        // dictionary for regex
+        public IDictionary<string, string> regexs = new Dictionary<string, string>() {
+            {"integer", @"^\d*$"}, {"float", @"^(\d*.\d+|\d*[^.])$"}, {"number", @"^[0-9]$"},
+            {"alphabtes" , @"^[A-Za-z]$"}, {"identifier", @"^([a-zA-Z]+_[0-9])$"},
+            {"punctuators", @"^,|.|;|[|]|(|)|{|}|:$"}, {"all_punctuators", @"^[\x20-\x2F]|[\x3A-\x40]|[\x5B-\x5E]|[\x7B-\x7E]|`$"}
+        };
+
         static readonly string textFile = "assets/sample.txt";
+        // Dictionary<int, List<Tuple<int, string>>> wordList = new Dictionary<int, Tuple<int, string>>();
+        Dictionary<int, Tuple<int, string>> wordList = new Dictionary<int, Tuple<int, string>>();
+        // var wordList = new Dictionary<int, Tuple<int, string>>();
         static int lineNumber = 1;
+        static int id = 1;
+        
         static int i = 0;
 
         // isKeyword Function Start
@@ -16,101 +54,247 @@ namespace Program
         {
             // Console.WriteLine("Hello " + message);  
 
-            if (Constant.keywords.Contains(message.Trim()))
+            if (keywords.ContainsKey(message.Trim()))
             {
                 Console.WriteLine("line no :" + lineNumber +" " + message + ":  KeyWord  , class :  Keyword");
             }
-            else if (Constant.oopKeywords.Contains(message.Trim()))
-            {
+            // else if (Constant.oopKeywords.Contains(message.Trim()))
+            // {
 
-                Console.WriteLine("line no :" + lineNumber +" " + message + ":  KeyWord, class :  OOP Keyword");
-            }
-            else if (Constant.dataTypes.Contains(message.Trim()))
-            {
+            //     Console.WriteLine("line no :" + lineNumber +" " + message + ":  KeyWord, class :  OOP Keyword");
+            // }
+            // else if (Constant.dataTypes.Contains(message.Trim()))
+            // {
 
-                Console.WriteLine("line no :" + lineNumber +" " + message + ":  KeyWord, class :  DataType");
-            }
-            else if (Constant.accessModifier.Contains(message.Trim()))
-            {
+            //     Console.WriteLine("line no :" + lineNumber +" " + message + ":  KeyWord, class :  DataType");
+            // }
+            // else if (Constant.accessModifier.Contains(message.Trim()))
+            // {
 
-                Console.WriteLine("line no :" + lineNumber +" "+ message + ":  KeyWord, class :  Access Modifier");
-            }
+            //     Console.WriteLine("line no :" + lineNumber +" "+ message + ":  KeyWord, class :  Access Modifier");
+            // }
             return false;
-            // No return statement  
+            // No return statempent  
         }
         // isKeyword Function End
 
         // isOperator Function Start
-        public void operator_seperator(char message)
+        public static string operator_seperator(string input, int index)
         {
-            // Console.WriteLine("Hello " + message);
-            if(message == '+')
-                Console.WriteLine("line no :" + lineNumber +" " + message + ":  Addition, class :  Operator");
-            if(message == '-')
-                Console.WriteLine("line no :" + lineNumber +" " + message + ":  Subtraction, class :  Operator");
-            if(message == '*')
-                Console.WriteLine("line no :" + lineNumber +" " + message + ":  Multiply, class :  Operator");
-            if(message == '/')
-                Console.WriteLine("line no :" + lineNumber +" " + message + ":  Divide, class :  Operator");
-            if(message == '%')
-                Console.WriteLine("line no :" + lineNumber +" " + message + ":  Modular, class :  Operator");
-            // foreach (char c in message)
-            // {
-            //     if (Constant.arithematic.Contains(c))
-            //     {
-            //         Console.WriteLine(c + ":  Operator, class :  Operator");
-            //     }
-            // }
+            string temp = "";
+            temp += input[index];
 
-            // No return statement  
+            // if Character is * then 2 possibilities
+            // *: Multiply operator
+            // *=: multiply asgt 
+            if (input[index] == '*')
+            {
+                if (input[index + 1] == '=')
+                {
+                    temp += input[index + 1];
+                    index += 2;
+                    return temp;
+                }
+                else
+                {
+                    // Multiply operator
+                    string word = input[index].ToString();
+                    index++;
+                    return word;
+                }
+            }
+
+            // if Character is + then 3 possibilities
+            else if (input[index] == '+')
+            {
+                if ((input[index + 1] == '+') && !Char.IsDigit(input[index + 2]))
+                {
+                    temp += input[index + 1];
+                    index += 2;
+                    return temp;
+                }
+                else if (input[index + 1] == '=')
+                {
+                    temp += input[index + 1];
+                    index += 2;
+                    return temp;
+                }
+                else if (Char.IsDigit(input[index + 1]))
+                {
+                    if ((index - 1 >= 0 && index - 1 < input.Length))
+                    {
+                        if (!Char.IsLetterOrDigit(input[index - 1]))
+                        {
+                            index++;
+                            do
+                            {
+                                temp += input[index];
+                                index++;
+
+                            } while (Char.IsDigit(input[index]));
+                            return temp;
+                        }
+                        else
+                        {
+                            string word = input[index].ToString();
+                            index++;
+                            return word;
+                        }
+                    }
+                    else
+                    {
+                        index++;
+                        do
+                        {
+                            temp += input[index];
+                            index++;
+
+                        } while (Char.IsDigit(input[index]));
+                        return temp;
+                    }
+                }
+                else
+                {
+                    string word = input[index].ToString();
+                    index++;
+                    return word;
+                }
+            }
+            else if (input[index] == '-')
+            {
+                if ((input[index + 1] == '-') && !Char.IsDigit(input[index + 2]))
+                {
+                    temp += input[index + 1];
+                    index += 2;
+                    return temp;
+                }
+                else if (input[index + 1] == '=')
+                {
+                    temp += input[index + 1];
+                    index += 2;
+                    return temp;
+                }
+                else if (Char.IsDigit(input[index + 1]))
+                {
+                    if ((index - 1 >= 0 && index - 1 < input.Length))
+                    {
+                        if (!Char.IsLetterOrDigit(input[index - 1]))
+                        {
+                            index++;
+                            do
+                            {
+                                temp += input[index];
+                                index++;
+
+                            } while (Char.IsDigit(input[index]));
+                            return temp;
+                        }
+                        else
+                        {
+                            string word = input[index].ToString();
+                            index++;
+                            return word;
+                        }
+                    }
+                    else
+                    {
+                        index++;
+                        do
+                        {
+                            temp += input[index];
+                            index++;
+
+                        } while (Char.IsDigit(input[index]));
+                        return temp;
+                    }
+
+                }
+                else
+                {
+                    string word = input[index].ToString();
+                    index++;
+                    return word;
+                }
+            }
+            // If Character is <,>,!,= then 4 possibilities
+            else if (input[index] == '<' || input[index] == '>' || input[index] == '!' || input[index] == '=')
+            {
+                if (input[index + 1] == '=')
+                {
+                    temp += input[index + 1];
+                    index += 2;
+                    return temp;
+                }
+                else
+                {
+                    string word = input[index].ToString();
+                    index++;
+                    return word;
+                }
+            }
+
+            // If Character is & then 2 possibilities
+            else if (input[index] == '&')
+            {
+                if (input[index + 1] == '&')
+                {
+                    temp += input[index + 1];
+                    index += 2;
+                    return temp;
+                }
+                else
+                {
+                    string word = input[index].ToString();
+                    index++;
+                    return word;
+                }
+            }
+
+
+            // If Character  | then 2 possibilities
+            else if (input[index] == '|')
+            {
+
+                if (input[index + 1] == '|')
+                {
+                    temp += input[index + 1];
+                    index += 2;
+                    return temp;
+                }
+                else
+                {
+                    string word = input[index].ToString();
+                    index++;
+                    return word;
+                }
+            }
+            return temp;
+        
         }
         // isOperator Function End
 
         // isOperator Function Start
-        public static bool isOperator(string message)
-        {
-            foreach (char c in message)
-            {
-                 if (Constant.arithematic.Contains(c))
-                {
-                    return true;
-                }
-            }
-            return false;
-            // No return statement  
-        }
+        // public static bool isOperator(string message)
+        // {
+        //     if (operators.ContainsKey(message.Trim()))
+        //     {
+        //         return true;
+        //         // Console.WriteLine("line no :" + lineNumber +" " + message + ":  KeyWord  , class :  Keyword");
+        //     }
+        //     return false;
+        // }
         // isOperator Function End
 
         // isIdentifier Function Start
-        public void isIdentifier(string message)
+        public bool isIdentifier(string message)
         {
             var isIdentifier = @"^@?[\p{L}\p{Nl}_][\p{Cf}\p{L}\p{Mc}\p{Mn}\p{Nd}\p{Nl}\p{Pc}]*$";
             if (Regex.IsMatch(message, isIdentifier, RegexOptions.CultureInvariant))
-            {
-                if (isInt(message))
-                {
-                    Console.WriteLine("line no :" + lineNumber +" " + message + ":  Int, class :  DataType");
-                }
-                else if (isFloat(message))
-                {
-                    Console.WriteLine("line no :" + lineNumber +" " + message + ":  Float, class :  DataType");
+                return true;
+            else
+                return false;
 
-                }
-                else if (isCharacter(message))
-                {
-                    Console.WriteLine("line no :" + lineNumber +" " + message + ":  Character, class :  DataType");
-                }
-                else if (isString(message))
-                {
-                    Console.WriteLine("line no :" + lineNumber +" " + message + ":  String, class :  DataType");
-                }
-                else
-                {
-                    Console.WriteLine("line no :" + lineNumber +" " + message + ":  Identifier, class :  Identifier");
-                }
-            }
-
-            // No return statement  
+            // No return statempent  
         }
         // isIdentifier Function End
 
@@ -130,7 +314,7 @@ namespace Program
         // isCharacter Function End
 
         // isInt Function Start
-        public bool isInt(string message)
+        public bool isDigit(string message)
         {
             var isInteger = @"^[0-9]*$";
             if (Regex.IsMatch(message, isInteger, RegexOptions.CultureInvariant))
@@ -141,7 +325,7 @@ namespace Program
             {
                 return false;
             }
-            // No return statement  
+            // No return statempent  
         }
         // isInt Function End
 
@@ -157,7 +341,7 @@ namespace Program
             {
                 return false;
             }
-            // No return statement  
+            // No return statempent  
         }
         // isFloat Function End
 
@@ -177,15 +361,9 @@ namespace Program
         // isString Function End
 
         // isPunctuator Function Start
-        public void isPunctuator(string message)
+        public bool isPunctuator(string message)
         {
-           foreach (char c in message)
-            {
-            if (Constant.punctuator.Contains(c)){
-                Console.WriteLine("line no : "+ lineNumber + " " + c + ":  Punctuator, class :  Punctuator");
-            }
-            }
-            
+            return true;
         }
         // isPunctuator Function End
 
@@ -219,6 +397,7 @@ namespace Program
         }
         // singleLineComment Function End
 
+
         // multiLineComment Function Start
         static bool multiLineComment(string input, int index)
         {
@@ -248,17 +427,17 @@ namespace Program
             return true;
         }
         // multiLineComment Function End
-
+        
         // breakWord Function Start
         public void breakWord(string text)
         {
             // for indexing through each character
             // int i = 0;
-            var tem = "";
+            var temp = "";
             List<string> list = new List<string>();
             while (i < text.Length)
             {
-                if(isOperator(text[i].ToString())){
+                if(operators.ContainsKey(text[i].ToString())){
                     if (text[i] == '/')
                     {
                         if (text[i + 1] == '/')
@@ -273,9 +452,9 @@ namespace Program
                         }
                         // else if (text[i + 1] == '=')
                         // {
-                        //     tem += "/=";
+                        //     temp += "/=";
                         //     i += 2;
-                        //     wordList.Add(id, Tuple.Create(lineNumber, temp));
+                        //     wordList.Add(id, Tuple.Create(lineNumber, tempp));
                         // }
                         // else
                         // {
@@ -283,22 +462,36 @@ namespace Program
                         //     i++;
                         //     wordList.Add(id, Tuple.Create(lineNumber, word));
                         // }
-                        // temp = "";
+                        // tempp = "";
                     }else if(text[i] != '/'){
-                        operator_seperator(text[i]);
-                        i++;
+                        // i++;
+                        string txt = operator_seperator(text, i);
+                        wordList.Add(id++, Tuple.Create(lineNumber, txt));
+                        // wordList.Add(id, Tuple.Create(lineNumber, text));
                     }
                 }
                 if (text[i] == ' ' || text[i] == '\n' || text[i] == '\r')
                 {
                     // Console.WriteLine("i = "+i);
-                    isKeyword(tem);
-                    // isOperator(tem);
-                    isIdentifier(tem);
-                    isPunctuator(tem);
+                    if(isDigit(temp)){
+                        wordList.Add(id++, Tuple.Create(lineNumber, temp));
+                    }
+                    else if(isIdentifier(temp)){
+                        wordList.Add(id++, Tuple.Create(lineNumber, temp));
+                    }
+                    else if(isIdentifier(temp)){
+                        wordList.Add(id++, Tuple.Create(lineNumber, temp));
+                    }
+                    else if(isPunctuator(temp)){
+                        wordList.Add(id++, Tuple.Create(lineNumber, temp));
+                    }
+                    // isKeyword(temp);
+                    // isOperator(temp);
+                    // isIdentifier(temp);
+                    // isPunctuator(temp);
 
-                    list.Add(tem.Trim());
-                    tem = "";
+                    list.Add(temp.Trim());
+                    temp = "";
                     i++;
                     try{
                         if(text[i] == '\n')
@@ -310,7 +503,7 @@ namespace Program
                 }
                 else
                 {
-                    tem += text[i];
+                    temp += text[i];
                     i++;
                 }
                 
@@ -318,13 +511,9 @@ namespace Program
                 
                 
                 // }else{
-                //     list.Add(tem.Trim());
-                //     tem = "";
+                //     list.Add(temp.Trim());
+                //     temp = "";
                 // }
-            }
-            foreach (var item in list)
-            {
-                // Console.WriteLine(item + item.Length + "");
             }
         }
         // breakWord Function End
@@ -333,6 +522,7 @@ namespace Program
         {
 
             string text = File.ReadAllText(textFile);
+            // var wordList = new Dictionary<int, Tuple<int, string>>();
             // isKeyword
 
             // isOperator
