@@ -484,6 +484,75 @@ namespace Program
         }
         // breakWord Function End
 
+          public Dictionary<int, Tuple<int, string, string>> classPart(ref Dictionary<int, Tuple<int, string>> list)
+        {
+            // Dictionary for word and line number
+            var wordList = new Dictionary<int, Tuple<int, string, string>>();
+
+            // looping through wordlist dictionary
+            foreach (KeyValuePair<int, Tuple<int, string>> data in list)
+            {
+                foreach (var item in Constant.keywords)
+                {
+                    if (data.Value.Item2.Equals(item.Key) )
+                    {
+                        wordList.Add(data.Key, Tuple.Create(data.Value.Item1, item.Value, data.Value.Item2));
+                    }
+                }
+                  foreach (var item in Constant.accessModifier)
+                {
+                    if (data.Value.Item2.Equals(item.Key) )
+                    {
+                        wordList.Add(data.Key, Tuple.Create(data.Value.Item1, item.Value, data.Value.Item2));
+                    }
+                }
+                  foreach (var item in Constant.dataTypes)
+                {
+                    if (data.Value.Item2.Equals(item.Key) )
+                    {
+                        wordList.Add(data.Key, Tuple.Create(data.Value.Item1, item.Value, data.Value.Item2));
+                    }
+                }
+                   foreach (var item in Constant.punctuators)
+                {
+                    if (data.Value.Item2.Equals(item.Key) )
+                    {
+                        wordList.Add(data.Key, Tuple.Create(data.Value.Item1, item.Value, data.Value.Item2));
+                    }
+                }
+
+                switch (data.Value.Item2)
+                {
+                    
+                    case string someVal when new Regex(Constant.regexs["integer"]).IsMatch(data.Value.Item2):
+                        wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "integer", data.Value.Item2));
+                        break;
+
+                    case var someVal when new Regex(Constant.regexs["float"]).IsMatch(data.Value.Item2):
+                        wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "float", data.Value.Item2));
+                        break;
+
+                    case var someVal when new Regex(Constant.regexs["char"]).IsMatch(data.Value.Item2):
+                        wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "str", data.Value.Item2));
+                        break;
+
+                    case var someVal when new Regex(Constant.regexs["identifier"]).IsMatch(data.Value.Item2):
+                        wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "identifier", data.Value.Item2));
+                        break;
+
+                    // case var someVal when new Regex(Constant.regexs["all_punctuators"]).IsMatch(data.Value.Item2):
+                    //     wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "punctuator", data.Value.Item2));
+                    //     break;
+
+                    default:
+                        // wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "Unhandled", data.Value.Item2));
+                        Console.WriteLine(data.Value.Item2);
+                        break;
+                };
+            }
+            return wordList;
+        }
+
        
         static void Main(String[] args)
         {
@@ -494,7 +563,8 @@ namespace Program
             // breakWord
             Program program = new Program(); // Creating Object  
             Dictionary<int, Tuple<int, string>>  words = program.breakWord(ref text); // Calling Function    
-    foreach (var item in words)
+            Dictionary<int, Tuple<int, string, string>> classes = program.classPart(ref words);
+    foreach (var item in classes)
     {
         Console.Write(item.Key +"::");Console.WriteLine(item.Value);
     }

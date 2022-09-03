@@ -15,9 +15,13 @@
         };
 
         // dictionary for keyword list
+        public static IDictionary<string, string> dataTypes = new Dictionary<string, string>(){
+            {"int","datatype"}, {"float","data-type"}, {"bool","data-type"}, {"string","data-type"}, {"char", "data-type"}};
+            public static Dictionary<string,string> accessModifier = new Dictionary<string, string>(){
+            {"public","access-modifier"},{"private","access-modifier"},{"filePrivate","access-modifier"},{"open","access-modifier"},{"internal","access-modifier"}
+            };
          public static IDictionary<string, string> keywords = new Dictionary<string, string>(){
-            {"int","datatype"}, {"float","data-type"}, {"bool","data-type"}, {"string","data-type"}, {"char", "data-type"},
-            {"public","access-modifier"},{"private","access-modifier"},{"filePrivate","access-modifier"},{"open","access-modifier"},{"internal","access-modifier"}, {"static","static"}, {"class","class"},
+             {"static","static"}, {"class","class"},
             {"while","while"}, {"for","for"}, {"struct","struct" },{"abstract","abstract" },{"implement","keyword" },{"extends","keyword" },{"enum","enum" },
             {"if","if"}, {"else","else"}, {"break","break"}, {"continous","continous"},{"var","mutable-constant"},{"let","immutable-constant"},{"main","Main"},{"switch","Switch"},
             {"true","bool-const"}, {"false","bool-const"}, {"protocol","interface"}, {"case","keyword"}, {"default","keyword"},

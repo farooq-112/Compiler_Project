@@ -2,7 +2,7 @@
 some text some text
 some text some text*/
 
-public class GFG{
+ public class GFG{
     static public void Main ()
     { 
         string str = "GeeksForGeeks"; 
