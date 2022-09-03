@@ -1,3 +1,6 @@
+/*some text
+some text some text
+some text some text*/
 public class GFG{
     static public void Main ()
     { 
@@ -20,6 +23,4 @@ public class GFG{
 
 // wordList.Add(id, Tuple.Create(lineNumber, temp));
 a = 5 + 6;
-/*some text
-some text some text
-some text some text*/
+

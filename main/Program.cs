@@ -190,13 +190,14 @@ namespace Program
 
         // lineIncrease Function Start
 
-        private static string getString(ref string text,ref int i){
+        private static string getString(ref string text, ref int i)
+        {
             string tem = "";
             tem += text[i];
             i++;
             while (i < text.Length)
             {
-                if (text[i]== '\n')
+                if (text[i] == '\n')
                 {
                     i++;
                     lineIncrease(ref i);
@@ -204,20 +205,41 @@ namespace Program
                 }
                 if (text[i] == '\"')
                 {
-                    
+                    if (text[i - 1] == '\\')
+                    {
                         tem += text[i];
+                        tem += text[i + 1];
+                        i += 2;
+                    }
+                    else
+                    {
+                        tem += text[i];
+                        i++;
                         return tem;
-                }else{
+                    }
+                }
+                else
+                {
                     tem += text[i];
                     i++;
                 }
-                
+
             }
             return tem;
         }
 
 
-
+        private static bool isAllDigit(string s)
+        {
+            foreach (char item in s)
+            {
+                if (!char.IsDigit(item))
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
 
         private static bool lineIncrease(ref int i)
         {
@@ -233,7 +255,7 @@ namespace Program
         {
             // Single Line Comment
             while (index < input.Length)
-            
+
             {
                 Console.WriteLine(input[index]);
                 if (input[index] == '\n')
@@ -250,17 +272,18 @@ namespace Program
         // singleLineComment Function End
 
         // multiLineComment Function Start
+      // multiLineComment Function Start
         static bool multiLineComment(ref string input,ref int index)
         {
             // Multiline Comment Function
             while (index < input.Length)
             {
-                Console.Write(input[index]);
                 if (input[index] == '\n')
                 {
                     index++;
                     // i = index;            
-                    lineIncrease(ref index);
+                    lineNumber++;
+                    // lineIncrease(int lineno);
                 }
 
                 if (input[index] == '*')
@@ -268,6 +291,7 @@ namespace Program
                     if (input[index + 1] == '/')
                     {
                         index += 1;
+                        
                         return true;
                     }
                 }
@@ -281,10 +305,10 @@ namespace Program
         // breakWord Function Start
         public Dictionary<int, Tuple<int, string>> breakWord(string text)
         {
+            int id = 1;
             var breakWords = new Dictionary<int, Tuple<int, string>>();
-            int key = 0;
+
             var tem = "";
-            List<string> list = new List<string>();
             int i = 0;
             while (i < text.Length)
             {
@@ -301,33 +325,139 @@ namespace Program
                         {
                             i += 2;
                             multiLineComment(ref text, ref i);
-                        }else if (text[i+1]== '='){
+                        }
+                        else if (text[i + 1] == '=')
+                        {
                             tem += "/=";
                             i += 2;
-                        }else{
-                            string word = text[i].ToString();
+                            breakWords.Add(id++, Tuple.Create(lineNumber, tem));
                             i++;
-                            breakWords.Add(key, Tuple.Create(lineNumber, word));
+                        }
+                        else
+                        {
+                            string word = text[i].ToString();
+                            breakWords.Add(id++, Tuple.Create(lineNumber, word));
+                            i++;
+
                         }
                         tem = "";
-                    }else if(text[i] != '/'){
+                    }
+                    else if (text[i] != '/')
+                    {
                         i++;
                     }
-                
-                }
-                if(text[i]== '\"'){
-                    string word = getString(ref text,ref i);
-                    breakWords.Add(key, Tuple.Create(lineNumber,word));
-                }
 
-                else
+                }
+                if (text[i] == '\"')
                 {
-                     Console.WriteLine(tem);
-                            Console.WriteLine(i);
+                    string word = getString(ref text, ref i);
+                    breakWords.Add(id, Tuple.Create(lineNumber, word));
+                    id++;
+                }
+                else if (Char.IsLetterOrDigit(text[i]))
+                {
                     tem += text[i];
+                    if (!Char.IsLetterOrDigit(text[i + 1]) && text[i + 1] != '.')
+                    {
+                        breakWords.Add(id, Tuple.Create(lineNumber, tem));
+                        id++;
+                        tem = "";
+                        i++;
+                    }
+                    else if (text[i + 1] == '.')
+                    {
+
+                        if (isAllDigit(tem) && Char.IsDigit(text[i + 2]))
+                        {
+                            i++;
+                            tem += text[i];
+                            i++;
+                            do
+                            {
+                                tem += text[i];
+                                i++;
+                            } while (Char.IsDigit(text[i + 2]));
+                            breakWords.Add(id, Tuple.Create(lineNumber, tem));
+                            id++;
+                            tem = "";
+                        }
+                        else if (!isAllDigit(tem))
+                        {
+                            breakWords.Add(id, Tuple.Create(lineNumber, tem));
+                            i++;
+                            id++;
+                            tem = "";
+                        }
+                        else
+                        {
+                            i++;
+                        }
+
+
+                        Console.WriteLine(".");
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+                else if (Constant.punctuators.ContainsKey(text[i]))
+                {
+
+                    if (text[i] == '.')
+                    {
+                        tem += text[i];
+                        if (Char.IsDigit(text[i + 1]))
+                        {
+                            i++;
+                            tem += text[i];
+                            i++;
+                        }
+                        else
+                        {
+                            breakWords.Add(id, Tuple.Create(lineNumber, tem));
+                            id++;
+                            i++;
+                        }
+                    }else if (text[i] != '.')
+                    {
+                        string word = text[i].ToString();
+                        breakWords.Add(id, Tuple.Create(lineNumber, word));
+                        i++;
+                        id++;
+                    }
+                }
+                 // Agar Line break hai
+                else if (text[i] == '\n')
+                {
+                    // if (text[i + 1] == '\n')
+                    // {
+                        i++;
+                        lineIncrease(ref i);
+                    // }
+                    // else
+                    // {
+                    //     i++;
+                    // }
+                }
+                  // agar Character = ' '
+                else if (text[i] == ' ')
+                {
+                    tem = "";
                     i++;
                 }
 
+
+                else
+                {
+                    Console.WriteLine(tem);
+                    Console.WriteLine(i);
+                    tem += text[i];
+                    i++;
+                }
+                // loop end
+                if (text.Length == 0)
+                    break;
 
             }
             return breakWords;
@@ -338,12 +468,15 @@ namespace Program
         {
 
             string text = File.ReadAllText(textFile);
-         
+
 
             // breakWord
             Program program = new Program(); // Creating Object  
-            program.breakWord(text); // Calling Function    
-
+            Dictionary<int, Tuple<int, string>>  words = program.breakWord(text); // Calling Function    
+    foreach (var item in words)
+    {
+        Console.Write(item.Key +"::");Console.WriteLine(item.Value);
+    }
         }
     }
 }
