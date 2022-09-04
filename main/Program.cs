@@ -82,7 +82,7 @@ namespace Program
         public static string operator_seperator(string input, int index)
         {
             string temp = "";
-            temp += input[index];
+            temp += input[index]; //*
 
             // if Character is * then 2 possibilities
             // *: Multiply operator
@@ -91,7 +91,7 @@ namespace Program
             {
                 if (input[index + 1] == '=')
                 {
-                    temp += input[index + 1];
+                    temp += input[index + 1];  //*=
                     index += 2;
                     return temp;
                 }
@@ -107,7 +107,7 @@ namespace Program
             // if Character is + then 3 possibilities
             else if (input[index] == '+')
             {
-                if ((input[index + 1] == '+') && !Char.IsDigit(input[index + 2]))
+                if (input[index + 1] == '+' && !isDigit(input[index + 2].ToString()))
                 {
                     temp += input[index + 1];
                     index += 2;
@@ -119,40 +119,40 @@ namespace Program
                     index += 2;
                     return temp;
                 }
-                else if (Char.IsDigit(input[index + 1]))
-                {
-                    if ((index - 1 >= 0 && index - 1 < input.Length))
-                    {
-                        if (!Char.IsLetterOrDigit(input[index - 1]))
-                        {
-                            index++;
-                            do
-                            {
-                                temp += input[index];
-                                index++;
+                // else if (isDigit(input[index + 1].ToString()))
+                // {
+                //     if ((index - 1 >= 0 && index - 1 < input.Length))
+                //     {
+                //         if (!Char.IsLetterOrDigit(input[index - 1]))
+                //         {
+                //             index++;
+                //             do
+                //             {
+                //                 temp += input[index];
+                //                 index++;
 
-                            } while (Char.IsDigit(input[index]));
-                            return temp;
-                        }
-                        else
-                        {
-                            string word = input[index].ToString();
-                            index++;
-                            return word;
-                        }
-                    }
-                    else
-                    {
-                        index++;
-                        do
-                        {
-                            temp += input[index];
-                            index++;
+                //             } while (Char.IsDigit(input[index]));
+                //             return temp;
+                //         }
+                //         else
+                //         {
+                //             string word = input[index].ToString();
+                //             index++;
+                //             return word;
+                //         }
+                //     }
+                //     else
+                //     {
+                //         index++;
+                //         do
+                //         {
+                //             temp += input[index];
+                //             index++;
 
-                        } while (Char.IsDigit(input[index]));
-                        return temp;
-                    }
-                }
+                //         } while (Char.IsDigit(input[index]));
+                //         return temp;
+                //     }
+                // }
                 else
                 {
                     string word = input[index].ToString();
@@ -160,9 +160,11 @@ namespace Program
                     return word;
                 }
             }
+
+             // if Character is - then 3 possibilities
             else if (input[index] == '-')
             {
-                if ((input[index + 1] == '-') && !Char.IsDigit(input[index + 2]))
+                if ((input[index + 1] == '-') && !isDigit(input[index + 2].ToString()))
                 {
                     temp += input[index + 1];
                     index += 2;
@@ -174,41 +176,41 @@ namespace Program
                     index += 2;
                     return temp;
                 }
-                else if (Char.IsDigit(input[index + 1]))
-                {
-                    if ((index - 1 >= 0 && index - 1 < input.Length))
-                    {
-                        if (!Char.IsLetterOrDigit(input[index - 1]))
-                        {
-                            index++;
-                            do
-                            {
-                                temp += input[index];
-                                index++;
+                // else if (Char.IsDigit(input[index + 1]))
+                // {
+                //     if ((index - 1 >= 0 && index - 1 < input.Length))
+                //     {
+                //         if (!Char.IsLetterOrDigit(input[index - 1]))
+                //         {
+                //             index++;
+                //             do
+                //             {
+                //                 temp += input[index];
+                //                 index++;
 
-                            } while (Char.IsDigit(input[index]));
-                            return temp;
-                        }
-                        else
-                        {
-                            string word = input[index].ToString();
-                            index++;
-                            return word;
-                        }
-                    }
-                    else
-                    {
-                        index++;
-                        do
-                        {
-                            temp += input[index];
-                            index++;
+                //             } while (Char.IsDigit(input[index]));
+                //             return temp;
+                //         }
+                //         else
+                //         {
+                //             string word = input[index].ToString();
+                //             index++;
+                //             return word;
+                //         }
+                //     }
+                //     else
+                //     {
+                //         index++;
+                //         do
+                //         {
+                //             temp += input[index];
+                //             index++;
 
-                        } while (Char.IsDigit(input[index]));
-                        return temp;
-                    }
+                //         } while (Char.IsDigit(input[index]));
+                //         return temp;
+                //     }
 
-                }
+                // }
                 else
                 {
                     string word = input[index].ToString();
@@ -216,6 +218,7 @@ namespace Program
                     return word;
                 }
             }
+
             // If Character is <,>,!,= then 4 possibilities
             else if (input[index] == '<' || input[index] == '>' || input[index] == '!' || input[index] == '=')
             {
@@ -314,7 +317,7 @@ namespace Program
         // isCharacter Function End
 
         // isInt Function Start
-        public bool isDigit(string message)
+        public static bool isDigit(string message)
         {
             var isInteger = @"^[0-9]*$";
             if (Regex.IsMatch(message, isInteger, RegexOptions.CultureInvariant))
@@ -455,6 +458,7 @@ namespace Program
                         //     temp += "/=";
                         //     i += 2;
                         //     wordList.Add(id, Tuple.Create(lineNumber, tempp));
+                        
                         // }
                         // else
                         // {
@@ -468,6 +472,10 @@ namespace Program
                         string txt = operator_seperator(text, i);
                         wordList.Add(id++, Tuple.Create(lineNumber, txt));
                         // wordList.Add(id, Tuple.Create(lineNumber, text));
+                    }
+                    else{
+                        // string txt = operator_seperator(text, i);
+                        // wordList.Add(id++, Tuple.Create(lineNumber, text[i].ToString));
                     }
                 }
                 if (text[i] == ' ' || text[i] == '\n' || text[i] == '\r')
