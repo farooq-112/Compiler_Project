@@ -1,8 +1,8 @@
  class Constant{
-        public static  IDictionary<char, string> punctuators = new Dictionary<char, string>() {
-            {'(', "("}, {')',")"}, {'{', "{"}, {'}', "}"}, {'[', "["}, {']', "]"}, {';',"semi-colon"}, {'.', "dot"}, {',', "comma"},
-            {'@', "lexical_error"}, {'$', "lexical_error"}, {'^', "lexical_error"}, {':', "lexical_error"}, {'?',"lexical_error"},
-            {'`', "lexical_error"}, {'~', "lexical_error"}, {'\'', "lexical_error"}, {'_', "lexical_error"}, {'\\', "lexical_error"},
+        public static  IDictionary<string, string> punctuators = new Dictionary<string, string>() {
+            {"(", "("}, {")",")"}, {"{", "{"}, {"}", "}"}, {"[", "["}, {"]", "]"}, {";","semi-colon"}, {".", "dot"}, {",", "comma"},
+            {"@", "lexical_error"}, {"$", "lexical_error"}, {"^", "lexical_error"}, {":", "lexical_error"}, {"?","lexical_error"},
+            {"`", "lexical_error"}, {"~", "lexical_error"}, {"\'", "lexical_error"}, {"_", "lexical_error"}, {"\\", "lexical_error"},
         };
 
           public static  IDictionary<string, string> operators = new Dictionary<string, string>() {

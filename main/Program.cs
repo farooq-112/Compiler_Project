@@ -10,7 +10,7 @@ namespace Program
         static readonly string textFile = "assets/sample.txt";
         static int lineNumber = 1;
 
-     
+
         private static string getString(ref string text, ref int i)
         {
             string tem = "";
@@ -61,7 +61,7 @@ namespace Program
             }
             return false;
         }
- private static string operatorSeparator(ref string input, ref int index)
+        private static string operatorSeparator(ref string input, ref int index)
         {
             // operator handler
             string temp = "";
@@ -289,8 +289,8 @@ namespace Program
         // singleLineComment Function End
 
         // multiLineComment Function Start
-      // multiLineComment Function Start
-        static bool multiLineComment(ref string input,ref int index)
+        // multiLineComment Function Start
+        static bool multiLineComment(ref string input, ref int index)
         {
             // Multiline Comment Function
             while (index < input.Length)
@@ -308,7 +308,7 @@ namespace Program
                     if (input[index + 1] == '/')
                     {
                         index += 1;
-                        
+
                         return true;
                     }
                 }
@@ -421,7 +421,7 @@ namespace Program
                         i++;
                     }
                 }
-                else if (Constant.punctuators.ContainsKey(text[i]))
+                else if (Constant.punctuators.ContainsKey(text[i].ToString()))
                 {
 
                     if (text[i] == '.')
@@ -439,7 +439,8 @@ namespace Program
                             id++;
                             i++;
                         }
-                    }else if (text[i] != '.')
+                    }
+                    else if (text[i] != '.')
                     {
                         string word = text[i].ToString();
                         breakWords.Add(id, Tuple.Create(lineNumber, word));
@@ -447,20 +448,20 @@ namespace Program
                         id++;
                     }
                 }
-                 // Agar Line break hai
+                // Agar Line break hai
                 else if (text[i] == '\n')
                 {
                     // if (text[i + 1] == '\n')
                     // {
-                        i++;
-                        lineIncrease(ref i);
+                    i++;
+                    lineIncrease(ref i);
                     // }
                     // else
                     // {
                     //     i++;
                     // }
                 }
-                  // agar Character = ' '
+                // agar Character = ' '
                 else if (text[i] == ' ')
                 {
                     tem = "";
@@ -484,46 +485,41 @@ namespace Program
         }
         // breakWord Function End
 
-          public Dictionary<int, Tuple<int, string, string>> classPart(ref Dictionary<int, Tuple<int, string>> list)
+        public Dictionary<int, Tuple<int, string, string>> classPart(ref Dictionary<int, Tuple<int, string>> list)
         {
             // Dictionary for word and line number
             var wordList = new Dictionary<int, Tuple<int, string, string>>();
+            
 
             // looping through wordlist dictionary
             foreach (KeyValuePair<int, Tuple<int, string>> data in list)
             {
                 foreach (var item in Constant.keywords)
                 {
-                    if (data.Value.Item2.Equals(item.Key) )
+                    if (data.Value.Item2.Equals(item.Key))
                     {
                         wordList.Add(data.Key, Tuple.Create(data.Value.Item1, item.Value, data.Value.Item2));
                     }
                 }
-                  foreach (var item in Constant.accessModifier)
+                foreach (var item in Constant.accessModifier)
                 {
-                    if (data.Value.Item2.Equals(item.Key) )
+                    if (data.Value.Item2.Equals(item.Key))
                     {
                         wordList.Add(data.Key, Tuple.Create(data.Value.Item1, item.Value, data.Value.Item2));
                     }
                 }
-                  foreach (var item in Constant.dataTypes)
+                foreach (var item in Constant.dataTypes)
                 {
-                    if (data.Value.Item2.Equals(item.Key) )
-                    {
-                        wordList.Add(data.Key, Tuple.Create(data.Value.Item1, item.Value, data.Value.Item2));
-                    }
-                }
-                   foreach (var item in Constant.punctuators)
-                {
-                    if (data.Value.Item2.Equals(item.Key) )
+                    if (data.Value.Item2.Equals(item.Key))
                     {
                         wordList.Add(data.Key, Tuple.Create(data.Value.Item1, item.Value, data.Value.Item2));
                     }
                 }
 
+
                 switch (data.Value.Item2)
                 {
-                    
+
                     case string someVal when new Regex(Constant.regexs["integer"]).IsMatch(data.Value.Item2):
                         wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "integer", data.Value.Item2));
                         break;
@@ -540,9 +536,24 @@ namespace Program
                         wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "identifier", data.Value.Item2));
                         break;
 
-                    // case var someVal when new Regex(Constant.regexs["all_punctuators"]).IsMatch(data.Value.Item2):
-                    //     wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "punctuator", data.Value.Item2));
-                    //     break;
+                    case var someVal when new Regex(Constant.regexs["all_punctuators"]).IsMatch(data.Value.Item2):
+                       
+                            if (Constant.punctuators.Keys.Contains(data.Value.Item2))
+                            {
+                                wordList.Add(data.Key, Tuple.Create(data.Value.Item1, Constant.punctuators[data.Value.Item2], data.Value.Item2));
+                            }
+                            else
+                            {
+                                if (wordList.Keys.Contains(data.Key))
+                                {
+                                    // wordList.Add(i++, Tuple.Create(data.Value.Item1, "punctuator", data.Value.Item2));
+                                }else{
+                                    wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "punctuator", data.Value.Item2));
+                                }
+                                
+                            
+                        }
+                        break;
 
                     default:
                         // wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "Unhandled", data.Value.Item2));
@@ -553,7 +564,7 @@ namespace Program
             return wordList;
         }
 
-       
+
         static void Main(String[] args)
         {
 
@@ -562,12 +573,12 @@ namespace Program
 
             // breakWord
             Program program = new Program(); // Creating Object  
-            Dictionary<int, Tuple<int, string>>  words = program.breakWord(ref text); // Calling Function    
+            Dictionary<int, Tuple<int, string>> words = program.breakWord(ref text); // Calling Function    
             Dictionary<int, Tuple<int, string, string>> classes = program.classPart(ref words);
-    foreach (var item in classes)
-    {
-        Console.Write(item.Key +"::");Console.WriteLine(item.Value);
-    }
+            foreach (var item in classes)
+            {
+                Console.Write(item.Key + "::"); Console.WriteLine(item.Value);
+            }
         }
     }
 }
