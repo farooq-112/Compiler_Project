@@ -23,13 +23,13 @@
          public static IDictionary<string, string> keywords = new Dictionary<string, string>(){
              {"static","static"}, {"class","class"},
             {"while","while"}, {"for","for"}, {"struct","struct" },{"abstract","abstract" },{"implement","keyword" },{"extends","keyword" },{"enum","enum" },
-            {"if","if"}, {"else","else"}, {"break","break"}, {"continous","continous"},{"var","mutable-constant"},{"let","immutable-constant"},{"main","Main"},{"switch","Switch"},
+            {"if","if"}, {"else","else"}, {"break","break"}, {"continous","continous"},{"var","mutable-constant"},{"let","immutable-constant"},{"Main","Main"},{"switch","Switch"},
             {"true","bool-const"}, {"false","bool-const"}, {"protocol","interface"}, {"case","keyword"}, {"default","keyword"},
         };
 
         // dictionary for regex
          public static IDictionary<string, string> regexs = new Dictionary<string, string>() {
-            {"integer", @"^[0-9]*$"}, {"float",  @"^[0-9]*(?:\.[0-9]*)?$"}, {"char", @"\b[M]\w+"},
+            {"integer", @"^[0-9]*$"}, {"float",  @"^[0-9]*(?:\.[0-9]*)?$"}, {"char", @"[a-z].*\d|\d.*[a-z]"}, {"string",@"[abc]+"},
             {"alphabtes" , @"^[A-Za-z]$"}, {"identifier", @"^([a-zA-Z]+_[0-9])$"},
             {"punctuators", @"^,|.|;|[|]|(|)|{|}|:$"}, {"all_punctuators", @"^[\x20-\x2F]|[\x3A-\x40]|[\x5B-\x5E]|[\x7B-\x7E]|`$"}
         };

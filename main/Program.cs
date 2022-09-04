@@ -489,7 +489,7 @@ namespace Program
         {
             // Dictionary for word and line number
             var wordList = new Dictionary<int, Tuple<int, string, string>>();
-            
+
 
             // looping through wordlist dictionary
             foreach (KeyValuePair<int, Tuple<int, string>> data in list)
@@ -516,6 +516,12 @@ namespace Program
                     }
                 }
 
+                if (data.Value.Item2.StartsWith("\"" ) && data.Value.Item2.EndsWith("\""))
+                {
+                    wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "string", data.Value.Item2));
+                
+                }
+
 
                 switch (data.Value.Item2)
                 {
@@ -528,30 +534,35 @@ namespace Program
                         wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "float", data.Value.Item2));
                         break;
 
-                    case var someVal when new Regex(Constant.regexs["char"]).IsMatch(data.Value.Item2):
-                        wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "str", data.Value.Item2));
-                        break;
+                    
 
                     case var someVal when new Regex(Constant.regexs["identifier"]).IsMatch(data.Value.Item2):
+
                         wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "identifier", data.Value.Item2));
                         break;
 
                     case var someVal when new Regex(Constant.regexs["all_punctuators"]).IsMatch(data.Value.Item2):
-                       
-                            if (Constant.punctuators.Keys.Contains(data.Value.Item2))
+
+                        if (Constant.punctuators.Keys.Contains(data.Value.Item2))
+                        {
+                            wordList.Add(data.Key, Tuple.Create(data.Value.Item1, Constant.punctuators[data.Value.Item2], data.Value.Item2));
+                        }
+                        else if (Constant.operators.Keys.Contains(data.Value.Item2))
+                        {
+                            wordList.Add(data.Key, Tuple.Create(data.Value.Item1, Constant.operators[data.Value.Item2], data.Value.Item2));
+
+
+                        }
+                        else
+                        {
+                            if (wordList.Keys.Contains(data.Key))
                             {
-                                wordList.Add(data.Key, Tuple.Create(data.Value.Item1, Constant.punctuators[data.Value.Item2], data.Value.Item2));
+                                // wordList.Add(i++, Tuple.Create(data.Value.Item1, "punctuator", data.Value.Item2));
                             }
                             else
                             {
-                                if (wordList.Keys.Contains(data.Key))
-                                {
-                                    // wordList.Add(i++, Tuple.Create(data.Value.Item1, "punctuator", data.Value.Item2));
-                                }else{
-                                    wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "punctuator", data.Value.Item2));
-                                }
-                                
-                            
+                                wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "punctuator", data.Value.Item2));
+                            }
                         }
                         break;
 
