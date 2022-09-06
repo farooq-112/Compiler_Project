@@ -16,7 +16,7 @@ some text some text*/
         } 
     
         // Printing content of array 
-        foreach  (char c in ch) { 
+        for(char c in ch) { 
             Console.WriteLine(c); 
         } 
     } 
