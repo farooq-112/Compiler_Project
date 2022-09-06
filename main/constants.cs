@@ -30,7 +30,7 @@
         // dictionary for regex
          public static IDictionary<string, string> regexs = new Dictionary<string, string>() {
             {"integer", @"^[0-9]*$"}, {"float",  @"^[0-9]*(?:\.[0-9]*)?$"}, {"char", @"[a-z].*\d|\d.*[a-z]"}, {"string",@"[abc]+"},
-            {"alphabtes" , @"^[A-Za-z]$"}, {"identifier", @"^([a-zA-Z]+_[0-9])$"},
+            {"alphabtes" , @"^[A-Za-z]$"}, {"identifier", @"^([A-Za-z][A-Za-z_0-9]*)$"},
             {"punctuators", @"^,|.|;|[|]|(|)|{|}|:$"}, {"all_punctuators", @"^[\x20-\x2F]|[\x3A-\x40]|[\x5B-\x5E]|[\x7B-\x7E]|`$"}
         };
        }

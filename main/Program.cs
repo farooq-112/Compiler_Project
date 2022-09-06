@@ -436,6 +436,7 @@ namespace Program
                         else
                         {
                             breakWords.Add(id, Tuple.Create(lineNumber, tem));
+                            tem = "";
                             id++;
                             i++;
                         }
@@ -538,7 +539,12 @@ namespace Program
 
                     case var someVal when new Regex(Constant.regexs["identifier"]).IsMatch(data.Value.Item2):
 
-                        wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "identifier", data.Value.Item2));
+                        if (wordList.Keys.Contains(data.Key))
+                        {
+                            
+                        }else{
+                            wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "identifier", data.Value.Item2));
+                        }
                         break;
 
                     case var someVal when new Regex(Constant.regexs["all_punctuators"]).IsMatch(data.Value.Item2):
