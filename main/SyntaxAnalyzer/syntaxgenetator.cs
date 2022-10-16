@@ -56,16 +56,10 @@ class SyntaxGenerator{
                         }
                     }
                 }
-
             }
-    // String[] whileSelectionSet = {"while"};
-
-    // public void starting(ref Dictionary<int, Tuple<int, string, string>>  text){
-    //     recognizeCFG(ref text, whileSelectionSet.ToList());
-
-    //     }
-    //     return false;
-    // }
+        }
+        return false;
+    }
 
     bool ELSE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
