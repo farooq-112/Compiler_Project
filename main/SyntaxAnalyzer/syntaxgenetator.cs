@@ -58,10 +58,14 @@ class SyntaxGenerator{
                 }
 
             }
+    // String[] whileSelectionSet = {"while"};
 
-        }
-        return false;
-    }
+    // public void starting(ref Dictionary<int, Tuple<int, string, string>>  text){
+    //     recognizeCFG(ref text, whileSelectionSet.ToList());
+
+    //     }
+    //     return false;
+    // }
 
     bool ELSE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
@@ -114,6 +118,13 @@ class SyntaxGenerator{
 
     bool BODY(){
         return true;
+    // void recognizeCFG(ref Dictionary<int, Tuple<int, string, string>>  text ,List<string> listofSelectionsSet){
+    //     for (int i = 1; i < text.Count ; i++){
+    //         if (text[i].Item3 == listofSelectionsSet[0])
+    //         {
+    //            Console.WriteLine("Yes");
+    //         }
+    //     }
     }
 
     bool OE(){
