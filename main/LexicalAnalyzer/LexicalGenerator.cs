@@ -271,7 +271,6 @@ class LexicalGenerartor
         while (index < input.Length)
 
         {
-            Console.WriteLine(input[index]);
             if (input[index] == '\n')
             {
                 index++;
@@ -280,7 +279,6 @@ class LexicalGenerartor
             }
             index++;
         }
-        Console.WriteLine(input[index]);
         return true;
     }
     // singleLineComment Function End
@@ -327,18 +325,30 @@ class LexicalGenerartor
 
         var list = new List<String>();
 
-        var split = text.Split("\n");
-
-        foreach (var i in split)
-        {
-            wordBreaking(i+"\n", ref breakWords,ref id);
+        if (text.Contains("*/")){
+            
         }
 
+        var split = text.Split("\n");
 
-
-
-
-
+        //  foreach (var i in split)
+        for (int i = 0; i < split.Length; i++)
+        
+        {
+            if (split[i].Contains("/*")){
+                lineNumber++;
+               while(!split[i+1].Contains("*/")){
+                    i++;
+                    lineNumber++;
+                }
+                if(split[i+1].Contains("*/")){
+                    i++;
+                    lineNumber++;
+                }
+            }else{
+                wordBreaking(split[i]+"\n", ref breakWords,ref id);
+            }
+        }
 
         return breakWords;
     }

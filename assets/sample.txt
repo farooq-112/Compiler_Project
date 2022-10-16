@@ -1,7 +1,14 @@
- public class GFG{
+  public class GFG{
     static public void Main ()
     { 
-       string str = "GeeksForGeeks"; 
+        /*some text
+some text some text
+
+some text some text
+some text some text
+some text some text*/ 
+
+        string str = "GeeksForGeeks"; 
     
         // Creating array of string length 
         char[] ch = new char[str.Length]; 
@@ -21,5 +28,8 @@
 // wordList.Add(id, Tuple.Create(lineNumber, temp));
 //a = 5 + 6;
 /*some text
+some text some text
+
+some text some text
 some text some text
 some text some text*/
