@@ -1,22 +1,22 @@
-// public class GFG{
-//    static public void Main ()
-//    { 
-//        string str = "GeeksForGeeks"; 
+ public class GFG{
+    static public void Main ()
+    { 
+       string str = "GeeksForGeeks"; 
     
-//        // Creating array of string length 
-//        char[] ch = new char[str.Length]; 
+        // Creating array of string length 
+        char[] ch = new char[str.Length]; 
     
-//        // Copy character by character into array 
-//        for (int i = 0; i < str.Length; i++) { 
-//            ch[i] = str[i]; 
-//        } 
+        // Copy character by character into array 
+        for (int i = 0; i < str.Length; i++) { 
+            ch[i] = str[i]; 
+        } 
     
-//        // Printing content of array 
-//        foreach  (char c in ch) { 
-//            Console.WriteLine(c); 
-//        } 
-//    } 
-//}
+        // Printing content of array 
+        foreach  (char c in ch) { 
+            Console.WriteLine(c); 
+        } 
+    } 
+}
 
 // wordList.Add(id, Tuple.Create(lineNumber, temp));
 //a = 5 + 6;

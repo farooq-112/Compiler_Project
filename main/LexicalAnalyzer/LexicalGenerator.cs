@@ -319,7 +319,7 @@ class LexicalGenerartor
     // breakWord Function Start
     public Dictionary<int, Tuple<int, string>> breakWord(ref string text)
     {
-
+        int id = 1;
         var breakWords = new Dictionary<int, Tuple<int, string>>();
         text = text.Trim();
 
@@ -331,7 +331,7 @@ class LexicalGenerartor
 
         foreach (var i in split)
         {
-            wordBreaking(i+"\n", ref breakWords);
+            wordBreaking(i+"\n", ref breakWords,ref id);
         }
 
 
@@ -346,9 +346,9 @@ class LexicalGenerartor
 
 
 
-    void wordBreaking(string text, ref Dictionary<int, Tuple<int, string>> breakWords)
+    void wordBreaking(string text, ref Dictionary<int, Tuple<int, string>> breakWords, ref int id)
     {
-        int id = 1;
+        
         var tem = "";
         int i = 0;
         while (i < text.Length)
@@ -363,11 +363,11 @@ class LexicalGenerartor
                         i += 2;
                         singleLineComment(ref text, ref i);
                     }
-                    else if (i < text.Length && text[i + 1] == '*')
-                    {
-                        i += 2;
-                        multiLineComment(ref text, ref i);
-                    }
+                    // else if (i < text.Length && text[i + 1] == '*')
+                    // {
+                    //     i += 2;
+                    //     multiLineComment(ref text, ref i);
+                    // }
                     else if (i < text.Length && text[i + 1] == '=')
                     {
                         tem += "/=";
