@@ -26,7 +26,7 @@ namespace Program
 
             string tokenSet = File.ReadAllText(tokenFile);
             SyntaxGenerator syntaxGenerator = new SyntaxGenerator();
-            syntaxGenerator.starting(ref tokenSet);
+            syntaxGenerator.starting(ref classes);
         }
        
     }
