@@ -1,3 +1,9 @@
 $ class main {
-    int a = 10;
+    int a = 10.0;
+    float a = 10;
+    string a = 1.22222;
+    char a = 1.23232;
+    bool a = true;
+    
+
 }

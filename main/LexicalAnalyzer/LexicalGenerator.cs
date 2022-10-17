@@ -56,7 +56,7 @@ class LexicalGenerartor
                 return false;
             }
         }
-        return false;
+        return true;
     }
     private static string operatorSeparator(ref string input, ref int index)
     {
@@ -285,33 +285,33 @@ class LexicalGenerartor
 
     // multiLineComment Function Start
     // multiLineComment Function Start
-    static bool multiLineComment(ref string input, ref int index)
-    {
-        // Multiline Comment Function
-        while (index < input.Length)
-        {
-            if (input[index] == '\n')
-            {
-                index++;
-                // i = index;            
-                lineNumber++;
-                // lineIncrease(int lineno);
-            }
+    // static bool multiLineComment(ref string input, ref int index)
+    // {
+    //     // Multiline Comment Function
+    //     while (index < input.Length)
+    //     {
+    //         if (input[index] == '\n')
+    //         {
+    //             index++;
+    //             // i = index;            
+    //             lineNumber++;
+    //             // lineIncrease(int lineno);
+    //         }
 
-            if (input[index] == '*')
-            {
-                if (input[index + 1] == '/')
-                {
-                    index += 1;
+    //         if (input[index] == '*')
+    //         {
+    //             if (input[index + 1] == '/')
+    //             {
+    //                 index += 1;
 
-                    return true;
-                }
-            }
-            index++;
-            // i = index;
-        }
-        return true;
-    }
+    //                 return true;
+    //             }
+    //         }
+    //         index++;
+    //         // i = index;
+    //     }
+    //     return true;
+    // }
     // multiLineComment Function End
 
     // breakWord Function Start
@@ -325,28 +325,34 @@ class LexicalGenerartor
 
         var list = new List<String>();
 
-        if (text.Contains("*/")){
-            
+        if (text.Contains("*/"))
+        {
+
         }
 
         var split = text.Split("\n");
 
         //  foreach (var i in split)
         for (int i = 0; i < split.Length; i++)
-        
+
         {
-            if (split[i].Contains("/*")){
+            if (split[i].Contains("/*"))
+            {
                 lineNumber++;
-               while(!split[i+1].Contains("*/")){
+                while (!split[i + 1].Contains("*/"))
+                {
                     i++;
                     lineNumber++;
                 }
-                if(split[i+1].Contains("*/")){
+                if (split[i + 1].Contains("*/"))
+                {
                     i++;
                     lineNumber++;
                 }
-            }else{
-                wordBreaking(split[i]+"\n", ref breakWords,ref id);
+            }
+            else
+            {
+                wordBreaking(split[i] + "\n", ref breakWords, ref id);
             }
         }
 
@@ -358,7 +364,7 @@ class LexicalGenerartor
 
     void wordBreaking(string text, ref Dictionary<int, Tuple<int, string>> breakWords, ref int id)
     {
-        
+
         var tem = "";
         int i = 0;
         while (i < text.Length)
@@ -403,8 +409,8 @@ class LexicalGenerartor
                 }
 
             }
-            
-            if (i < text.Length && text[i] == '\"' )
+
+            if (i < text.Length && text[i] == '\"')
             {
                 string word = getString(ref text, ref i);
                 breakWords.Add(id, Tuple.Create(lineNumber, word));
@@ -423,7 +429,7 @@ class LexicalGenerartor
                 else if (i < text.Length && text[i + 1] == '.')
                 {
 
-                    if (isAllDigit(tem) && Char.IsDigit(text[i + 2]))
+                    if (isAllDigit(tem) && Char.IsDigit(text[i + 1]))
                     {
                         i++;
                         tem += text[i];
@@ -479,6 +485,11 @@ class LexicalGenerartor
                 }
                 else if (text[i] != '.')
                 {
+                    if (tem != null && tem != "")
+                    {
+                        breakWords.Add(id, Tuple.Create(lineNumber, tem));
+                        id++;
+                    }
                     string word = text[i].ToString();
                     breakWords.Add(id, Tuple.Create(lineNumber, word));
                     i++;
@@ -508,15 +519,18 @@ class LexicalGenerartor
 
             else
             {
-                if(i == text.Length ){
+                if (i == text.Length)
+                {
                     break;
-                }else{
-                    Console.WriteLine(tem);
-                Console.WriteLine(i);
-                tem += text[i];
-                i++;
                 }
-                
+                else
+                {
+                    Console.WriteLine(tem);
+                    Console.WriteLine(i);
+                    tem += text[i];
+                    i++;
+                }
+
             }
             // loop end
             if (text.Length == 0)
@@ -647,7 +661,3 @@ class LexicalGenerartor
 
 
 }
-
-
-
-
