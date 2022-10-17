@@ -74,44 +74,90 @@ class SyntaxGenerator
     //    class CFG SELECTION SET
     bool CLASS_SET(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (AM(ref token))
-        {
+        if (token[index].Item2 == "public" || token[index].Item2 == "class" || token[index].Item2 == "private" || token[index].Item2 == "filePrivate" || token[index].Item2 == "open" || token[index].Item2 == "internal")
             index++;
-            return true;
-        }
-        else
-        {
-            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
-            return false;
-        }
+            if (AM(ref token))
+            {
+                if (token[index].Item2 == "class")
+                {
+                    index++;
+                    if (token[index].Item2 == "identifier")
+                    {
+                        index++;
+                        if (INH(ref token))
+                        {
+                            if (token[index].Item2 == "{")
+                            {
+                                index++;
+                                if (CBODY(ref token))
+                                {
+                                    if(token[index].Item2 == "}")
+                                    {
+                                        index++;
+                                        return true;
+                                    }
 
+                                }
+
+                            }
+                        }else{
+                            
+                        }
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+                return false;
+            }
+
+    }
+
+    private bool CBODY(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool INH(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        throw new NotImplementedException();
     }
 
     bool AM(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (ACCM(ref token))
+        if (token[index].Item2 == "public" || token[index].Item2 == "private" || token[index].Item2 == "filePrivate" ||
+            token[index].Item2 == "open" || token[index].Item2 == "internal" || token[index].Item2 == "abstact" || token[index].Item2 == "final" || token[index].Item2 == "static")
         {
-            return true;
+            index++;
+            if (ACCM(ref token))
+            {
+                if (CLASSM(ref token))
+                {
+                    return true;
+                }
+            }
         }
-        else if (CLASSM(ref token))
-        {
-            return true;
-        }
-        else if (token[index].Item2 == "class" || token[index].Item2 == "struct" || token[index].Item2 == "func" || token[index].Item2 == "enum")
-        {
-            return true;
-        }
-        else
+        else if(token[index].Item2 == "class")
         {
             Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
-            return false;
+            return true;
         }
+        return false;
     }
 
     bool ACCM(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2 == "public" || token[index].Item2 == "private" || token[index].Item2 == "filePrivate" || token[index].Item2 == "open" || token[index].Item2 == "internal")
+        if (token[index].Item2 == "public" || token[index].Item2 == "private" || token[index].Item2 == "filePrivate" ||
+            token[index].Item2 == "open" || token[index].Item2 == "internal")
         {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "abstact" || token[index].Item2 == "final" || token[index].Item2 == "static" || token[index].Item2 == "class")
+        {
+            index++;
             return true;
         }
         else
@@ -125,6 +171,7 @@ class SyntaxGenerator
     {
         if (token[index].Item2 == "abstact" || token[index].Item2 == "final" || token[index].Item2 == "static")
         {
+            index++;
             return true;
         }
         else
@@ -299,8 +346,8 @@ class SyntaxGenerator
     //OE Expression
     public bool OE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") || 
-        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") || 
+        if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
+        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
         token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
         {
             if (AE(ref token))
@@ -311,7 +358,7 @@ class SyntaxGenerator
         }
 
         return false;
-        }
+    }
 
     public bool OE1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
@@ -353,8 +400,8 @@ class SyntaxGenerator
 
     public bool AE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") || 
-        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") || 
+        if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
+        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
         token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
         {
             if (RE(ref token))
@@ -388,8 +435,8 @@ class SyntaxGenerator
 
     public bool RE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") || 
-        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") || 
+        if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
+        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
         token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
         {
             if (E(ref token))
@@ -413,7 +460,7 @@ class SyntaxGenerator
                     return true;
             }
         }
-        else if (token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") || 
+        else if (token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") ||
                 token[index].Item2.Equals(":") || token[index].Item2.Equals(";"))
         {
             return true;
@@ -424,8 +471,8 @@ class SyntaxGenerator
 
     public bool E(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") || 
-            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") || 
+        if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
+            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
         {
             if (T(ref token))
@@ -462,8 +509,8 @@ class SyntaxGenerator
 
     public bool T(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") || 
-            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") || 
+        if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
+            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
         {
             if (F(ref token))
@@ -503,7 +550,8 @@ class SyntaxGenerator
         if (token[index].Item2.Equals("identifier"))
         {
             index++;
-            if(LHS(ref token)){
+            if (LHS(ref token))
+            {
                 if (F1(ref token))
                 {
                     return true;
@@ -519,7 +567,8 @@ class SyntaxGenerator
                 if (token[index].Item2.Equals("identifier"))
                 {
                     index++;
-                    if(LHS(ref token)){
+                    if (LHS(ref token))
+                    {
                         if (Inc_Dec(ref token))
                         {
                             return true;
@@ -532,7 +581,7 @@ class SyntaxGenerator
         else if (token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
         {
-                return true;
+            return true;
         }
         else if (Inc_Dec(ref token))
         {
@@ -552,7 +601,7 @@ class SyntaxGenerator
     {
         if (token[index].Item2.Equals("MDM") || token[index].Item2.Equals("PM") || token[index].Item2.Equals("RelationalOperator") ||
             token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") || token[index].Item2.Equals(";") ||
-            token[index].Item2.Equals(":") )
+            token[index].Item2.Equals(":"))
         {
             return true;
         }
@@ -564,23 +613,24 @@ class SyntaxGenerator
 
         return false;
     }
-    
+
     // LHS NON TERMINAL
-    bool LHS(ref Dictionary<int, Tuple<int, string, string>> token){
+    bool LHS(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
         if (token[index].Item2.Equals("."))
         {
             index++;
             if (token[index].Item2.Equals("identifier"))
             {
                 index++;
-                if(LHS(ref token))
+                if (LHS(ref token))
                     return true;
             }
-            else if(token[index].Item2.Equals("("))
+            else if (token[index].Item2.Equals("("))
             {
                 index++;
-                if(PARAMS(ref token))
-                    if(token[index].Item2.Equals(")"))
+                if (PARAMS(ref token))
+                    if (token[index].Item2.Equals(")"))
                         return true;
             }
         }
@@ -588,15 +638,16 @@ class SyntaxGenerator
     }
 
     // Icrement Decrement NON TERMINAL
-    bool Inc_Dec(ref Dictionary<int, Tuple<int, string, string>> token){
+    bool Inc_Dec(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
         if (token[index].Item2.Equals("inc-dec"))
         {
             index++;
-            if(THIS_ST(ref token))
+            if (THIS_ST(ref token))
             {
                 if (token[index].Item2.Equals("identifier"))
                 {
-                    if(LHS(ref token))
+                    if (LHS(ref token))
                     {
                         return true;
                     }
@@ -613,7 +664,8 @@ class SyntaxGenerator
                 if (token[index].Item2.Equals("identifier"))
                 {
                     index++;
-                    if(LHS(ref token)){
+                    if (LHS(ref token))
+                    {
                         if (token[index].Item2.Equals("inc-dec"))
                         {
                             index++;
@@ -647,7 +699,8 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool PARAMS(ref Dictionary<int, Tuple<int, string, string>> token){
+    public bool PARAMS(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
         return true;
     }
 }
