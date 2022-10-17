@@ -1,117 +1,299 @@
-class SyntaxGenerator{
-    
+class SyntaxGenerator
+{
     // List<String> token = new List<String>();
     //Dictionary<int, Tuple<int, string, string>> token; chala isko k
-    static int index = 0;
-
-    public void starting(ref Dictionary<int, Tuple<int, string, string>> text){
+    static int index = 1;
+    public void starting(ref Dictionary<int, Tuple<int, string, string>> text)
+    {
         Console.WriteLine(text);
         checkRule(ref text);
     }
 
     public bool checkRule(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (Start())
+        if (Start(ref token))
         {
-            //Console.WriteLine(token[index].Item2);
-            Console.WriteLine("No syntax Error");
-            //return true;
-            if (token[index].Item3 == "$")
+            if (token[index].Item2 == "class"
+            )
             {
-                Console.WriteLine("No syntax Error");
+                return CLASS_SET(ref token);
+            }
+            else if (token[index].Item2 == "func")
+            {
+                Console.WriteLine($"{token[index].Item2} {token[index].Item1}");
+
+                index++;
                 return true;
             }
-        }
-        Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
-        return false;
-    }
-    
-    public bool Start()
-    {
-        return true;
-    }
-
-    
-    // IF ELSE STATEMENT;
-    bool IFELSE(ref Dictionary<int, Tuple<int, string, string>> token)
-    {
-        if (token[index].Item2 == "if")
-        {
-            index++;
-            if (token[index].Item2 == "(")
+            else if (token[index].Item2 == "enum")
             {
+                Console.WriteLine($"{token[index].Item2} {token[index].Item1}");
                 index++;
-                if (OE(ref token))
-                {
-                    if (token[index].Item2 == ")")
-                    {
-                        index++;
-                        if (BODY())
-                        {
-                            if (ELSE(ref token))
-                            {
-                                return true;
-                            }
-
-                        }
-                    }
-                }
+                return true;
             }
-        }
-        return false;
-    }
-
-    bool ELSE(ref Dictionary<int, Tuple<int, string, string>> token)
-    {
-        if (token[index].Item2 == "else")
-        {
-            index++;
-            if (BODY())
+            else if (token[index].Item2 == "struct")
             {
+                Console.WriteLine($"{token[index].Item2} {token[index].Item1}");
+                index++;
+                return true;
+            }
+            else if (token[index].Item2 == "main")
+            {
+                Console.WriteLine($"{token[index].Item2} {token[index].Item1}");
+                index++;
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
                 return true;
             }
         }
         else
         {
-            if (token[index].Item2 == " ") //follow(BODY) & follow(IFELSE)
-            {
-                return true;
-            }
+            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            return false;
         }
-        return false;
     }
 
-
-    //WHILE STATEMENT
-    bool WHILE_ST(ref Dictionary<int, Tuple<int, string, string>> token)
+    public bool Start(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2 == "while")
+        if (token[index].Item3 == "$")
         {
             index++;
-            if (token[index].Item2 == "(")
-            {
-                index++;
-                if (OE(ref token))
-                {
-                    if (token[index].Item2 == ")")
-                    {
-                        index++;
-                        if (BODY())
-                        {
-                            return true;
-                        }
-                    }
-                }
-
-            }
+            return true;
         }
-        return false;
+        else
+        {
+            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            return false;
+        }
     }
 
 
+    //    class CFG SELECTION SET
+    bool CLASS_SET(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (AM(ref token))
+        {
+            index++;
+            return true;
+        }
+        else
+        {
+            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            return false;
+        }
 
-    bool BODY(){
-        return true;
+    }
+
+    bool AM(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (ACCM(ref token))
+        {
+            return true;
+        }
+        else if (CLASSM(ref token))
+        {
+            return true;
+        }
+        else if (token[index].Item2 == "class" || token[index].Item2 == "struct" || token[index].Item2 == "func" || token[index].Item2 == "enum")
+        {
+            return true;
+        }
+        else
+        {
+            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            return false;
+        }
+    }
+
+    bool ACCM(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2 == "public" || token[index].Item2 == "private" || token[index].Item2 == "filePrivate" || token[index].Item2 == "open" || token[index].Item2 == "internal")
+        {
+            return true;
+        }
+        else
+        {
+            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            return false;
+        }
+    }
+
+    bool CLASSM(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2 == "abstact" || token[index].Item2 == "final" || token[index].Item2 == "static")
+        {
+            return true;
+        }
+        else
+        {
+            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            return false;
+        }
+    }
+
+    //WHILE STATEMENT
+    // bool WHILE_ST(ref Dictionary<int, Tuple<int, string, string>> token)
+    // {
+    //     if (token[index].Item2 == "while")
+    //     {
+    //         index++;
+    //         if (token[index].Item2 == "(")
+    //         {
+    //             index++;
+    //             if (OE())
+    //             {
+    //                 if (token[index].Item2 == ")")
+    //                 {
+    //                     index++;
+    //                     if (BODY())
+    //                     {
+    //                         return true;
+    //                     }
+    //                 }
+    //             }
+
+    //         }
+    //     }
+    //     return false;
+    // }
+
+
+
+    bool BODY(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2 == ";" || token[index].Item2 == "{" || token[index].Item2 == "while" || token[index].Item2 == "for"
+        || token[index].Item2 == "do" || token[index].Item2 == "if" || token[index].Item2 == "switch" || token[index].Item2 == "identifier" ||
+         token[index].Item2 == "try" || token[index].Item2 == "var" || token[index].Item2 == "let" || token[index].Item2 == "return" || token[index].Item2 == "break" ||
+          token[index].Item2 == "continue" || token[index].Item2 == "[" || token[index].Item2 == "public" || token[index].Item2 == "private" ||
+           token[index].Item2 == "open" || token[index].Item2 == "internal" ||
+          token[index].Item2 == "func")
+        {
+            index++;
+            return true;
+        }
+        else
+        {
+            Console.WriteLine("Lexical Error :: " + token[index]);
+            return false;
+        }
+    }
+
+    bool SST(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2 == ";")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "{")
+        {
+            index++;
+            return true;
+
+        }
+        else if (token[index].Item2 == "while")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "for")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "do")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "for")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "if")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "switch")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "identifier")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "try")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "var")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "let")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "return")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "break")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "continue")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "public")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "[")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "private")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "open")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "internal")
+        {
+            index++;
+            return true;
+        }
+        else if (token[index].Item2 == "func")
+        {
+            index++;
+            return true;
+        }
+        else
+        {
+            Console.WriteLine("Lexical Error :: " + token[index]);
+            return false;
+        }
     }
 
     //OE Expression
@@ -129,7 +311,7 @@ class SyntaxGenerator{
         }
 
         return false;
-    }
+        }
 
     public bool OE1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
@@ -149,6 +331,25 @@ class SyntaxGenerator{
 
         return false;
     }
+    // void recognizeCFG(ref Dictionary<int, Tuple<int, string, string>> text, List<string> listofSelectionsSet)
+    // {
+    //     for (int i = 1; i < text.Count; i++)
+    //     {
+    //         foreach (var item in listofSelectionsSet)
+    //         {
+    //             if (text[i].Item3 == item)
+    //             {
+    //                 Console.WriteLine("Yes");
+    //             }
+    //             else
+    //             {
+    //             }
+    //             i++;
+    //         }
+
+    //     }
+    // }
+
 
     public bool AE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
