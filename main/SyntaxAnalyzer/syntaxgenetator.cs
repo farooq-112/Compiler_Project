@@ -76,42 +76,44 @@ class SyntaxGenerator
     {
         if (token[index].Item2 == "public" || token[index].Item2 == "class" || token[index].Item2 == "private" || token[index].Item2 == "filePrivate" || token[index].Item2 == "open" || token[index].Item2 == "internal")
             index++;
-            if (AM(ref token))
+        if (AM(ref token))
+        {
+            if (token[index].Item2 == "class")
             {
-                if (token[index].Item2 == "class")
+                index++;
+                if (token[index].Item2 == "identifier")
                 {
                     index++;
-                    if (token[index].Item2 == "identifier")
+                    if (INH(ref token))
                     {
-                        index++;
-                        if (INH(ref token))
+                        if (token[index].Item2 == "{")
                         {
-                            if (token[index].Item2 == "{")
+                            index++;
+                            if (CBODY(ref token))
                             {
-                                index++;
-                                if (CBODY(ref token))
+                                if (token[index].Item2 == "}")
                                 {
-                                    if(token[index].Item2 == "}")
-                                    {
-                                        index++;
-                                        return true;
-                                    }
-
+                                    index++;
+                                    return true;
                                 }
 
                             }
-                        }else{
-                            
+
                         }
                     }
+                    else
+                    {
+
+                    }
                 }
-                return true;
             }
-            else
-            {
-                Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
-                return false;
-            }
+            return true;
+        }
+        else
+        {
+            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            return false;
+        }
 
     }
 
@@ -123,6 +125,32 @@ class SyntaxGenerator
     private bool INH(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         throw new NotImplementedException();
+    }
+
+    private bool FOR(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2 == "for")
+        {
+            index++;
+            if (token[index].Item2 == "(")
+            {
+                index++;
+                if(PARAMS(ref token)){
+                    if (token[index].Item2 == ")")
+            {
+                index++;
+                if (BODY(ref token))
+                {
+                    return true;
+                }
+            }
+                }
+            }
+            
+        }
+            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            return false;
+        
     }
 
     bool AM(ref Dictionary<int, Tuple<int, string, string>> token)
@@ -139,9 +167,8 @@ class SyntaxGenerator
                 }
             }
         }
-        else if(token[index].Item2 == "class")
+        else if (token[index].Item2 == "class")
         {
-            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
             return true;
         }
         return false;
