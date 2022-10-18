@@ -208,32 +208,82 @@ class SyntaxGenerator
         }
     }
 
+    // WHILE STATEMENT
+   // IF ELSE STATEMENT;
+    bool IFELSE(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2 == "if")
+        {
+            index++;
+            if (token[index].Item2 == "(")
+            {
+                index++;
+                if (OE(ref token))
+                {
+                    if (token[index].Item2 == ")")
+                    {
+                        index++;
+                        if (BODY(ref token))
+                        {
+                            if (ELSE(ref token))
+                            {
+                                return true;
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    bool ELSE(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2 == "else")
+        {
+            index++;
+            if (BODY(ref token))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (token[index].Item2 == " ") //follow(BODY) & follow(IFELSE)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     //WHILE STATEMENT
-    // bool WHILE_ST(ref Dictionary<int, Tuple<int, string, string>> token)
-    // {
-    //     if (token[index].Item2 == "while")
-    //     {
-    //         index++;
-    //         if (token[index].Item2 == "(")
-    //         {
-    //             index++;
-    //             if (OE())
-    //             {
-    //                 if (token[index].Item2 == ")")
-    //                 {
-    //                     index++;
-    //                     if (BODY())
-    //                     {
-    //                         return true;
-    //                     }
-    //                 }
-    //             }
+    bool WHILE_ST(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2 == "while")
+        {
+            index++;
+            if (token[index].Item2 == "(")
+            {
+                index++;
+                if (OE(ref token))
+                {
+                    if (token[index].Item2 == ")")
+                    {
+                        index++;
+                        if (BODY(ref token))
+                        {
+                            return true;
+                        }
+                    }
+                }
 
-    //         }
-    //     }
-    //     return false;
-    // }
-
+            }
+        }
+        return false;
+    }
 
 
     bool BODY(ref Dictionary<int, Tuple<int, string, string>> token)
@@ -255,122 +305,123 @@ class SyntaxGenerator
         }
     }
 
-    bool SST(ref Dictionary<int, Tuple<int, string, string>> token)
-    {
-        if (token[index].Item2 == ";")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "{")
-        {
-            index++;
-            return true;
+    // bool SSTfarooq(ref Dictionary<int, Tuple<int, string, string>> token)
+    // {
+    //     if (token[index].Item2 == ";")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "{")
+    //     {
+    //         index++;
+    //         return true;
 
-        }
-        else if (token[index].Item2 == "while")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "for")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "do")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "for")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "if")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "switch")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "identifier")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "try")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "var")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "let")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "return")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "break")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "continue")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "public")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "[")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "private")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "open")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "internal")
-        {
-            index++;
-            return true;
-        }
-        else if (token[index].Item2 == "func")
-        {
-            index++;
-            return true;
-        }
-        else
-        {
-            Console.WriteLine("Lexical Error :: " + token[index]);
-            return false;
-        }
-    }
+    //     }
+    //     else if (token[index].Item2 == "while")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "for")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "do")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "for")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "if")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "switch")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "identifier")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "try")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "var")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "let")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "return")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "break")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "continue")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "public")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "[")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "private")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "open")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "internal")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else if (token[index].Item2 == "func")
+    //     {
+    //         index++;
+    //         return true;
+    //     }
+    //     else
+    //     {
+    //         Console.WriteLine("Lexical Error :: " + token[index]);
+    //         return false;
+    //     }
+    // }
 
     //OE Expression
+   
     public bool OE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
@@ -729,5 +780,366 @@ class SyntaxGenerator
     public bool PARAMS(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         return true;
+    }
+
+    //SST
+    bool SST(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+
+        if (token[index].Item2.Equals("while"))
+        {
+            if (WHILE_ST(ref token))
+                return true;
+        }
+
+        // else if (token[index].Item2.Equals("for"))
+        // {
+        //     if (FOR(ref token))
+        //         return true;
+        // }
+
+        // else if (token[index].Item2.Equals("do"))
+        // {
+        //     if (DO(ref token))
+        //         return true;
+        // }
+
+        else if (token[index].Item2.Equals("if"))
+        {
+            if (IFELSE(ref token))
+                return true;
+        }
+
+        else if (token[index].Item2.Equals("try"))
+        {
+            index++;
+            if (token[index].Item2.Equals("{"))
+            {
+                index++;
+                if (MST(ref token))
+                {
+                    if (token[index].Item2.Equals("}"))
+                    {
+                        index++;
+                        if (token[index].Item2.Equals("catch"))
+                        {
+                           if (token[index].Item2.Equals("("))
+                            {
+                                index++;
+                                if (token[index].Item2.Equals("e"))
+                                {
+                                    if (token[index].Item2.Equals(")"))
+                                    {
+                                        index++;
+                                        if (token[index].Item2.Equals("{"))
+                                        {
+                                            index++;
+                                            if (MST(ref token))
+                                            {
+                                                if (token[index].Item2.Equals("}"))
+                                                {
+                                                    index++;
+                                                    return true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        else if (token[index].Item2.Equals("return"))
+        {
+            index++;
+            if (OE(ref token))
+            {
+                if(token[index].Item2.Equals(";"))
+                {
+                    index++;
+                    return true;
+                }
+            }
+        }
+
+        else if (token[index].Item2.Equals("continue"))
+        {
+            index++;
+            if(token[index].Item2.Equals(";"))
+            {
+                index++;
+                return true;
+            }
+        }
+
+        else if (token[index].Item2.Equals("break"))
+        {
+            index++;
+            if(token[index].Item2.Equals(";"))
+            {
+                index++;
+                return true;
+            }
+        }
+
+        else if (token[index].Item2.Equals("identifier"))
+        {
+            index++;
+            if(LHS(ref token))
+            {
+                if(SST1(ref token))
+                {
+                    return true;
+                }
+            }
+        }
+
+        else if (token[index].Item2.Equals("["))
+        {
+            if(ARRAY(ref token))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    
+    bool SST1(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2.Equals("Var") || token[index].Item2.Equals("Let"))
+        {
+            index++;
+            if (token[index].Item2.Equals("identifier"))
+            {
+                index++;
+                if (token[index].Item2.Equals(":"))
+                {
+                    if (SST2(ref token))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        else if(token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("this"))
+        {
+            if (Inc_Dec(ref token))
+            {
+                return true;
+            }
+        }
+        else if(token[index].Item2.Equals("+") || token[index].Item2.Equals("-") || token[index].Item2.Equals("*") || token[index].Item2.Equals("/"))
+        {
+            if (OE(ref token))
+            {
+                return true;
+            }
+        }
+        else if(token[index].Item2.Equals("="))
+        {
+            index++;
+            if (OE(ref token))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool SST2(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2.Equals("data-type"))
+        {
+            if (DEC(ref token))
+            {
+                return true;
+            }
+        }
+        else if(token[index].Item2.Equals("identifier"))
+        {
+            if (OBJ_DEC(ref token))
+            {
+                return true;
+            }
+        }
+        else if(token[index].Item2.Equals("["))
+        {
+            if (ARRAY(ref token))
+            {
+                return true;
+            }
+        }
+        else if(token[index].Item2.Equals("="))
+        {
+            index++;
+            if (OE(ref token))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Declaration
+    bool DEC(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2.Equals("data-type") || token[index].Item2.Equals("identifier"))
+        {
+            if (DATA_TYPE(ref token))
+            {
+                if (INIT(ref token))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //Object Declaration
+    bool OBJ_DEC(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2.Equals("identifier"))
+        {
+            index++;
+            if (token[index].Item2.Equals("="))
+            {
+                index++;
+                if (token[index].Item2.Equals("identifier"))
+                {
+                    index++;
+                    if (token[index].Item2.Equals("dot"))
+                    {
+                        index++;
+                        if (token[index].Item2.Equals("init"))
+                        {
+                            index++;
+                            if (token[index].Item2.Equals("("))
+                            {
+                                index++;
+                                if (OE(ref token))
+                                {
+                                    index++;
+                                    if (token[index].Item2.Equals(")"))
+                                    {
+                                        index++;
+                                        if (token[index].Item2.Equals(";"))
+                                        {
+                                            index++;
+                                            return true;
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+        return false;
+    }
+
+    //Data Type
+     bool DATA_TYPE(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2.Equals("data-type") || token[index].Item2.Equals("identifier"))
+        {
+            index++;
+            return true;
+        }
+        return false;
+    }
+
+    bool INIT(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2.Equals("="))
+        {
+            index++;
+            if (OE(ref token))
+            {
+                 if (token[index].Item2.Equals(";"))
+                {
+                    index++;
+                    return true;
+                }
+            }
+        }
+        else if(token[index].Item2.Equals(";"))
+        {
+            index++;
+            return true;
+        }
+        return false;
+    }
+
+    // MST Multiline Statement
+    bool MST(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2 == "if" || token[index].Item2 == "while" || token[index].Item2 == "for" || token[index].Item2 == "try" ||
+            token[index].Item2 == "inc-dec" || token[index].Item2 == "return" || token[index].Item2 == "continue" ||  token[index].Item2 == "break" ||
+            token[index].Item2 == "public" || token[index].Item2 == "private" || token[index].Item2 == "open" ||  token[index].Item2 == "internal" || token[index].Item2 == "func" ||
+            token[index].Item2 == "DT" || token[index].Item2 == "identifier" || token[index].Item2 == "this" || token[index].Item2 == "[")
+        {
+            if (SST(ref token))
+                if (MST(ref token))
+                    return true;
+        }
+        else if (token[index].Item2 == "}")
+        {
+            return true;
+        }
+        return false;
+    }
+
+    //Array
+    bool ARRAY(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2.Equals("["))
+        {
+            index++;
+            if (ARR(ref token))
+            {
+                 if (token[index].Item2.Equals(";"))
+                {
+                    index++;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    bool ARR(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2.Equals("["))
+        {
+            index++;
+            if (DATA_TYPE(ref token))
+            {
+                 if (token[index].Item2.Equals("]"))
+                {
+                    index++;
+                    return true;
+                }
+            }
+        }
+        else{
+            if (DATA_TYPE(ref token))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
