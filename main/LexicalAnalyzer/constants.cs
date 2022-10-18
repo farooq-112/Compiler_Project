@@ -1,8 +1,8 @@
  class Constant{
         public static  IDictionary<string, string> punctuators = new Dictionary<string, string>() {
             {"(", "("}, {")",")"}, {"{", "{"}, {"}", "}"}, {"[", "["}, {"]", "]"}, {";","semi-colon"}, {".", "dot"}, {",", "comma"},
-            {"@", "lexical_error"}, {"$", "lexical_error"}, {"^", "lexical_error"}, {":", "lexical_error"}, {"?","lexical_error"},
-            {"`", "lexical_error"}, {"~", "lexical_error"}, {"\'", "lexical_error"}, {"_", "lexical_error"}, {"\\", "lexical_error"},
+            {"@", "lexical_error"},{"^", "lexical_error"}, {":", "colon"}, {"?","lexical_error"},
+            {"`", "lexical_error"}, {"~", "lexical_error"}, {"\'", "lexical_error"}, {"_", "lexical_error"}, {"\\", "lexical_error"},{"$", "end-mark"}
         };
 
           public static  IDictionary<string, string> operators = new Dictionary<string, string>() {
@@ -16,15 +16,15 @@
 
         // dictionary for keyword list
         public static IDictionary<string, string> dataTypes = new Dictionary<string, string>(){
-            {"int","datatype"}, {"float","data-type"}, {"bool","data-type"}, {"string","data-type"}, {"char", "data-type"}};
+            {"int","data-type"}, {"float","data-type"}, {"bool","data-type"}, {"string","data-type"}, {"char", "data-type"}};
             public static Dictionary<string,string> accessModifier = new Dictionary<string, string>(){
             {"public","access-modifier"},{"private","access-modifier"},{"filePrivate","access-modifier"},{"open","access-modifier"},{"internal","access-modifier"}
             };
          public static IDictionary<string, string> keywords = new Dictionary<string, string>(){
              {"static","static"}, {"class","class"},
-            {"while","while"}, {"for","for"}, {"struct","struct" },{"abstract","abstract" },{"implement","keyword" },{"extends","keyword" },{"enum","enum" },
+            {"while","while"}, {"for","for"}, {"struct","struct" },{"abstract","abstract" },{"implements","keyword" },{"extends","keyword" },{"enum","enum" },
             {"if","if"}, {"else","else"}, {"break","break"}, {"continous","continous"},{"var","mutable-constant"},{"let","immutable-constant"},{"Main","Main"},{"switch","Switch"},
-            {"true","bool-const"}, {"false","bool-const"}, {"protocol","interface"}, {"case","keyword"}, {"default","keyword"},{"continue","continue"}
+            {"true","bool-const"}, {"false","bool-const"}, {"protocol","interface"}, {"case","keyword"}, {"default","keyword"},{"continue","continue"}, {"func","func"}
         };
 
         // dictionary for regex
