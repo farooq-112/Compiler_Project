@@ -2,6 +2,44 @@ class X extends Yes ,implements X , Farooq {
     var farooq , noor ,abbas : int
 
     public static func Q (x : int){
+        var i :int = 10
+         while(i == 2){
+        }
+    }
+    init(x : int){
+        
+    }
+
+    deinit{
 
     }
-} $
+} 
+
+struct X extends Yes ,implements X , Farooq {
+    var farooq , noor ,abbas : int
+
+    public static func Q (x : int){
+        var i :int = 10
+    }
+    init(x : int){
+        
+    }
+
+    deinit{
+        
+    }
+} 
+
+enum A : int {
+    case X
+    case Y
+}
+
+
+func work(x : int){
+    var i :int = a
+    var i :int = "str"
+    var i :int = 9.0
+}
+
+$

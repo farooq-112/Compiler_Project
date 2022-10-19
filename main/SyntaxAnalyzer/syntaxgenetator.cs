@@ -10,6 +10,10 @@ class SyntaxGenerator
         {
             End(ref token);
         }
+        else
+        {
+            End(ref token);
+        }
     }
 
     public bool checkRule(ref Dictionary<int, Tuple<int, string, string>> token)
@@ -24,15 +28,28 @@ class SyntaxGenerator
                 {
                     if (token[index].Item2 == "class")
                     {
-                        return CLASS_SET(ref token);
+                        if (CLASS_SET(ref token))
+                        {
+                            checkRule(ref token);
+                            return true;
+                        }
                     }
                     else if (token[index].Item2 == "struct")
                     {
-                        return STRUCT_SET(ref token);
+                         if (STRUCT_SET(ref token))
+                        {
+                            checkRule(ref token);
+                            return true;
+                        }
                     }
                     else if (token[index].Item2 == "func")
                     {
-                        return FUNC_SET(ref token);
+                        if (FUNC_SET(ref token))
+                        {
+                            checkRule(ref token);
+                            return true;
+                        }
+
                     }
                     else
                     {
@@ -44,19 +61,36 @@ class SyntaxGenerator
                 {
                     if (token[index].Item2 == "class")
                     {
-                        return CLASS_SET(ref token);
+                        if (CLASS_SET(ref token))
+                        {
+                            checkRule(ref token);
+                            return true;
+                        }
                     }
                     else if (token[index].Item2 == "struct")
                     {
-                        return STRUCT_SET(ref token);
+                        if (STRUCT_SET(ref token))
+                        {
+                            checkRule(ref token);
+                            return true;
+                        }
                     }
                     else if (token[index].Item2 == "func")
                     {
-                        return FUNC_SET(ref token);
+                        if (FUNC_SET(ref token))
+                        {
+                            checkRule(ref token);
+                            return true;
+                        }
                     }
                     else if (token[index].Item2 == "enum")
                     {
-                        return ENUM_SET(ref token);
+                       
+                        if (ENUM_SET(ref token))
+                        {
+                            checkRule(ref token);
+                            return true;
+                        }
                     }
                     else
                     {
@@ -69,19 +103,35 @@ class SyntaxGenerator
             {
                 if (token[index].Item2 == "class")
                 {
-                    return CLASS_SET(ref token);
+                    if (CLASS_SET(ref token))
+                    {
+                        checkRule(ref token);
+                        return true;
+                    }
                 }
                 else if (token[index].Item2 == "struct")
                 {
-                    return STRUCT_SET(ref token);
+                    if (STRUCT_SET(ref token))
+                        {
+                            checkRule(ref token);
+                            return true;
+                        }
                 }
                 else if (token[index].Item2 == "func")
                 {
-                    return FUNC_SET(ref token);
+                    if (FUNC_SET(ref token))
+                    {
+                        checkRule(ref token);
+                        return true;
+                    }
                 }
                 else if (token[index].Item2 == "enum")
                 {
-                    return ENUM_SET(ref token);
+                     if (ENUM_SET(ref token))
+                        {
+                            checkRule(ref token);
+                            return true;
+                        }
                 }
                 else if (token[index].Item2 == "enum")
                 {
@@ -92,7 +142,7 @@ class SyntaxGenerator
                     return false;
                 }
             }
-
+            return true;
         }
 
         else
@@ -111,7 +161,68 @@ class SyntaxGenerator
 
     private bool ENUM_SET(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        return true;
+        if(token[index].Item2 == "enum"){
+            index++;
+            if(token[index].Item2 == "identifier"){
+                index++;
+                if(TYPE(ref token)){
+                    if(token[index].Item2 == "{"){
+                        index++;
+                        if(E_BODY(ref token)){
+                            return true;
+                        }else{
+                            if(token[index].Item2 == "}"){
+                                index++;
+                                return true;
+                            }
+                        }
+                    }
+                }else{
+                    if(token[index].Item2 == "{"){
+                        index++;
+                        if(E_BODY(ref token)){
+                            return true;
+                        }else{
+                            if(token[index].Item2 == "}"){
+                                index++;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }else{
+            return false;
+        }
+    }
+
+    private bool E_BODY(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if(token[index].Item3 == "case"){
+            index++;
+            if(token[index].Item2 == "identifier"){
+                index++;
+                E_BODY(ref token);
+            }
+            return false;
+        }else{
+            return false;
+        }
+    }
+
+    private bool TYPE(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if(token[index].Item2 == "colon"){
+            index++;
+            if(token[index].Item2 == "data-type"){
+                index++;
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
     }
 
     private bool FUNC_SET(ref Dictionary<int, Tuple<int, string, string>> token)
@@ -123,95 +234,147 @@ class SyntaxGenerator
                 index++;
                 if (CLASSM(ref token))
                 {
-                    index++;
-                      if (token[index].Item2 == "func")
-                {
-                    index++;
-                    if (token[index].Item2 == "identifier"){
+                    if (token[index].Item2 == "func")
+                    {
                         index++;
-                        if (token[index].Item2 == "("){
-                            index++;
-                            if(PARAMS(ref token)){
-                                if(token[index].Item2 == ")"){
-                                    index++;
-                                    if(RET_TYPE(ref token)){
-                                        if(token[index].Item2 == "{"){
-                                        index++;
-                                            if(BODY(ref token)){
-                                                if(token[index].Item2 == "}"){
-                                                    return true;
-                                                }
-                                            }else{
-                                                if(token[index].Item2 == "}"){
-                                                    return true;
-                                                }
-                                            }
-                                }
-                                    }else{
-                                       if(token[index].Item2 == "{"){
-                                        index++;
-                                            if(BODY(ref token)){
-                                                if(token[index].Item2 == "}"){
-                                                    return true;
-                                                }
-                                            }else{
-                                                if(token[index].Item2 == "}"){
-                                                    return true;
-                                                }
-                                            }
-                                }
+                        return FUNC_ELABORATE(ref token);
+
+                    }
+                }
+                else if (token[index].Item2 == "func")
+                {
+                    return FUNC_ELABORATE(ref token);
+                }
+            }
+            else if (token[index].Item2 == "abstract" || token[index].Item2 == "final" || token[index].Item2 == "static")
+            {
+                if (token[index].Item2 == "func")
+                {
+                    return FUNC_ELABORATE(ref token);
+                }
+            }
+            else if (token[index].Item2 == "func")
+            {
+                index++;
+                return FUNC_ELABORATE(ref token);
+            }
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool FUNC_ELABORATE(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+
+        if (token[index].Item2 == "identifier")
+        {
+            index++;
+            if (token[index].Item2 == "(")
+            {
+                index++;
+                if (PARAMS(ref token))
+                {
+                    if (token[index].Item2 == ")")
+                    {
+                        index++;
+                        if (RET_TYPE(ref token))
+                        {
+                            if (token[index].Item2 == "{")
+                            {
+                                index++;
+                                if (BODY(ref token))
+                                {
+                                    if (token[index].Item2 == "}")
+                                    {
+                                        return true;
                                     }
                                 }
-                            }else{
-                                if(token[index].Item2 == ")"){
-                                        index++;
-                                    if(RET_TYPE(ref token)){
-                                        if(token[index].Item2 == "{"){
-                                        index++;
-                                            if(BODY(ref token)){
-                                                if(token[index].Item2 == "}"){
-                                                    return true;
-                                                }
-                                            }else{
-                                                if(token[index].Item2 == "}"){
-                                                    return true;
-                                                }
-                                            }
+                                else
+                                {
+                                    if (token[index].Item2 == "}")
+                                    {
+                                        return true;
+                                    }
                                 }
-                                    }else{
-                                       if(token[index].Item2 == "{"){
-                                        index++;
-                                            if(BODY(ref token)){
-                                                if(token[index].Item2 == "}"){
-                                                    return true;
-                                                }
-                                            }else{
-                                                if(token[index].Item2 == "}"){
-                                                    return true;
-                                                }
-                                            }
+                            }
+                        }
+                        else
+                        {
+                            if (token[index].Item2 == "{")
+                            {
+                                index++;
+                                if (BODY(ref token))
+                                {
+                                    return true;
                                 }
+                                else
+                                {
+                                    if (token[index].Item2 == "}")
+                                    {
+                                        index++;
+                                        return true;
                                     }
                                 }
                             }
                         }
                     }
                 }
-                }
-                else if (token[index].Item2 == "func")
+                else
                 {
-                    return true;
+                    if (token[index].Item2 == ")")
+                    {
+                        index++;
+                        if (RET_TYPE(ref token))
+                        {
+                            if (token[index].Item2 == "{")
+                            {
+                                index++;
+                                if (BODY(ref token))
+                                {
+                                    if (token[index].Item2 == "}")
+                                    {
+                                        index++;
+                                        return true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (token[index].Item2 == "}")
+                                    {
+                                        index++;
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (token[index].Item2 == "{")
+                            {
+                                index++;
+                                if (BODY(ref token))
+                                {
+                                    if (token[index].Item2 == "}")
+                                    {
+                                        index++;
+                                        return true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (token[index].Item2 == "}")
+                                    {
+                                        index++;
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-            }
-            else if (token[index].Item2 == "abstract" || token[index].Item2 == "final" || token[index].Item2 == "static")
-            {
-                 if (token[index].Item2 == "func")
-                {
-                    return true;
-                }
-            }else if(token[index].Item2 == "func"){
-                index++;
-                return true;
             }
             return false;
         }
@@ -223,21 +386,97 @@ class SyntaxGenerator
 
     private bool RET_TYPE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if(token[index].Item2 == "ret-type"){
+        if (token[index].Item2 == "ret-type")
+        {
             index++;
-            if(token[index].Item2 == "data-type"){
+            if (token[index].Item2 == "data-type")
+            {
                 index++;
                 return true;
             }
             return false;
-        }else{
+        }
+        else
+        {
             return false;
         }
     }
 
     private bool STRUCT_SET(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        return true;
+         // if (token[index].Item2 == "access-modifier" || token[index].Item2 == "class" || token[index].Item2 == "abstract" || token[index].Item2 == "final" || token[index].Item2 == "static")
+        // {
+        // if (AM(ref token))
+        // {
+        if (token[index].Item2 == "struct")
+        {
+            index++;
+            if (token[index].Item2 == "identifier")
+            {
+                index++;
+                if (INH(ref token))
+                {
+                    if (token[index].Item2 == "{")
+                    {
+                        index++;
+                        if (SBODY(ref token))
+                        {
+                            if (token[index].Item2 == "}")
+                            {
+                                index++;
+                                return true;
+                            }
+
+                        }
+                        else
+                        {
+                            if (token[index].Item2 == "}")
+                            {
+                                index++;
+                                return true;
+                            }
+                        }
+
+                    }
+                }
+                else
+                {
+                    if (token[index].Item2 == "{")
+                    {
+                        index++;
+                        if (SBODY(ref token))
+                        {
+                            if (token[index].Item2 == "}")
+                            {
+                                index++;
+                                return true;
+                            }
+
+                        }
+                        else
+                        {
+                            if (token[index].Item2 == "}")
+                            {
+                                index++;
+                                return true;
+                            }
+                        }
+
+                    }
+                }
+            }
+            // }
+
+            // }else{
+
+            // }
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     public bool End(ref Dictionary<int, Tuple<int, string, string>> token)
@@ -249,7 +488,7 @@ class SyntaxGenerator
         }
         else
         {
-            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            Console.WriteLine($"RETURN FALSE {token[index].Item2.ToString()} {token[index].Item1.ToString()}");
             return false;
         }
     }
@@ -328,12 +567,54 @@ class SyntaxGenerator
         }
         else
         {
-            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
             return false;
         }
 
     }
 
+   private bool SBODY(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if (token[index].Item2 == "mutable-constant" || token[index].Item2 == "immutable-constant" || token[index].Item2 == "immutable-constant" || token[index].Item2 == "func" || token[index].Item2 == "init")
+        {
+            if (token[index].Item2 == "mutable-constant" || token[index].Item2 == "immutable-constant")
+            {
+                index++;
+                if (ATTR(ref token))
+                {
+                    SBODY(ref token);
+                }
+            }
+            else if (token[index].Item2 == "access-modifier" || token[index].Item2 == "func" || token[index].Item2 == "abstract" || token[index].Item2 == "final" || token[index].Item2 == "static")
+            {
+                if (FUNC_SET(ref token))
+                {
+                    SBODY(ref token);
+                }
+            }
+             else if (token[index].Item2 == "init" )
+            {
+                if (INIT_C(ref token))
+                {
+                    SBODY(ref token);
+                }
+            }
+
+            return false;
+
+        }
+        else if (token[index].Item2 == "access-modifier" || token[index].Item2 == "func" || token[index].Item2 == "abstract" || token[index].Item2 == "final" || token[index].Item2 == "static")
+        {
+             if (FUNC_SET(ref token))
+                {
+                    CBODY(ref token);
+                }
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
     private bool CBODY(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2 == "mutable-constant" || token[index].Item2 == "immutable-constant" || token[index].Item2 == "immutable-constant" || token[index].Item2 == "func" || token[index].Item2 == "init" || token[index].Item2 == "deinit")
@@ -350,16 +631,102 @@ class SyntaxGenerator
             {
                 if (FUNC_SET(ref token))
                 {
-                    return true;
+                    CBODY(ref token);
                 }
+            }
+             else if (token[index].Item2 == "init" )
+            {
+                if (INIT_C(ref token))
+                {
+                    CBODY(ref token);
+                }
+            }
+             else if (token[index].Item2 == "deinit" )
+            {
+                if (DEINIT(ref token))
+                {
+                    CBODY(ref token);
+                } 
             }
 
             return false;
 
         }
+        else if (token[index].Item2 == "access-modifier" || token[index].Item2 == "func" || token[index].Item2 == "abstract" || token[index].Item2 == "final" || token[index].Item2 == "static")
+        {
+             if (FUNC_SET(ref token))
+                {
+                    CBODY(ref token);
+                }
+            return false;
+        }
         else
         {
             return false;
+        }
+    }
+
+    private bool INIT_C(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if(token[index].Item2 == "init"){
+            index ++;
+            if (token[index].Item2 == "(")
+            {
+                index++;
+                if (PARAMS(ref token))
+                {
+                    if (token[index].Item2 == ")")
+                    {
+                        index++;
+                        if (token[index].Item2 == "{")
+                        {
+                            index++;
+                            if (MST(ref token))
+                        {
+                         return true;   
+                        }
+                        }
+                    }
+                }else{
+                     if (token[index].Item2 == ")")
+                    {
+                        index++;
+                        if (token[index].Item2 == "{")
+                        {
+                            index++;
+                            if (MST(ref token))
+                        {
+                         return true;   
+                        }
+                        }
+                    }
+                }
+            }
+            return false;
+        }else{
+            return false;
+        }
+    }
+
+    private bool DEINIT(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if(token[index].Item2 == "deinit"){
+            index++;
+            if(token[index].Item2 == "{"){
+                index++;
+                 
+                        
+                            if (MST(ref token))
+                        {
+                         return true;   
+                        }
+                        
+            
+            }
+            return false;
+        }
+        else{
+            return  false;
         }
     }
 
@@ -372,6 +739,7 @@ class SyntaxGenerator
             {
                 index++;
                 ATTR(ref token);
+                return true;
             }
             else
             {
@@ -381,13 +749,17 @@ class SyntaxGenerator
                     if (token[index].Item2 == "data-type")
                     {
                         index++;
-                        if(token[index].Item2 == "UnaryOperator"){
+                        if (token[index].Item2 == "UnaryOperator")
+                        {
                             index++;
-                            if(token[index].Item2 == "integer"){
+                            if (token[index].Item2 == "integer" || token[index].Item2 == "float" || token[index].Item2 == "char" || token[index].Item2 == "string" || token[index].Item2 == "identifier")
+                            {
                                 index++;
                                 return true;
                             }
-                        }else{
+                        }
+                        else
+                        {
                             return true;
                         }
                     }
@@ -650,19 +1022,12 @@ class SyntaxGenerator
 
     bool BODY(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2 == ";" || token[index].Item2 == "{" || token[index].Item2 == "while" || token[index].Item2 == "for"
-        || token[index].Item2 == "do" || token[index].Item2 == "if" || token[index].Item2 == "switch" || token[index].Item2 == "identifier" ||
-         token[index].Item2 == "try" || token[index].Item2 == "var" || token[index].Item2 == "let" || token[index].Item2 == "return" || token[index].Item2 == "break" ||
-          token[index].Item2 == "continue" || token[index].Item2 == "[" || token[index].Item2 == "public" || token[index].Item2 == "private" ||
-           token[index].Item2 == "open" || token[index].Item2 == "internal" ||
-          token[index].Item2 == "func")
+        if (MST(ref token))
         {
-            index++;
             return true;
         }
         else
         {
-            Console.WriteLine("Lexical Error :: " + token[index]);
             return false;
         }
     }
@@ -996,6 +1361,8 @@ class SyntaxGenerator
                 {
                     return true;
                 }
+            }else if(F1(ref token)){
+                return true;
             }
         }
         else if (token[index].Item2.Equals("this"))
@@ -1141,17 +1508,23 @@ class SyntaxGenerator
 
     public bool PARAMS(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if(token[index].Item2 == "identifier"){
-            if(token[index].Item2 == ":"){
+        if (token[index].Item2 == "identifier")
+        {
+            index++;
+            if (token[index].Item2 == "colon")
+            {
                 index++;
-                if(token[index].Item2 == "data-type"){
+                if (token[index].Item2 == "data-type")
+                {
                     index++;
                     PARAMS(ref token);
                 }
                 return true;
             }
             return false;
-        }else{
+        }
+        else
+        {
             return false;
         }
     }
@@ -1278,13 +1651,22 @@ class SyntaxGenerator
                 return true;
             }
         }
+        else if (token[index].Item2 == "mutable-constant" || token[index].Item2 == "immutable-constant")
+        {
+            index++;
+            if (ATTR(ref token))
+            {
+                return true;
+            }
+
+        }
         return false;
     }
 
 
     bool SST1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("Var") || token[index].Item2.Equals("Let"))
+        if (token[index].Item2.Equals("mutable-constant") || token[index].Item2.Equals("immutable-constant"))
         {
             index++;
             if (token[index].Item2.Equals("identifier"))
@@ -1462,8 +1844,8 @@ class SyntaxGenerator
     {
         if (token[index].Item2 == "if" || token[index].Item2 == "while" || token[index].Item2 == "for" || token[index].Item2 == "try" ||
             token[index].Item2 == "inc-dec" || token[index].Item2 == "return" || token[index].Item2 == "continue" || token[index].Item2 == "break" ||
-            token[index].Item2 == "public" || token[index].Item2 == "private" || token[index].Item2 == "open" || token[index].Item2 == "internal" || token[index].Item2 == "func" ||
-            token[index].Item2 == "DT" || token[index].Item2 == "identifier" || token[index].Item2 == "this" || token[index].Item2 == "[")
+            token[index].Item2 == "access-modifier" || token[index].Item2 == "func" ||
+            token[index].Item2 == "DT" || token[index].Item2 == "identifier" || token[index].Item2 == "this" || token[index].Item2 == "[" || token[index].Item2.Equals("mutable-constant") || token[index].Item2.Equals("immutable-constant"))
         {
             if (SST(ref token))
                 if (MST(ref token))
@@ -1471,6 +1853,7 @@ class SyntaxGenerator
         }
         else if (token[index].Item2 == "}")
         {
+            index++;
             return true;
         }
         return false;
