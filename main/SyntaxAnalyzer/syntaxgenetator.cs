@@ -120,10 +120,83 @@ class SyntaxGenerator
         {
             if (token[index].Item2 == "access-modifier")
             {
+                index++;
                 if (CLASSM(ref token))
                 {
                     index++;
-                    return true;
+                      if (token[index].Item2 == "func")
+                {
+                    index++;
+                    if (token[index].Item2 == "identifier"){
+                        index++;
+                        if (token[index].Item2 == "("){
+                            index++;
+                            if(PARAMS(ref token)){
+                                if(token[index].Item2 == ")"){
+                                    index++;
+                                    if(RET_TYPE(ref token)){
+                                        if(token[index].Item2 == "{"){
+                                        index++;
+                                            if(BODY(ref token)){
+                                                if(token[index].Item2 == "}"){
+                                                    return true;
+                                                }
+                                            }else{
+                                                if(token[index].Item2 == "}"){
+                                                    return true;
+                                                }
+                                            }
+                                }
+                                    }else{
+                                       if(token[index].Item2 == "{"){
+                                        index++;
+                                            if(BODY(ref token)){
+                                                if(token[index].Item2 == "}"){
+                                                    return true;
+                                                }
+                                            }else{
+                                                if(token[index].Item2 == "}"){
+                                                    return true;
+                                                }
+                                            }
+                                }
+                                    }
+                                }
+                            }else{
+                                if(token[index].Item2 == ")"){
+                                        index++;
+                                    if(RET_TYPE(ref token)){
+                                        if(token[index].Item2 == "{"){
+                                        index++;
+                                            if(BODY(ref token)){
+                                                if(token[index].Item2 == "}"){
+                                                    return true;
+                                                }
+                                            }else{
+                                                if(token[index].Item2 == "}"){
+                                                    return true;
+                                                }
+                                            }
+                                }
+                                    }else{
+                                       if(token[index].Item2 == "{"){
+                                        index++;
+                                            if(BODY(ref token)){
+                                                if(token[index].Item2 == "}"){
+                                                    return true;
+                                                }
+                                            }else{
+                                                if(token[index].Item2 == "}"){
+                                                    return true;
+                                                }
+                                            }
+                                }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 }
                 else if (token[index].Item2 == "func")
                 {
@@ -132,12 +205,32 @@ class SyntaxGenerator
             }
             else if (token[index].Item2 == "abstract" || token[index].Item2 == "final" || token[index].Item2 == "static")
             {
+                 if (token[index].Item2 == "func")
+                {
+                    return true;
+                }
+            }else if(token[index].Item2 == "func"){
+                index++;
                 return true;
             }
             return false;
         }
         else
         {
+            return false;
+        }
+    }
+
+    private bool RET_TYPE(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if(token[index].Item2 == "ret-type"){
+            index++;
+            if(token[index].Item2 == "data-type"){
+                index++;
+                return true;
+            }
+            return false;
+        }else{
             return false;
         }
     }
@@ -1048,7 +1141,19 @@ class SyntaxGenerator
 
     public bool PARAMS(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        return true;
+        if(token[index].Item2 == "identifier"){
+            if(token[index].Item2 == ":"){
+                index++;
+                if(token[index].Item2 == "data-type"){
+                    index++;
+                    PARAMS(ref token);
+                }
+                return true;
+            }
+            return false;
+        }else{
+            return false;
+        }
     }
 
     //SST

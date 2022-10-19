@@ -24,7 +24,7 @@
              {"static","static"}, {"class","class"},
             {"while","while"}, {"for","for"}, {"struct","struct" },{"abstract","abstract" },{"implements","keyword" },{"extends","keyword" },{"enum","enum" },
             {"if","if"}, {"else","else"}, {"break","break"}, {"continous","continous"},{"var","mutable-constant"},{"let","immutable-constant"},{"Main","Main"},{"switch","Switch"},
-            {"true","bool-const"}, {"false","bool-const"}, {"protocol","interface"}, {"case","keyword"}, {"default","keyword"},{"continue","continue"}, {"func","func"}
+            {"true","bool-const"}, {"false","bool-const"}, {"protocol","interface"}, {"case","keyword"}, {"default","keyword"},{"continue","continue"}, {"func","func"} {"->","return"}
         };
 
         // dictionary for regex

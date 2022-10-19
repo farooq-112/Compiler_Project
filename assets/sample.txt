@@ -1,3 +1,7 @@
 class X extends Yes ,implements X , Farooq {
     var farooq , noor ,abbas : int
+
+    public static func Q (x : int){
+
+    }
 } $
