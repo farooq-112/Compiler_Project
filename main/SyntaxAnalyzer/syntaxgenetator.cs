@@ -19,7 +19,7 @@ class SyntaxGenerator
     public bool checkRule(ref Dictionary<int, Tuple<int, string, string>> token)
     {
 
-        if (token[index].Item2 == "access-modifier" || token[index].Item2 == "class" || token[index].Item2 == "abstract" || token[index].Item2 == "final" || token[index].Item2 == "static" || token[index].Item2 == "func" || token[index].Item2 == "enum" || token[index].Item2 == "struct" || token[index].Item2 == "Main")
+        if (token[index].Item2 == "access-modifier" || token[index].Item2 == "class" || token[index].Item2 == "abstract" || token[index].Item2 == "final" || token[index].Item2 == "static" || token[index].Item2 == "func" || token[index].Item2 == "enum" || token[index].Item2 == "struct" || token[index].Item2 == "Main" || token[index].Item2 == "interface")
         {
             if (token[index].Item2 == "access-modifier")
             {
@@ -133,9 +133,21 @@ class SyntaxGenerator
                             return true;
                         }
                 }
-                else if (token[index].Item2 == "enum")
+                else if (token[index].Item2 == "Main")
                 {
-                    return MAIN_SET(ref token);
+                     if (MAIN_SET(ref token))
+                        {
+                            checkRule(ref token);
+                            return true;
+                        }
+                }
+                 else if (token[index].Item2 == "interface")
+                {
+                     if (PROTOCOL(ref token))
+                        {
+                            checkRule(ref token);
+                            return true;
+                        }
                 }
                 else
                 {
@@ -154,9 +166,46 @@ class SyntaxGenerator
 
     }
 
+    private bool PROTOCOL(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        if(token[index].Item2 == "interface"){
+            index++;
+            if(token[index].Item2 == "identifier"){
+                index++;
+                if(token[index].Item2 == "{"){
+                    index++;
+                    if(BODY(ref token)){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }else{
+            return false;
+        }
+    }
+
     private bool MAIN_SET(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        return true;
+        if(token[index].Item2 == "Main"){
+            index++;
+            if(token[index].Item2 == "("){
+            index++;
+            if(token[index].Item2 == ")"){
+            index++;
+            if(token[index].Item2 == "{"){
+            index++;
+            if(MST(ref token)){
+                return true;
+        }
+        }
+        }
+        }
+        return false;
+        }
+        else{
+            return false;
+        }
     }
 
     private bool ENUM_SET(ref Dictionary<int, Tuple<int, string, string>> token)
@@ -1007,9 +1056,12 @@ class SyntaxGenerator
                     if (token[index].Item2 == ")")
                     {
                         index++;
-                        if (BODY(ref token))
+                        if (token[index].Item2.Equals("{")){
+                            index++;
+                            if (BODY(ref token))
                         {
                             return true;
+                        }
                         }
                     }
                 }
@@ -1266,7 +1318,7 @@ class SyntaxGenerator
             }
         }
         else if (token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") ||
-                token[index].Item2.Equals(":") || token[index].Item2.Equals(";"))
+                token[index].Item2.Equals("colon") || token[index].Item2.Equals("semi-colon"))
         {
             return true;
         }

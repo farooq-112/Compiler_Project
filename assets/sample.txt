@@ -3,9 +3,11 @@ class X extends Yes ,implements X , Farooq {
 
     public static func Q (x : int){
         var i :int = 10
-         while(i == 2){
+         while(i == a){
         }
+    
     }
+
     init(x : int){
         
     }
@@ -35,11 +37,18 @@ enum A : int {
     case Y
 }
 
+protocol A {
+    
+}
 
 func work(x : int){
     var i :int = a
     var i :int = "str"
     var i :int = 9.0
 }
+
+    Main(){
+        var a: int = 10
+    }
 
 $
