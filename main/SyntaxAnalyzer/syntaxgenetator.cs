@@ -172,6 +172,14 @@ class SyntaxGenerator
             index++;
             if(token[index].Item2 == "identifier"){
                 index++;
+                if(P_IMP(ref token)){
+                    if(token[index].Item2 == "{"){
+                    index++;
+                    if(BODY(ref token)){
+                        return true;
+                    }
+                }
+                }
                 if(token[index].Item2 == "{"){
                     index++;
                     if(BODY(ref token)){
@@ -834,12 +842,13 @@ class SyntaxGenerator
                     index++;
                     if (IMP(ref token))
                     {
-
+                        return true;
                     }
                     else
                     {
-                        return true;
-                    }
+                       return true;
+                    
+                }
                 }
                 return false;
             }
@@ -872,11 +881,33 @@ class SyntaxGenerator
         }
     }
 
+    private bool P_IMP(ref Dictionary<int, Tuple<int, string, string>> token){
+          if (token[index].Item2 == "keyword")
+            {
+                index++;
+                if (token[index].Item2 == "identifier")
+                {
+                    index++;
+                    if (OTHER(ref token))
+                    {
+                        
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }else{
+                return false;
+            }
+    }
+
     private bool IMP(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2 == "comma")
-        {
-            index++;
+        // if (token[index].Item2 == "implements")
+        // {
+            // index++;
             if (token[index].Item3 == "implements")
             {
                 index++;
@@ -886,10 +917,12 @@ class SyntaxGenerator
                     if (OTHER(ref token))
                     {
                         return true;
+                    }else{
+                        return true;
                     }
                 }
             }
-        }
+        // }
         return false;
     }
 

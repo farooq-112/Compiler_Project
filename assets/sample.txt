@@ -1,4 +1,4 @@
-class X extends Yes ,implements X , Farooq {
+class X extends Yes implements X , Farooq {
     var farooq , noor ,abbas : int
 
     public static func Q (x : int){
@@ -17,7 +17,7 @@ class X extends Yes ,implements X , Farooq {
     }
 } 
 
-struct X extends Yes ,implements X , Farooq {
+struct X extends Yes implements X , Farooq {
     var farooq , noor ,abbas : int
 
     public static func Q (x : int){
@@ -37,7 +37,7 @@ enum A : int {
     case Y
 }
 
-protocol A {
+protocol A implements X , Y ,Z{
     
 }
 
