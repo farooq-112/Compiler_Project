@@ -49,6 +49,44 @@ func work(x : int){
 
     Main(){
         var a: int = 10
+        let arr:[int];
+        let arr:[[int]];
+        while(b == 10){
+            if(b < 5){
+                let arr:[int];
+            }
+            else if(a > 4){
+
+            }
+            continue;
+        }
+        if(b < 5){
+            while(b == 10){
+                if(b < 5){
+                    let arr:[int];
+                }
+                else if(a > 4){
+
+                }
+                continue;
+            }
+        }
+        else if(a > 4){
+
+        }
+        else{
+            
+        }
+        
+        try{
+            if(b < 5){
+                    let arr:[int];
+            }
+        }
+        catch(e){
+
+        }
+
     }
 
 $

@@ -991,7 +991,7 @@ class SyntaxGenerator
         }
     }
 
-    // WHILE STATEMENT
+
     // IF ELSE STATEMENT;
     bool IFELSE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
@@ -1006,13 +1006,19 @@ class SyntaxGenerator
                     if (token[index].Item2 == ")")
                     {
                         index++;
-                        if (BODY(ref token))
+                        
+                        if (token[index].Item2 == "{")
                         {
-                            if (ELSE(ref token))
+                            index++;
+                            if (BODY(ref token))
                             {
+                                if (ELSE(ref token))
+                                {
+                                    return true;
+                                }
                                 return true;
-                            }
 
+                            }
                         }
                     }
                 }
@@ -1026,9 +1032,18 @@ class SyntaxGenerator
         if (token[index].Item2 == "else")
         {
             index++;
-            if (BODY(ref token))
+            
+            if (token[index].Item2 == "{")
             {
-                return true;
+                index++;
+                if (BODY(ref token))
+                {
+                    if (token[index].Item2 == "}")
+                    {
+                        index++;
+                        return true;
+                    }
+                }
             }
         }
         else
@@ -1058,7 +1073,7 @@ class SyntaxGenerator
                         index++;
                         if (token[index].Item2.Equals("{")){
                             index++;
-                            if (BODY(ref token))
+                        if (BODY(ref token))
                         {
                             return true;
                         }
@@ -1074,19 +1089,30 @@ class SyntaxGenerator
 
     bool BODY(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (MST(ref token))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        // if (token[index].Item2 == "semi-colon")
+        // {
+        //     return true;
+        // }
+        // else if(SST(ref token))
+        // {
+        //     return true;
+        // }
+        // else if(token[index].Item2 == "{")
+        // {
+            if (MST(ref token))
+            {
+                // if (token[index].Item2 == "}")
+                // {
+                    return true;
+                // }
+            }
+        // }
+        return false;
     }
 
     // bool SSTfarooq(ref Dictionary<int, Tuple<int, string, string>> token)
     // {
-    //     if (token[index].Item2 == ";")
+    //     if (token[index].Item2 == "semi-colon")
     //     {
     //         index++;
     //         return true;
@@ -1204,8 +1230,8 @@ class SyntaxGenerator
     public bool OE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
-        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
-        token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
+        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+        token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             if (AE(ref token))
             {
@@ -1228,7 +1254,7 @@ class SyntaxGenerator
                     return true;
             }
         }
-        else if (token[index].Item2.Equals(";") || token[index].Item2.Equals(")") || token[index].Item2.Equals(":"))
+        else if (token[index].Item2.Equals("semi-colon") || token[index].Item2.Equals(")") || token[index].Item2.Equals("colon"))
         {
             return true;
         }
@@ -1258,8 +1284,8 @@ class SyntaxGenerator
     public bool AE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
-        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
-        token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
+        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+        token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             if (RE(ref token))
             {
@@ -1282,7 +1308,7 @@ class SyntaxGenerator
                     return true;
             }
         }
-        else if (token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") || token[index].Item2.Equals(";") || token[index].Item2.Equals(":"))
+        else if (token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") || token[index].Item2.Equals("colon"))
         {
             return true;
         }
@@ -1293,8 +1319,8 @@ class SyntaxGenerator
     public bool RE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
-        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
-        token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
+        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+        token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             if (E(ref token))
             {
@@ -1329,8 +1355,8 @@ class SyntaxGenerator
     public bool E(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
-            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
-            token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
+            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+            token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             if (T(ref token))
             {
@@ -1355,7 +1381,7 @@ class SyntaxGenerator
             }
         }
         else if (token[index].Item2.Equals("RelationalOperator") || token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") ||
-                token[index].Item2.Equals(")") || token[index].Item2.Equals(";") || token[index].Item2.Equals(":"))
+                token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") || token[index].Item2.Equals("colon"))
         {
             Console.WriteLine($"E1 NULL {token[index].Item2}");
             return true;
@@ -1367,8 +1393,8 @@ class SyntaxGenerator
     public bool T(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
-            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
-            token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
+            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+            token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             if (F(ref token))
             {
@@ -1393,7 +1419,7 @@ class SyntaxGenerator
 
         }
         if (token[index].Item2.Equals("PM") || token[index].Item2.Equals("RelationalOperator") || token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") ||
-                token[index].Item2.Equals(")") || token[index].Item2.Equals(";") || token[index].Item2.Equals(":"))
+                token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") || token[index].Item2.Equals("colon"))
         {
             return true;
         }
@@ -1437,9 +1463,10 @@ class SyntaxGenerator
 
             }
         }
-        else if (token[index].Item2.Equals("int-const") || token[index].Item2.Equals("bool-const") ||
-            token[index].Item2.Equals("string-const") || token[index].Item2.Equals("float-const"))
+        else if (token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+            token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
+            index++;
             return true;
         }
         else if (Inc_Dec(ref token))
@@ -1459,8 +1486,8 @@ class SyntaxGenerator
     public bool F1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("MDM") || token[index].Item2.Equals("PM") || token[index].Item2.Equals("RelationalOperator") ||
-            token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") || token[index].Item2.Equals(";") ||
-            token[index].Item2.Equals(":"))
+            token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") ||
+            token[index].Item2.Equals("colon"))
         {
             return true;
         }
@@ -1609,54 +1636,20 @@ class SyntaxGenerator
                 return true;
         }
 
-        else if (token[index].Item2.Equals("try"))
-        {
-            index++;
-            if (token[index].Item2.Equals("{"))
-            {
-                index++;
-                if (MST(ref token))
-                {
-                    if (token[index].Item2.Equals("}"))
-                    {
-                        index++;
-                        if (token[index].Item2.Equals("catch"))
-                        {
-                            if (token[index].Item2.Equals("("))
-                            {
-                                index++;
-                                if (token[index].Item2.Equals("e"))
-                                {
-                                    if (token[index].Item2.Equals(")"))
-                                    {
-                                        index++;
-                                        if (token[index].Item2.Equals("{"))
-                                        {
-                                            index++;
-                                            if (MST(ref token))
-                                            {
-                                                if (token[index].Item2.Equals("}"))
-                                                {
-                                                    index++;
-                                                    return true;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // else if (token[index].Item2.Equals("try"))
+        // {
+        //     if (TRY(ref token))
+        //     {
+        //         return true;
+        //     }
+        // }
 
         else if (token[index].Item2.Equals("return"))
         {
             index++;
             if (OE(ref token))
             {
-                if (token[index].Item2.Equals(";"))
+                if (token[index].Item2.Equals("semi-colon"))
                 {
                     index++;
                     return true;
@@ -1667,7 +1660,7 @@ class SyntaxGenerator
         else if (token[index].Item2.Equals("continue"))
         {
             index++;
-            if (token[index].Item2.Equals(";"))
+            if (token[index].Item2.Equals("semi-colon"))
             {
                 index++;
                 return true;
@@ -1677,7 +1670,7 @@ class SyntaxGenerator
         else if (token[index].Item2.Equals("break"))
         {
             index++;
-            if (token[index].Item2.Equals(";"))
+            if (token[index].Item2.Equals("semi-colon"))
             {
                 index++;
                 return true;
@@ -1693,6 +1686,10 @@ class SyntaxGenerator
                 {
                     return true;
                 }
+            }
+            else if(TRY(ref token))
+            {
+                    return true;
             }
         }
 
@@ -1710,6 +1707,10 @@ class SyntaxGenerator
             {
                 return true;
             }
+            else if(ARRAY(ref token))
+            {
+                return true;
+            }
 
         }
         return false;
@@ -1724,7 +1725,7 @@ class SyntaxGenerator
             if (token[index].Item2.Equals("identifier"))
             {
                 index++;
-                if (token[index].Item2.Equals(":"))
+                if (token[index].Item2.Equals("colon"))
                 {
                     if (SST2(ref token))
                     {
@@ -1792,6 +1793,48 @@ class SyntaxGenerator
         return false;
     }
 
+    //TRY_CATCH
+    bool TRY(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+
+        if (token[index].Item2.Equals("{"))
+        {
+            index++;
+            if (MST(ref token))
+            {
+                if (token[index].Item2.Equals("identifier"))
+                {
+                    index++;
+                    if (token[index].Item2.Equals("("))
+                    {
+                        index++;
+                        if (token[index].Item2.Equals("identifier"))
+                        {
+                            index++;
+                            if (token[index].Item2.Equals(")"))
+                            {
+                                index++;
+                                if (token[index].Item2.Equals("{"))
+                                {
+                                    index++;
+                                    if (MST(ref token))
+                                    {
+                                        if (token[index].Item2.Equals("}"))
+                                        {
+                                            index++;
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     //Declaration
     bool DEC(ref Dictionary<int, Tuple<int, string, string>> token)
     {
@@ -1835,7 +1878,7 @@ class SyntaxGenerator
                                     if (token[index].Item2.Equals(")"))
                                     {
                                         index++;
-                                        if (token[index].Item2.Equals(";"))
+                                        if (token[index].Item2.Equals("semi-colon"))
                                         {
                                             index++;
                                             return true;
@@ -1876,14 +1919,14 @@ class SyntaxGenerator
             index++;
             if (OE(ref token))
             {
-                if (token[index].Item2.Equals(";"))
+                if (token[index].Item2.Equals("semi-colon"))
                 {
                     index++;
                     return true;
                 }
             }
         }
-        else if (token[index].Item2.Equals(";"))
+        else if (token[index].Item2.Equals("semi-colon"))
         {
             index++;
             return true;
@@ -1919,10 +1962,14 @@ class SyntaxGenerator
             index++;
             if (ARR(ref token))
             {
-                if (token[index].Item2.Equals(";"))
+                if (token[index].Item2.Equals("]"))
                 {
                     index++;
-                    return true;
+                    if (token[index].Item2.Equals("semi-colon"))
+                    {
+                        index++;
+                        return true;
+                    }
                 }
             }
         }
@@ -1943,12 +1990,9 @@ class SyntaxGenerator
                 }
             }
         }
-        else
+        else if (DATA_TYPE(ref token))
         {
-            if (DATA_TYPE(ref token))
-            {
-                return true;
-            }
+            return true;
         }
         return false;
     }
