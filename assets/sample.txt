@@ -41,11 +41,19 @@ protocol A implements X , Y ,Z{
     
 }
 
+func work1(){
+    var i :int = a
+    var i :int = "str"
+    var i :int = 9.0
+}
+
 func work(x : int){
     var i :int = a
     var i :int = "str"
     var i :int = 9.0
 }
+work1();
+work(x:int);
 
     Main(){
         var a: int = 10
@@ -56,7 +64,8 @@ func work(x : int){
                 let arr:[int];
             }
             else if(a > 4){
-
+                work();
+               let arr:int = work(x:int);
             }
             continue;
         }
