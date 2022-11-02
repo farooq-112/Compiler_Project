@@ -149,38 +149,38 @@ class SyntaxGenerator
                             return true;
                         }
                 }
-                else if(token[index].Item2 == "identifier")
-                {
-                    index++;
-                    if(token[index].Item2 == "(")
-                    {
-                        index++;
-                        if(PARAMS2(ref token))
-                        {
-                            if(token[index].Item2 == ")")
-                            {
-                                index++;
-                                if(token[index].Item2 == "semi-colon")
-                                {
-                                    index++;
-                                    checkRule(ref token);
-                                    return true;
-                                }
-                            }
-                        }
-                        else if(token[index].Item2 == ")")
-                        {
-                            index++;
-                            if(token[index].Item2 == "semi-colon")
-                            {
-                                index++;
-                                checkRule(ref token);
-                                return true;
-                            }
-                        }
+                // else if(token[index].Item2 == "identifier")
+                // {
+                //     index++;
+                //     if(token[index].Item2 == "(")
+                //     {
+                //         index++;
+                //         if(PARAMS2(ref token))
+                //         {
+                //             if(token[index].Item2 == ")")
+                //             {
+                //                 index++;
+                //                 if(token[index].Item2 == "semi-colon")
+                //                 {
+                //                     index++;
+                //                     checkRule(ref token);
+                //                     return true;
+                //                 }
+                //             }
+                //         }
+                //         else if(token[index].Item2 == ")")
+                //         {
+                //             index++;
+                //             if(token[index].Item2 == "semi-colon")
+                //             {
+                //                 index++;
+                //                 checkRule(ref token);
+                //                 return true;
+                //             }
+                //         }
 
-                    }
-                }
+                //     }
+                // }
                 else
                 {
                     return false;
@@ -376,10 +376,10 @@ class SyntaxGenerator
                                 index++;
                                 if (BODY(ref token))
                                 {
-                                    if (token[index].Item2 == "}")
-                                    {
+                                    // if (token[index].Item2 == "}")
+                                    // {
                                         return true;
-                                    }
+                                    // }
                                 }
                                 else
                                 {
@@ -423,11 +423,11 @@ class SyntaxGenerator
                                 index++;
                                 if (BODY(ref token))
                                 {
-                                    if (token[index].Item2 == "}")
-                                    {
-                                        index++;
+                                    // if (token[index].Item2 == "}")
+                                    // {
+                                        // index++;
                                         return true;
-                                    }
+                                    // }
                                 }
                                 else
                                 {
@@ -446,11 +446,11 @@ class SyntaxGenerator
                                 index++;
                                 if (BODY(ref token))
                                 {
-                                    if (token[index].Item2 == "}")
-                                    {
-                                        index++;
+                                    // if (token[index].Item2 == "}")
+                                    // {
+                                        // index++;
                                         return true;
-                                    }
+                                    // }
                                 }
                                 else
                                 {
@@ -1120,11 +1120,11 @@ class SyntaxGenerator
                 index++;
                 if (BODY(ref token))
                 {
-                    if (token[index].Item2 == "}")
-                    {
-                        index++;
+                    // if (token[index].Item2 == "}")
+                    // {
+                        // index++;
                         return true;
-                    }
+                    // }
                 }
             }
         }
@@ -1528,7 +1528,7 @@ class SyntaxGenerator
         else if (token[index].Item2.Equals("this"))
         {
             index++;
-            if (token[index].Item2.Equals("."))
+            if (token[index].Item2.Equals("dot"))
             {
                 index++;
                 if (token[index].Item2.Equals("identifier"))
@@ -1575,7 +1575,6 @@ class SyntaxGenerator
         }
         else if (Inc_Dec(ref token))
         {
-            index++;
             return true;
         }
 
@@ -1585,7 +1584,8 @@ class SyntaxGenerator
     // LHS NON TERMINAL
     bool LHS(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("."))
+        
+        if (token[index].Item2.Equals("dot"))
         {
             index++;
             if (token[index].Item2.Equals("identifier"))
@@ -1597,9 +1597,39 @@ class SyntaxGenerator
             else if (token[index].Item2.Equals("("))
             {
                 index++;
-                if (PARAMS(ref token))
-                    if (token[index].Item2.Equals(")"))
+                if (PARAMS(ref token)){
+                    if (token[index].Item2.Equals(")")){
+                        index++;
+                         if(LHS(ref token))
+                        {
+                            return true;
+                        }
                         return true;
+                    }
+                }else{
+                 if (token[index].Item2.Equals(")")){
+                    index++;
+                    return true;
+                 }
+            }
+                       
+            }
+        }else if (token[index].Item2.Equals("(")){
+                index++;
+                if (PARAMS(ref token)){
+                    if (token[index].Item2.Equals(")")){
+                        index++;
+                         if(LHS(ref token))
+                        {
+                            return true;
+                        }
+                        return true;
+                    }
+                }else{
+                 if (token[index].Item2.Equals(")")){
+                    index++;
+                    return true;
+                 }
             }
         }
         return false;
@@ -1626,7 +1656,7 @@ class SyntaxGenerator
         else if (token[index].Item2.Equals("this"))
         {
             index++;
-            if (token[index].Item2.Equals("."))
+            if (token[index].Item2.Equals("dot"))
             {
                 index++;
                 if (token[index].Item2.Equals("identifier"))
@@ -1653,7 +1683,7 @@ class SyntaxGenerator
         if (token[index].Item2.Equals("this"))
         {
             index++;
-            if (token[index].Item2.Equals("."))
+            if (token[index].Item2.Equals("dot"))
             {
                 index++;
                 return true;
@@ -1739,11 +1769,7 @@ class SyntaxGenerator
         //         return true;
         // }
 
-        // else if (token[index].Item2.Equals("do"))
-        // {
-        //     if (DO(ref token))
-        //         return true;
-        // }
+        
 
         else if (token[index].Item2.Equals("if"))
         {
@@ -1791,6 +1817,11 @@ class SyntaxGenerator
                 return true;
             }
         }
+        else if (token[index].Item2.Equals("inc-dec"))
+        {
+            if (SST1(ref token))
+                return true;
+        }
 
         else if (token[index].Item2.Equals("identifier"))
         {
@@ -1804,6 +1835,11 @@ class SyntaxGenerator
             }
             else if(TRY(ref token))
             {
+                    return true;
+            }
+            else if (token[index].Item2.Equals("inc-dec"))
+            {
+                if (SST1(ref token))
                     return true;
             }
             else if(token[index].Item2.Equals("("))
@@ -1976,11 +2012,11 @@ class SyntaxGenerator
                                     index++;
                                     if (MST(ref token))
                                     {
-                                        if (token[index].Item2.Equals("}"))
-                                        {
-                                            index++;
+                                        // if (token[index].Item2.Equals("}"))
+                                        // {
+                                        //     index++;
                                             return true;
-                                        }
+                                        // }
                                     }
                                 }
                             }

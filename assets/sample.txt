@@ -52,19 +52,19 @@ func work(x : int){
     var i :int = "str"
     var i :int = 9.0
 }
-work1();
-work(x:int);
-    Main(){
+
+Main(){
         var a: int = 10 
         let arr:[int];
         let arr:[[int]];
-        while(b == 10){
+        while(b.a.fn() == 10){
+            
             if(b < 5){
                 let arr:[int];
             }
             else if(a > 4){
-                work();
-             //   a ++
+                a++
+                ++b
                let arr:int = work(x:int, 5:int);
             }
             continue;
@@ -96,8 +96,8 @@ work(x:int);
 
         }
 
-    }
-    }
+}
+
 class X extends Yes implements X , Farooq {
     var farooq , noor ,abbas : int
 

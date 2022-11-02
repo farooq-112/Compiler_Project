@@ -1,14 +1,13 @@
-struct ClassTable
+public struct ClassTable
 {
-    string name;
-    string type;
-    string accessModifier;
-    bool isStatic;
-    bool isFinal;
-    bool isAbstract;
+    public string name;
+    public string type;
+    public string accessModifier;
+    public bool isStatic;
+    public bool isFinal;
+    public bool isAbstract;
 
-
-    ClassTable(string name,string type,string accessModifier,bool isStatic,bool isFinal,bool isAbstract)
+    public ClassTable(string name,string type,string accessModifier,bool isStatic,bool isFinal,bool isAbstract)
    {
     this.name = name;
     this.type = type;
