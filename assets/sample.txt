@@ -54,9 +54,8 @@ func work(x : int){
 }
 work1();
 work(x:int);
-
     Main(){
-        var a: int = 10
+        var a: int = 10 
         let arr:[int];
         let arr:[[int]];
         while(b == 10){
@@ -65,7 +64,8 @@ work(x:int);
             }
             else if(a > 4){
                 work();
-               let arr:int = work(x:int);
+             //   a ++
+               let arr:int = work(x:int, 5:int);
             }
             continue;
         }
@@ -97,5 +97,26 @@ work(x:int);
         }
 
     }
+    }
+class X extends Yes implements X , Farooq {
+    var farooq , noor ,abbas : int
+
+    public static func Q (x : int){
+        var i :int = 10
+         while(i == a){
+        }
+    
+    }
+
+    init(x : int){
+        
+    }
+
+    deinit{
+
+    }
+} 
+
+
 
 $

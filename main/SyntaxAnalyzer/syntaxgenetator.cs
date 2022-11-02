@@ -1,6 +1,6 @@
 class SyntaxGenerator
 {
-    // List<String> token = new List<String>();
+    
     //Dictionary<int, Tuple<int, string, string>> token; chala isko k
     static int index = 1;
     public void starting(ref Dictionary<int, Tuple<int, string, string>> token)
@@ -12,7 +12,7 @@ class SyntaxGenerator
         }
         else
         {
-            End(ref token);
+            //End(ref token);
         }
     }
 
@@ -1678,7 +1678,11 @@ class SyntaxGenerator
                 if (token[index].Item2 == "data-type")
                 {
                     index++;
-                    PARAMS(ref token);
+                    if(token[index].Item2 == "comma")
+                    {
+                        index++;
+                        PARAMS(ref token);
+                    }
                 }
                 return true;
             }
@@ -1702,7 +1706,12 @@ class SyntaxGenerator
                 if (token[index].Item2 == "data-type")
                 {
                     index++;
-                    PARAMS2(ref token);
+                    if(token[index].Item2 == "comma")
+                    {
+                        index++;
+                        PARAMS2(ref token);
+                    }
+                    return true;
                 }
                 return true;
             }
