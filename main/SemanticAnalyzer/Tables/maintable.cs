@@ -1,19 +1,22 @@
-public struct MainTable
+public class MainTable
 {
     public string? name;
     public string? type;
+    public string? accessModifier;
     public string? typeModifier;
-    public List<String?> extension = new List<String?>();
-    public List<String?> implementation = new List<String?>();
-    public string? reference;
-    public MainTable(string name,string type,string typeModifier, List<String?> extension,List<String?> implementation,string reference)
+    public List<String>? parent;
+    public List<ClassTable>? refDT;
+
+    public MainTable()
+    {
+    }
+
+    public MainTable(string name,string type,string accessModifier,string typeModifier, List<String>? parent)
    {
     this.name = name;
     this.type = type;
+    this.accessModifier = accessModifier;
     this.typeModifier = typeModifier;
-    this.extension = extension;
-    this.implementation = implementation;
-    this.reference = reference;
-
+    this.parent = parent;
    }
 }

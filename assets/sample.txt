@@ -1,4 +1,4 @@
-class X extends Yes implements X , Farooq {
+public static class X extends Yes implements X , Farooq {
     var farooq , noor ,abbas : int
 
     public static func Q (x : int){
@@ -57,13 +57,13 @@ Main(){
         var a: int = 10 
         let arr:[int];
         let arr:[[int]];
-        while(b.a.fn() == 10){
+        while(b.a.fn(a:int) == 10){
             
             if(b < 5){
                 let arr:[int];
             }
             else if(a > 4){
-                a++
+                this.a++
                 ++b
                let arr:int = work(x:int, 5:int);
             }

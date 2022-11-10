@@ -2,63 +2,68 @@
 
 class SemanticAnalyzer {
 
-    int scopenum = 0;
-    Stack<int> currentscope = new Stack<int>();
-    List<ClassTable> classTable = new List<ClassTable>();
-    List<MainTable> mainTable = new List<MainTable>();
-    List<FunctionTable> functionable = new List<FunctionTable>();
+    public int scopenum = 0;
+    public Stack<int> currentscope = new Stack<int>();
+    
+    public List<MainTable> mainTableList = new List<MainTable>();
+    public MainTable mainTable = new MainTable();
+    public List<FunctionTable> functionTable = new List<FunctionTable>();
 
-bool insertMT(String name, String type, String TM, List<String?> extension, List<String?> implemetation, String reference, ref List<MainTable> mainTable)
+public bool insertMT(ref MainTable mainTable)
 {
-    MainTable m = new MainTable(name, type, TM, extension, implemetation, reference);
-    if (mainTable.Contains(m)) 
+    
+    if (mainTableList.Contains(mainTable)) 
     {
         return false;
     }
     else
     {
-        mainTable.Append(m);
+        List<ClassTable> ctable = new List<ClassTable>();
+        mainTable.refDT = ctable;
+        mainTableList.Append(mainTable);
+        Console.WriteLine(mainTableList);
         return true;
     }
+    
 }
-MainTable? lookupMT(String name,ref List<MainTable> mainTable)
+public MainTable? lookupMT(String name)
 {
-    for (int i = 0; i < mainTable.Count; i++) 
+    for (int i = 0; i < mainTableList.Count; i++) 
     {
-        if (mainTable[i].name!.Equals(name)) 
+        if (mainTableList[i].name!.Equals(name)) 
         {
-            return mainTable[i];
+            return mainTableList[i];
         }
     }
     return null;
 }
-bool insertCT(string name,string type,string accessModifier,bool isStatic,bool isFinal,bool isAbstract,ref List<ClassTable> classTable)
-{
-    ClassTable c = new ClassTable( name, type, accessModifier, isStatic, isFinal, isAbstract);
-    for (int i = 0; i < mainTable.Count; i++) 
-    {
-        ClassTable ct = classTable[i];
-        if (ct.name!.Equals(name)) 
-        {
-            classTable.Append(c);
-            return true;
-        }
-    }return false;
-}
-ClassTable? LookupCT(String Name, String className,ref List<ClassTable> classTable)
-{
-    for (int i = 0; i < classTable.Count; i++) 
-    {
-        if(classTable[i].name.Equals(className)){
-            return classTable[i];
-        }
-    }
-    return null;
-}
-bool insertFT(String name, String type, int scope,ref List<FunctionTable> functionTable)
+// bool insertCT(string name,string type,string accessModifier,bool isStatic,bool isFinal,bool isAbstract)
+// {
+//     ClassTable c = new ClassTable( name, type, accessModifier, isStatic, isFinal, isAbstract);
+//     for (int i = 0; i < mainTable.Count; i++) 
+//     {
+//         ClassTable ct = classTable[i];
+//         if (ct.name!.Equals(name)) 
+//         {
+//             classTable.Append(c);
+//             return true;
+//         }
+//     }return false;
+// }
+// ClassTable? LookupCT(String Name, String className )
+// {
+//     for (int i = 0; i < classTable.Count; i++) 
+//     {
+//         if(classTable[i].name.Equals(className)){
+//             return classTable[i];
+//         }
+//     }
+//     return null;
+// }
+bool insertFT(String name, String type, int scope)
 {
 
-        foreach(FunctionTable item in functionable) {
+        foreach(FunctionTable item in functionTable) {
             if (item.name.Equals(name) && item.scope == scope) {
                 return false;
             }

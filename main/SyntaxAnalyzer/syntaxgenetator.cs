@@ -1,7 +1,6 @@
 class SyntaxGenerator
-{
-    
-    //Dictionary<int, Tuple<int, string, string>> token; chala isko k
+{   
+    SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
     static int index = 1;
     public void starting(ref Dictionary<int, Tuple<int, string, string>> token)
     {
@@ -23,6 +22,7 @@ class SyntaxGenerator
         {
             if (token[index].Item2 == "access-modifier")
             {
+                semanticAnalyzer.mainTable.accessModifier = token[index].Item3;
                 index++;
                 if (CLASSM(ref token))
                 {
@@ -592,14 +592,25 @@ class SyntaxGenerator
         // {
         if (token[index].Item2 == "class")
         {
+            semanticAnalyzer.mainTable.type = token[index].Item3;
             index++;
             if (token[index].Item2 == "identifier")
             {
+                 var data = semanticAnalyzer.lookupMT(token[index].Item3);
+                if (data != null){
+                    Console.WriteLine("Already Exist at path");
+                    return false;
+                }else{
+                    semanticAnalyzer.mainTable.name = token[index].Item3;
+                    semanticAnalyzer.insertMT(ref semanticAnalyzer.mainTable);
+                }
                 index++;
                 if (INH(ref token))
                 {
+
                     if (token[index].Item2 == "{")
                     {
+
                         index++;
                         if (CBODY(ref token))
                         {
@@ -1062,6 +1073,7 @@ class SyntaxGenerator
     {
         if (token[index].Item2 == "abstact" || token[index].Item2 == "final" || token[index].Item2 == "static")
         {
+            semanticAnalyzer.mainTable.typeModifier = token[index].Item3;
             index++;
             return true;
 
