@@ -6,7 +6,7 @@ class SemanticAnalyzer {
     public Stack<int> currentscope = new Stack<int>();
     
     public List<MainTable> mainTableList = new List<MainTable>();
-    public MainTable mainTable = new MainTable();
+    
     public List<FunctionTable> functionTable = new List<FunctionTable>();
 
 public bool insertMT(ref MainTable mainTable)
@@ -20,7 +20,7 @@ public bool insertMT(ref MainTable mainTable)
     {
         List<ClassTable> ctable = new List<ClassTable>();
         mainTable.refDT = ctable;
-        mainTableList.Append(mainTable);
+        mainTableList.Add(mainTable);
         Console.WriteLine(mainTableList);
         return true;
     }
@@ -91,6 +91,6 @@ public void createScope()
 }
 public void destroyScope()
 {
-    currentscope.Pop();
+    // currentscope.Pop();
 }
 }

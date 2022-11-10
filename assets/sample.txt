@@ -1,4 +1,14 @@
-public static class X extends Yes implements X , Farooq {
+public static class Yes{
+
+}
+protocol J{
+
+}
+protocol K{
+
+}
+
+public static class X extends Yes implements J , K {
     var farooq , noor ,abbas : int
 
     public static func Q (x : int){
@@ -17,7 +27,7 @@ public static class X extends Yes implements X , Farooq {
     }
 } 
 
-struct X extends Yes implements X , Farooq {
+struct W extends Yes implements J , K  {
     var farooq , noor ,abbas : int
 
     public static func Q (x : int){
