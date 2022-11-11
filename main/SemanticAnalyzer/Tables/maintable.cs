@@ -5,7 +5,7 @@ public class MainTable
     public string? accessModifier;
     public string? typeModifier;
     public List<string>? parent = new List<string>();
-    public List<ClassTable>? refDT;
+    public List<ClassTable>? refDT = new List<ClassTable>();
 
     public MainTable()
     {

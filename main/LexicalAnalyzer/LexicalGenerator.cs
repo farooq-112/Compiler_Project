@@ -191,6 +191,10 @@ class LexicalGenerartor
                     return temp;
                 }
 
+            }else if (input[index + 1] == '>'){
+                temp += input[index + 1];
+                index += 2;
+                return temp;
             }
             else
             {

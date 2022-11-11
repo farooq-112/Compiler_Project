@@ -88,7 +88,7 @@ class SyntaxGenerator
                     else if (token[index].Item2 == "enum")
                     {
 
-                        if (ENUM_SET(ref token))
+                        if (ENUM_SET(ref token, ref dummyTable))
                         {
                             checkRule(ref token);
                             return true;
@@ -129,7 +129,7 @@ class SyntaxGenerator
                 }
                 else if (token[index].Item2 == "enum")
                 {
-                    if (ENUM_SET(ref token))
+                    if (ENUM_SET(ref token, ref dummyTable))
                     {
                         checkRule(ref token);
                         return true;
@@ -137,7 +137,7 @@ class SyntaxGenerator
                 }
                 else if (token[index].Item2 == "Main")
                 {
-                    if (MAIN_SET(ref token))
+                    if (MAIN_SET(ref token, ref dummyTable))
                     {
                         checkRule(ref token);
                         return true;
@@ -145,7 +145,7 @@ class SyntaxGenerator
                 }
                 else if (token[index].Item2 == "interface")
                 {
-                    if (PROTOCOL(ref token,ref dummyTable))
+                    if (PROTOCOL(ref token, ref dummyTable))
                     {
                         checkRule(ref token);
                         return true;
@@ -168,7 +168,7 @@ class SyntaxGenerator
 
     }
 
-    private bool PROTOCOL(ref Dictionary<int, Tuple<int, string, string>> token,ref MainTable dummyTable)
+    private bool PROTOCOL(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
         if (token[index].Item2 == "interface")
         {
@@ -187,14 +187,14 @@ class SyntaxGenerator
                     dummyTable.name = token[index].Item3;
                 }
                 index++;
-                if (P_IMP(ref token, ref  dummyTable))
+                if (P_IMP(ref token, ref dummyTable))
                 {
                     if (token[index].Item2 == "{")
                     {
                         semanticAnalyzer.insertMT(ref dummyTable);
                         semanticAnalyzer.createScope();
                         index++;
-                        if (BODY(ref token))
+                        if (BODY(ref token, ref dummyTable))
                         {
                             return true;
                         }
@@ -205,7 +205,7 @@ class SyntaxGenerator
                     semanticAnalyzer.insertMT(ref dummyTable);
                     semanticAnalyzer.createScope();
                     index++;
-                    if (BODY(ref token))
+                    if (BODY(ref token, ref dummyTable))
                     {
                         return true;
                     }
@@ -219,7 +219,7 @@ class SyntaxGenerator
         }
     }
 
-    private bool MAIN_SET(ref Dictionary<int, Tuple<int, string, string>> token)
+    private bool MAIN_SET(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
         if (token[index].Item2 == "Main")
         {
@@ -233,7 +233,7 @@ class SyntaxGenerator
                     if (token[index].Item2 == "{")
                     {
                         index++;
-                        if (MST(ref token))
+                        if (MST(ref token, ref dummyTable))
                         {
                             return true;
                         }
@@ -248,16 +248,28 @@ class SyntaxGenerator
         }
     }
 
-    private bool ENUM_SET(ref Dictionary<int, Tuple<int, string, string>> token)
+    private bool ENUM_SET(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
         if (token[index].Item2 == "enum")
         {
+            dummyTable.type = token[index].Item3;
             index++;
             if (token[index].Item2 == "identifier")
             {
+                var data = semanticAnalyzer.lookupMT(token[index].Item3);
+                if (data != null)
+                {
+                    Console.WriteLine("Already Exist at path");
+                    return false;
+                }
+                else
+                {
+                    dummyTable.name = token[index].Item3;
+                }
                 index++;
                 if (TYPE(ref token))
                 {
+                    semanticAnalyzer.insertMT(ref dummyTable);
                     if (token[index].Item2 == "{")
                     {
                         index++;
@@ -353,26 +365,26 @@ class SyntaxGenerator
                     if (token[index].Item2 == "func")
                     {
                         index++;
-                        return FUNC_ELABORATE(ref token);
+                        return FUNC_ELABORATE(ref token, ref dummyTable);
 
                     }
                 }
                 else if (token[index].Item2 == "func")
                 {
-                    return FUNC_ELABORATE(ref token);
+                    return FUNC_ELABORATE(ref token, ref dummyTable);
                 }
             }
             else if (token[index].Item2 == "abstract" || token[index].Item2 == "final" || token[index].Item2 == "static")
             {
                 if (token[index].Item2 == "func")
                 {
-                    return FUNC_ELABORATE(ref token);
+                    return FUNC_ELABORATE(ref token, ref dummyTable);
                 }
             }
             else if (token[index].Item2 == "func")
             {
                 index++;
-                return FUNC_ELABORATE(ref token);
+                return FUNC_ELABORATE(ref token, ref dummyTable);
             }
             return false;
         }
@@ -382,26 +394,37 @@ class SyntaxGenerator
         }
     }
 
-    bool FUNC_ELABORATE(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool FUNC_ELABORATE(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
-
+        ClassTable ctable = new ClassTable();
         if (token[index].Item2 == "identifier")
         {
+            ctable.name = token[index].Item3;
             index++;
             if (token[index].Item2 == "(")
             {
                 index++;
-                if (PARAMS(ref token))
+                if (PARAMS(ref token, ref ctable))
                 {
+
                     if (token[index].Item2 == ")")
                     {
                         index++;
-                        if (RET_TYPE(ref token))
+                        if (RET_TYPE(ref token, ref ctable))
                         {
+                            var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", ctable.name);
+                            if (data == null)
+                            {
+                                semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Variable Already Exist");
+                            }
                             if (token[index].Item2 == "{")
                             {
                                 index++;
-                                if (BODY(ref token))
+                                if (BODY(ref token, ref dummyTable))
                                 {
                                     // if (token[index].Item2 == "}")
                                     // {
@@ -419,10 +442,19 @@ class SyntaxGenerator
                         }
                         else
                         {
+                            var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", ctable.name);
+                            if (data == null)
+                            {
+                                semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Variable Already Exist");
+                            }
                             if (token[index].Item2 == "{")
                             {
                                 index++;
-                                if (BODY(ref token))
+                                if (BODY(ref token, ref dummyTable))
                                 {
                                     return true;
                                 }
@@ -443,12 +475,12 @@ class SyntaxGenerator
                     if (token[index].Item2 == ")")
                     {
                         index++;
-                        if (RET_TYPE(ref token))
+                        if (RET_TYPE(ref token, ref ctable))
                         {
                             if (token[index].Item2 == "{")
                             {
                                 index++;
-                                if (BODY(ref token))
+                                if (BODY(ref token, ref dummyTable))
                                 {
                                     // if (token[index].Item2 == "}")
                                     // {
@@ -471,7 +503,7 @@ class SyntaxGenerator
                             if (token[index].Item2 == "{")
                             {
                                 index++;
-                                if (BODY(ref token))
+                                if (BODY(ref token, ref dummyTable))
                                 {
                                     // if (token[index].Item2 == "}")
                                     // {
@@ -500,13 +532,15 @@ class SyntaxGenerator
         }
     }
 
-    private bool RET_TYPE(ref Dictionary<int, Tuple<int, string, string>> token)
+    private bool RET_TYPE(ref Dictionary<int, Tuple<int, string, string>> token, ref ClassTable ctable)
     {
         if (token[index].Item2 == "ret-type")
         {
+            ctable.type += token[index].Item3;
             index++;
             if (token[index].Item2 == "data-type")
             {
+                ctable.type += token[index].Item3;
                 index++;
                 return true;
             }
@@ -732,8 +766,9 @@ class SyntaxGenerator
         {
             if (token[index].Item2 == "mutable-constant" || token[index].Item2 == "immutable-constant")
             {
+                string mutableConst = token[index].Item3;
                 index++;
-                if (ATTR(ref token))
+                if (ATTR(ref token, ref dummyTable, ref mutableConst))
                 {
                     SBODY(ref token, ref dummyTable);
                 }
@@ -747,7 +782,7 @@ class SyntaxGenerator
             }
             else if (token[index].Item2 == "init")
             {
-                if (INIT_C(ref token))
+                if (INIT_C(ref token, ref dummyTable))
                 {
                     SBODY(ref token, ref dummyTable);
                 }
@@ -773,10 +808,13 @@ class SyntaxGenerator
     {
         if (token[index].Item2 == "mutable-constant" || token[index].Item2 == "immutable-constant" || token[index].Item2 == "immutable-constant" || token[index].Item2 == "func" || token[index].Item2 == "init" || token[index].Item2 == "deinit")
         {
+
             if (token[index].Item2 == "mutable-constant" || token[index].Item2 == "immutable-constant")
             {
+                // ClassTable ctable = new ClassTable();
+                string mutableConst = token[index].Item3;
                 index++;
-                if (ATTR(ref token))
+                if (ATTR(ref token, ref dummyTable, ref mutableConst))
                 {
                     CBODY(ref token, ref dummyTable);
                 }
@@ -790,14 +828,14 @@ class SyntaxGenerator
             }
             else if (token[index].Item2 == "init")
             {
-                if (INIT_C(ref token))
+                if (INIT_C(ref token, ref dummyTable))
                 {
                     CBODY(ref token, ref dummyTable);
                 }
             }
             else if (token[index].Item2 == "deinit")
             {
-                if (DEINIT(ref token))
+                if (DEINIT(ref token, ref dummyTable))
                 {
                     CBODY(ref token, ref dummyTable);
                 }
@@ -820,23 +858,34 @@ class SyntaxGenerator
         }
     }
 
-    private bool INIT_C(ref Dictionary<int, Tuple<int, string, string>> token)
+    private bool INIT_C(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
+        ClassTable ctable = new ClassTable();
         if (token[index].Item2 == "init")
         {
+            ctable.name = token[index].Item2;
             index++;
             if (token[index].Item2 == "(")
             {
                 index++;
-                if (PARAMS(ref token))
+                if (PARAMS(ref token, ref ctable))
                 {
                     if (token[index].Item2 == ")")
                     {
                         index++;
                         if (token[index].Item2 == "{")
                         {
+                            var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", ctable.name);
+                            if (data == null)
+                            {
+                                semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Variable Already Exist");
+                            }
                             index++;
-                            if (MST(ref token))
+                            if (MST(ref token, ref dummyTable))
                             {
                                 return true;
                             }
@@ -850,8 +899,17 @@ class SyntaxGenerator
                         index++;
                         if (token[index].Item2 == "{")
                         {
+                            var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", ctable.name);
+                            if (data == null)
+                            {
+                                semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Variable Already Exist");
+                            }
                             index++;
-                            if (MST(ref token))
+                            if (MST(ref token, ref dummyTable))
                             {
                                 return true;
                             }
@@ -867,7 +925,7 @@ class SyntaxGenerator
         }
     }
 
-    private bool DEINIT(ref Dictionary<int, Tuple<int, string, string>> token)
+    private bool DEINIT(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
         if (token[index].Item2 == "deinit")
         {
@@ -877,7 +935,7 @@ class SyntaxGenerator
                 index++;
 
 
-                if (MST(ref token))
+                if (MST(ref token, ref dummyTable))
                 {
                     return true;
                 }
@@ -892,15 +950,29 @@ class SyntaxGenerator
         }
     }
 
-    private bool ATTR(ref Dictionary<int, Tuple<int, string, string>> token)
+    private bool ATTR(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable, ref string mutableConst)
     {
+        ClassTable ctable = new ClassTable();
+        ctable.mutableConst = mutableConst;
         if (token[index].Item2 == "identifier")
         {
+            ctable.name = token[index].Item3;
             index++;
             if (token[index].Item2 == "comma")
             {
+                ctable.type = "-";
+                var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", ctable.name);
+                if (data == null)
+                {
+                    semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                }
+                else
+                {
+                    Console.WriteLine("Variable Already Exist");
+                }
                 index++;
-                ATTR(ref token);
+
+                ATTR(ref token, ref dummyTable, ref mutableConst);
                 return true;
             }
             else
@@ -910,6 +982,17 @@ class SyntaxGenerator
                     index++;
                     if (token[index].Item2 == "data-type")
                     {
+
+                        ctable.type = token[index].Item3;
+                        var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", ctable.name);
+                        if (data == null)
+                        {
+                            semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Variable Already Exist");
+                        }
                         index++;
                         if (token[index].Item2 == "UnaryOperator")
                         {
@@ -973,11 +1056,12 @@ class SyntaxGenerator
                             Console.WriteLine("Type must be Class");
                         }
                     }
-                    else{
+                    else
+                    {
                         Console.WriteLine("Dclaration Error");
                     }
                     index++;
-                    if (IMP(ref token,ref  dummyTable))
+                    if (IMP(ref token, ref dummyTable))
                     {
                         return true;
                     }
@@ -995,7 +1079,7 @@ class SyntaxGenerator
                 if (token[index].Item2 == "identifier")
                 {
                     index++;
-                    if (OTHER(ref token,ref  dummyTable))
+                    if (OTHER(ref token, ref dummyTable))
                     {
 
                     }
@@ -1053,31 +1137,32 @@ class SyntaxGenerator
         }
     }
 
-    private bool IMP(ref Dictionary<int, Tuple<int, string, string>> token,ref MainTable dummyTable)
+    private bool IMP(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
         if (token[index].Item3 == "implements")
         {
-            
+
             index++;
             if (token[index].Item2 == "identifier")
             {
                 var data = semanticAnalyzer.lookupMT(token[index].Item3);
-                    if (data != null)
+                if (data != null)
+                {
+                    if (data.type == "protocol")
                     {
-                        if (data.type == "protocol")
-                        {
-                            dummyTable.parent?.Add(data.name ?? "");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Type must be Interface");
-                        }
+                        dummyTable.parent?.Add(data.name ?? "");
                     }
-                    else{
-                        Console.WriteLine("Dclaration Error");
+                    else
+                    {
+                        Console.WriteLine("Type must be Interface");
                     }
+                }
+                else
+                {
+                    Console.WriteLine("Dclaration Error");
+                }
                 index++;
-                if (OTHER(ref token,ref dummyTable))
+                if (OTHER(ref token, ref dummyTable))
                 {
                     return true;
                 }
@@ -1098,20 +1183,21 @@ class SyntaxGenerator
             if (token[index].Item2 == "identifier")
             {
                 var data = semanticAnalyzer.lookupMT(token[index].Item3);
-                    if (data != null)
+                if (data != null)
+                {
+                    if (data.type == "protocol")
                     {
-                        if (data.type == "protocol")
-                        {
-                            dummyTable.parent?.Add(data.name ?? "");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Type must be Interface");
-                        }
+                        dummyTable.parent?.Add(data.name ?? "");
                     }
-                    else{
-                        Console.WriteLine("Dclaration Error");
+                    else
+                    {
+                        Console.WriteLine("Type must be Interface");
                     }
+                }
+                else
+                {
+                    Console.WriteLine("Dclaration Error");
+                }
                 index++;
                 if (OTHER(ref token, ref dummyTable))
                 {
@@ -1122,32 +1208,29 @@ class SyntaxGenerator
         return false;
     }
 
-    private bool FOR(ref Dictionary<int, Tuple<int, string, string>> token)
-    {
-        if (token[index].Item2 == "for")
-        {
-            index++;
-            if (token[index].Item2 == "(")
-            {
-                index++;
-                if (PARAMS(ref token))
-                {
-                    if (token[index].Item2 == ")")
-                    {
-                        index++;
-                        if (BODY(ref token))
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
+    // private bool FOR(ref Dictionary<int, Tuple<int, string, string>> token,ref MainTable dummyTable)
+    // {
+    //     if (token[index].Item2 == "for")
+    //     {
+    //         index++;
+    //         if (token[index].Item2 == "(")
+    //         {
+    //             index++;
+    //             if (PARAMS(ref token,ref ctable))
+    //             {
+    //                 if (token[index].Item2 == ")")
+    //                 {
+    //                     index++;
+    //                     if (BODY(ref token,ref dummyTable))
+    //                     {
+    //                         return true;
+    //                     }
+    //                 }
+    //             }
+    //         }
 
-        }
-        Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
-        return false;
-
-    }
+    //     }
+    //     Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
 
     bool AM(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
@@ -1206,7 +1289,7 @@ class SyntaxGenerator
 
 
     // IF ELSE STATEMENT;
-    bool IFELSE(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool IFELSE(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
         if (token[index].Item2 == "if")
         {
@@ -1223,9 +1306,9 @@ class SyntaxGenerator
                         if (token[index].Item2 == "{")
                         {
                             index++;
-                            if (BODY(ref token))
+                            if (BODY(ref token, ref dummyTable))
                             {
-                                if (ELSE(ref token))
+                                if (ELSE(ref token, ref dummyTable))
                                 {
                                     return true;
                                 }
@@ -1240,7 +1323,7 @@ class SyntaxGenerator
         return false;
     }
 
-    bool ELSE(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool ELSE(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
         if (token[index].Item2 == "else")
         {
@@ -1249,7 +1332,7 @@ class SyntaxGenerator
             if (token[index].Item2 == "{")
             {
                 index++;
-                if (BODY(ref token))
+                if (BODY(ref token, ref dummyTable))
                 {
                     // if (token[index].Item2 == "}")
                     // {
@@ -1271,7 +1354,7 @@ class SyntaxGenerator
 
 
     //WHILE STATEMENT
-    bool WHILE_ST(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool WHILE_ST(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
         if (token[index].Item2 == "while")
         {
@@ -1287,7 +1370,7 @@ class SyntaxGenerator
                         if (token[index].Item2.Equals("{"))
                         {
                             index++;
-                            if (BODY(ref token))
+                            if (BODY(ref token, ref dummyTable))
                             {
                                 return true;
                             }
@@ -1301,10 +1384,10 @@ class SyntaxGenerator
     }
 
 
-    bool BODY(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool BODY(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
 
-        if (MST(ref token))
+        if (MST(ref token, ref dummyTable))
         {
 
             return true;
@@ -1590,7 +1673,7 @@ class SyntaxGenerator
             else if (token[index].Item2.Equals("("))
             {
                 index++;
-                if (PARAMS(ref token))
+                if (CPARAMS(ref token))
                 {
                     if (token[index].Item2.Equals(")"))
                     {
@@ -1616,7 +1699,7 @@ class SyntaxGenerator
         else if (token[index].Item2.Equals("("))
         {
             index++;
-            if (PARAMS(ref token))
+            if (CPARAMS(ref token))
             {
                 if (token[index].Item2.Equals(")"))
                 {
@@ -1702,21 +1785,24 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool PARAMS(ref Dictionary<int, Tuple<int, string, string>> token)
+    public bool PARAMS(ref Dictionary<int, Tuple<int, string, string>> token, ref ClassTable ctable)
     {
         if (token[index].Item2 == "identifier")
         {
+            // ctable. = token[index].Item3;
             index++;
             if (token[index].Item2 == "colon")
             {
                 index++;
                 if (token[index].Item2 == "data-type")
                 {
+                    ctable.type = ctable.type + token[index].Item3;
                     index++;
                     if (token[index].Item2 == "comma")
                     {
+                        ctable.type = ctable.type + token[index].Item3;
                         index++;
-                        PARAMS(ref token);
+                        PARAMS(ref token, ref ctable);
                     }
                 }
                 return true;
@@ -1727,6 +1813,39 @@ class SyntaxGenerator
         {
             return false;
         }
+    }
+
+
+
+    public bool CPARAMS(ref Dictionary<int, Tuple<int, string, string>> token)
+    {
+        // if (token[index].Item2 == "identifier")
+        // {
+        //     ctable.name = token[index].Item3;
+        //     index++;
+        //     if (token[index].Item2 == "colon")
+        //     {
+        //         index++;
+        //         if (token[index].Item2 == "data-type")
+        //         {
+        //             ctable.type += token[index].Item3;
+        //             index++;
+        //             if (token[index].Item2 == "comma")
+        //             {
+        //                 ctable.type += token[index].Item3;
+        //                 index++;
+        //                 PARAMS(ref token,ref ctable);
+        //             }
+        //         }
+        //         return true;
+        //     }
+        //     return false;
+        // }
+        // else
+        // {
+        //     return false;
+        // }
+        return true;
     }
 
     public bool PARAMS2(ref Dictionary<int, Tuple<int, string, string>> token)
@@ -1759,12 +1878,12 @@ class SyntaxGenerator
     }
 
     //SST
-    bool SST(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool SST(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
 
         if (token[index].Item2.Equals("while"))
         {
-            if (WHILE_ST(ref token))
+            if (WHILE_ST(ref token, ref dummyTable))
                 return true;
         }
 
@@ -1778,7 +1897,7 @@ class SyntaxGenerator
 
         else if (token[index].Item2.Equals("if"))
         {
-            if (IFELSE(ref token))
+            if (IFELSE(ref token, ref dummyTable))
                 return true;
         }
 
@@ -1838,7 +1957,7 @@ class SyntaxGenerator
                     return true;
                 }
             }
-            else if (TRY(ref token))
+            else if (TRY(ref token, ref dummyTable))
             {
                 return true;
             }
@@ -1882,8 +2001,10 @@ class SyntaxGenerator
         }
         else if (token[index].Item2 == "mutable-constant" || token[index].Item2 == "immutable-constant")
         {
+            // ClassTable ctable = new ClassTable();
+            string mutableConst = token[index].Item3;
             index++;
-            if (ATTR(ref token))
+            if (ATTR(ref token, ref dummyTable, ref mutableConst))
             {
                 return true;
             }
@@ -1992,13 +2113,13 @@ class SyntaxGenerator
     }
 
     //TRY_CATCH
-    bool TRY(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool TRY(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
 
         if (token[index].Item2.Equals("{"))
         {
             index++;
-            if (MST(ref token))
+            if (MST(ref token, ref dummyTable))
             {
                 if (token[index].Item2.Equals("identifier"))
                 {
@@ -2015,7 +2136,7 @@ class SyntaxGenerator
                                 if (token[index].Item2.Equals("{"))
                                 {
                                     index++;
-                                    if (MST(ref token))
+                                    if (MST(ref token, ref dummyTable))
                                     {
                                         // if (token[index].Item2.Equals("}"))
                                         // {
@@ -2143,15 +2264,15 @@ class SyntaxGenerator
     }
 
     // MST Multiline Statement
-    bool MST(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool MST(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
         if (token[index].Item2 == "if" || token[index].Item2 == "while" || token[index].Item2 == "for" || token[index].Item2 == "try" ||
             token[index].Item2 == "inc-dec" || token[index].Item2 == "return" || token[index].Item2 == "continue" || token[index].Item2 == "break" ||
             token[index].Item2 == "access-modifier" || token[index].Item2 == "func" ||
             token[index].Item2 == "DT" || token[index].Item2 == "identifier" || token[index].Item2 == "this" || token[index].Item2 == "[" || token[index].Item2.Equals("mutable-constant") || token[index].Item2.Equals("immutable-constant"))
         {
-            if (SST(ref token))
-                if (MST(ref token))
+            if (SST(ref token, ref dummyTable))
+                if (MST(ref token, ref dummyTable))
                     return true;
         }
         else if (token[index].Item2 == "}")

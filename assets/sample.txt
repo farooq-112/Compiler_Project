@@ -1,5 +1,14 @@
 public static class Yes{
+  
+  init(f : int, d : float){
 
+  }
+  public static func Q (x : int, y : float) -> float{
+        var i :int = 10
+         while(i == a){
+        }
+    
+    }
 }
 protocol J{
 
@@ -11,7 +20,7 @@ protocol K{
 public static class X extends Yes implements J , K {
     var farooq , noor ,abbas : int
 
-    public static func Q (x : int){
+    public static func Q (x : int, y : float) -> float{
         var i :int = 10
          while(i == a){
         }
@@ -64,10 +73,10 @@ func work(x : int){
 }
 
 Main(){
-        var a: int = 10 
+        var a: int = 4
         let arr:[int];
         let arr:[[int]];
-        while(b.a.fn(a:int) == 10){
+        while(b.a.fn(a) == 10){
             
             if(b < 5){
                 let arr:[int];
@@ -115,7 +124,11 @@ class X extends Yes implements X , Farooq {
         var i :int = 10
          while(i == a){
         }
-    
+
+
+    func fn(a:int){
+
+    }
     }
 
     init(x : int){

@@ -4,10 +4,11 @@ public struct ClassTable
     public string type;
     public string accessModifier;
     public bool isStatic;
+    public string mutableConst;
     public bool isFinal;
     public bool isAbstract;
 
-    public ClassTable(string name,string type,string accessModifier,bool isStatic,bool isFinal,bool isAbstract)
+    public ClassTable(string name,string type,string accessModifier,bool isStatic,bool isFinal,bool isAbstract, string mutableConst)
    {
     this.name = name;
     this.type = type;
@@ -15,6 +16,6 @@ public struct ClassTable
     this.isStatic = isStatic;
     this.isFinal = isFinal;
     this.isAbstract = isAbstract;
-
+    this.mutableConst = mutableConst;
    }
 }
