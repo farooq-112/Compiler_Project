@@ -1,19 +1,11 @@
-public static class Yes{
-  
-  init(f : int, d : float){
-
-  }
-  public static func Q (x : int, y : float) -> float{
-        var i :int = 10
-         while(i == a){
-        }
-    
-    }
-}
 protocol J{
 
 }
 protocol K{
+
+}
+
+class Yes {
 
 }
 
@@ -51,19 +43,19 @@ struct W extends Yes implements J , K  {
     }
 } 
 
-enum A : int {
-    case X
-    case Y
-}
+//enum A : int {
+//case X
+  //  case Y
+//}
 
-protocol A implements X , Y ,Z{
+//protocol A implements X , Y ,Z{
     
-}
+//}
 
 func work1(){
-    var i :int = a
+    var r :int = a
     var i :int = "str"
-    var i :int = 9.0
+    var c :int = 9.0
 }
 
 func work(x : int){
@@ -76,7 +68,7 @@ Main(){
         var a: int = 4
         let arr:[int];
         let arr:[[int]];
-        while(b.a.fn(a) == 10){
+        while(b.a.fn() == 10){
             
             if(b < 5){
                 let arr:[int];
@@ -117,18 +109,17 @@ Main(){
 
 }
 
-class X extends Yes implements X , Farooq {
+class P extends Yes {
     var farooq , noor ,abbas : int
 
     public static func Q (x : int){
         var i :int = 10
          while(i == a){
         }
-
-
-    func fn(a:int){
-
     }
+
+    func K(a:int){
+
     }
 
     init(x : int){

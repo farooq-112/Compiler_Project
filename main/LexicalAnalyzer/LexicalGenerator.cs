@@ -606,8 +606,8 @@ class LexicalGenerartor
             switch (data.Value.Item2)
             {
 
-                case string someVal when new Regex(Constant.regexs["integer"]).IsMatch(data.Value.Item2):
-                    wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "integer", data.Value.Item2));
+                case string someVal when new Regex(Constant.regexs["int"]).IsMatch(data.Value.Item2):
+                    wordList.Add(data.Key, Tuple.Create(data.Value.Item1, "int", data.Value.Item2));
                     break;
 
                 case var someVal when new Regex(Constant.regexs["float"]).IsMatch(data.Value.Item2):

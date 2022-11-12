@@ -136,6 +136,7 @@ public void createScope()
 }
 public void destroyScope()
 {
-    // currentscope.Pop();
+    currentscope.Pop();
+    Console.WriteLine(scopenum);
 }
 }

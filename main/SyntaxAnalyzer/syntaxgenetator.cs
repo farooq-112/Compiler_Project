@@ -161,7 +161,7 @@ class SyntaxGenerator
 
         else
         {
-            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            // Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
             return false;
         }
 
@@ -232,6 +232,7 @@ class SyntaxGenerator
                     index++;
                     if (token[index].Item2 == "{")
                     {
+                        semanticAnalyzer.createScope();
                         index++;
                         if (MST(ref token, ref dummyTable))
                         {
@@ -272,6 +273,7 @@ class SyntaxGenerator
                     semanticAnalyzer.insertMT(ref dummyTable);
                     if (token[index].Item2 == "{")
                     {
+                        semanticAnalyzer.createScope();
                         index++;
                         if (E_BODY(ref token))
                         {
@@ -281,6 +283,7 @@ class SyntaxGenerator
                         {
                             if (token[index].Item2 == "}")
                             {
+                                semanticAnalyzer.destroyScope();
                                 index++;
                                 return true;
                             }
@@ -291,6 +294,7 @@ class SyntaxGenerator
                 {
                     if (token[index].Item2 == "{")
                     {
+                        semanticAnalyzer.createScope();
                         index++;
                         if (E_BODY(ref token))
                         {
@@ -300,6 +304,7 @@ class SyntaxGenerator
                         {
                             if (token[index].Item2 == "}")
                             {
+                                semanticAnalyzer.destroyScope();
                                 index++;
                             }
                         }
@@ -423,6 +428,7 @@ class SyntaxGenerator
                             }
                             if (token[index].Item2 == "{")
                             {
+                                semanticAnalyzer.createScope();
                                 index++;
                                 if (BODY(ref token, ref dummyTable))
                                 {
@@ -435,6 +441,7 @@ class SyntaxGenerator
                                 {
                                     if (token[index].Item2 == "}")
                                     {
+                                        semanticAnalyzer.destroyScope();
                                         return true;
                                     }
                                 }
@@ -453,6 +460,7 @@ class SyntaxGenerator
                             }
                             if (token[index].Item2 == "{")
                             {
+                                semanticAnalyzer.createScope();
                                 index++;
                                 if (BODY(ref token, ref dummyTable))
                                 {
@@ -462,6 +470,7 @@ class SyntaxGenerator
                                 {
                                     if (token[index].Item2 == "}")
                                     {
+                                        semanticAnalyzer.destroyScope();
                                         index++;
                                         return true;
                                     }
@@ -479,6 +488,7 @@ class SyntaxGenerator
                         {
                             if (token[index].Item2 == "{")
                             {
+                                semanticAnalyzer.createScope();
                                 index++;
                                 if (BODY(ref token, ref dummyTable))
                                 {
@@ -492,6 +502,7 @@ class SyntaxGenerator
                                 {
                                     if (token[index].Item2 == "}")
                                     {
+                                        semanticAnalyzer.destroyScope();
                                         index++;
                                         return true;
                                     }
@@ -502,6 +513,7 @@ class SyntaxGenerator
                         {
                             if (token[index].Item2 == "{")
                             {
+                                semanticAnalyzer.createScope();
                                 index++;
                                 if (BODY(ref token, ref dummyTable))
                                 {
@@ -515,6 +527,7 @@ class SyntaxGenerator
                                 {
                                     if (token[index].Item2 == "}")
                                     {
+                                        semanticAnalyzer.destroyScope();
                                         index++;
                                         return true;
                                     }
@@ -656,7 +669,7 @@ class SyntaxGenerator
         }
         else
         {
-            Console.WriteLine($"RETURN FALSE {token[index].Item2.ToString()} {token[index].Item1.ToString()}");
+            // Console.WriteLine($"RETURN FALSE {token[index].Item3.ToString()} {token[index].Item1.ToString()}");
             return false;
         }
     }
@@ -884,6 +897,7 @@ class SyntaxGenerator
                             {
                                 Console.WriteLine("Variable Already Exist");
                             }
+                            semanticAnalyzer.createScope();
                             index++;
                             if (MST(ref token, ref dummyTable))
                             {
@@ -908,6 +922,7 @@ class SyntaxGenerator
                             {
                                 Console.WriteLine("Variable Already Exist");
                             }
+                            semanticAnalyzer.createScope();
                             index++;
                             if (MST(ref token, ref dummyTable))
                             {
@@ -932,6 +947,7 @@ class SyntaxGenerator
             index++;
             if (token[index].Item2 == "{")
             {
+                semanticAnalyzer.createScope();
                 index++;
 
 
@@ -984,22 +1000,25 @@ class SyntaxGenerator
                     {
 
                         ctable.type = token[index].Item3;
-                        var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", ctable.name);
-                        if (data == null)
-                        {
-                            semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Variable Already Exist");
-                        }
                         index++;
                         if (token[index].Item2 == "UnaryOperator")
                         {
                             index++;
-                            if (token[index].Item2 == "integer" || token[index].Item2 == "float" || token[index].Item2 == "char" || token[index].Item2 == "string" || token[index].Item2 == "identifier")
+                            if (token[index].Item2 == "int" || token[index].Item2 == "float" || token[index].Item2 == "char" || token[index].Item2 == "string" || token[index].Item2 == "identifier")
                             {
-
+                                if (token[index].Item2 == ctable.type){
+                                     var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", ctable.name);
+                                        if (data == null)
+                                        {
+                                            semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Variable Already Exist");
+                                        }
+                                }else{
+                                    Console.WriteLine("DataType Mismatch Error at line " + token[index].Item1);
+                                }
                                 index++;
                                 if (token[index].Item2 == "(")
                                 {
@@ -1058,7 +1077,7 @@ class SyntaxGenerator
                     }
                     else
                     {
-                        Console.WriteLine("Dclaration Error");
+                        Console.WriteLine("Dclaration Error" + token[index].Item3 , token[index].Item1);
                     }
                     index++;
                     if (IMP(ref token, ref dummyTable))
@@ -1112,7 +1131,7 @@ class SyntaxGenerator
                 var data = semanticAnalyzer.lookupMT(token[index].Item3);
                 if (data != null)
                 {
-                    Console.WriteLine("Already Exist at path");
+                    Console.WriteLine("type Already Exist at path" + data.name);
                     return false;
                 }
                 else
@@ -1154,7 +1173,7 @@ class SyntaxGenerator
                     }
                     else
                     {
-                        Console.WriteLine("Type must be Interface");
+                        Console.WriteLine("Type must be Interface" + token[index].Item3, token[index].Item1);
                     }
                 }
                 else
@@ -1266,7 +1285,7 @@ class SyntaxGenerator
         }
         else
         {
-            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            // Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
             return false;
         }
     }
@@ -1282,7 +1301,7 @@ class SyntaxGenerator
         }
         else
         {
-            Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
+            // Console.WriteLine($"RETURN FALSE {token[index].Item2} {token[index].Item1}");
             return false;
         }
     }
@@ -1305,6 +1324,7 @@ class SyntaxGenerator
 
                         if (token[index].Item2 == "{")
                         {
+                            semanticAnalyzer.createScope();
                             index++;
                             if (BODY(ref token, ref dummyTable))
                             {
@@ -1331,6 +1351,7 @@ class SyntaxGenerator
 
             if (token[index].Item2 == "{")
             {
+                semanticAnalyzer.createScope();
                 index++;
                 if (BODY(ref token, ref dummyTable))
                 {
@@ -1369,6 +1390,7 @@ class SyntaxGenerator
                         index++;
                         if (token[index].Item2.Equals("{"))
                         {
+                            semanticAnalyzer.createScope();
                             index++;
                             if (BODY(ref token, ref dummyTable))
                             {
@@ -1403,7 +1425,7 @@ class SyntaxGenerator
     public bool OE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
-        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
         token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             if (AE(ref token))
@@ -1440,7 +1462,7 @@ class SyntaxGenerator
     public bool AE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
-        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
         token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             if (RE(ref token))
@@ -1475,7 +1497,7 @@ class SyntaxGenerator
     public bool RE(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
-        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+        token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
         token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             if (E(ref token))
@@ -1511,7 +1533,7 @@ class SyntaxGenerator
     public bool E(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
-            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             if (T(ref token))
@@ -1549,7 +1571,7 @@ class SyntaxGenerator
     public bool T(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
-            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+            token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             if (F(ref token))
@@ -1621,7 +1643,7 @@ class SyntaxGenerator
 
             }
         }
-        else if (token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+        else if (token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             index++;
@@ -1850,7 +1872,7 @@ class SyntaxGenerator
 
     public bool PARAMS2(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2 == "identifier" || token[index].Item2.Equals("integer") || token[index].Item2.Equals("bool-const") ||
+        if (token[index].Item2 == "identifier" || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
             index++;
@@ -2118,6 +2140,7 @@ class SyntaxGenerator
 
         if (token[index].Item2.Equals("{"))
         {
+            semanticAnalyzer.createScope();
             index++;
             if (MST(ref token, ref dummyTable))
             {
@@ -2135,6 +2158,7 @@ class SyntaxGenerator
                                 index++;
                                 if (token[index].Item2.Equals("{"))
                                 {
+                                    semanticAnalyzer.createScope();
                                     index++;
                                     if (MST(ref token, ref dummyTable))
                                     {
