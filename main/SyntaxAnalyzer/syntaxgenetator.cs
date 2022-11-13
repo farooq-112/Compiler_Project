@@ -665,11 +665,30 @@ class SyntaxGenerator
         if (token[index].Item3 == "$")
         {
             Console.WriteLine($"No Syntax Error");
+           foreach (var item in semanticAnalyzer.mainTableList)
+          
+            {
+                Console.WriteLine($" Generated Class -> {item.name} | {item.type} | {item.accessModifier} | {item.typeModifier} ");
+                 if(item.parent != null){
+                    foreach (var j in item.parent)
+                {
+                    Console.WriteLine($" parent  of : {item.name} -> {j}");
+                }
+                }
+               if (item.refDT != null)
+               {
+                 foreach (var i in item.refDT)
+                {
+                    Console.WriteLine($" Attributes of Class : {item.name} is -> {i.name} | {i.type} | {i.accessModifier} | {i.mutableConst} ");
+                }
+               }
+               
+            }
             return true;
         }
         else
         {
-            // Console.WriteLine($"RETURN FALSE {token[index].Item3.ToString()} {token[index].Item1.ToString()}");
+            Console.WriteLine($"RETURN FALSE {token[index].Item3.ToString()} {token[index].Item1.ToString()}");
             return false;
         }
     }
@@ -1549,7 +1568,7 @@ class SyntaxGenerator
 
     public bool E1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("PM"))
+        if (token[index].Item2.Equals("PlusMinus"))
         {
             index++;
             if (T(ref token))
@@ -1586,7 +1605,7 @@ class SyntaxGenerator
 
     public bool T1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("MDM"))
+        if (token[index].Item2.Equals("MultipyDivide"))
         {
             index++;
             if (F(ref token))
@@ -1596,7 +1615,7 @@ class SyntaxGenerator
             }
 
         }
-        if (token[index].Item2.Equals("PM") || token[index].Item2.Equals("RelationalOperator") || token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") ||
+        if (token[index].Item2.Equals("PlusMinus") || token[index].Item2.Equals("RelationalOperator") || token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") ||
                 token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") || token[index].Item2.Equals("colon"))
         {
             return true;
@@ -1620,6 +1639,9 @@ class SyntaxGenerator
             }
             else if (F1(ref token))
             {
+                return true;
+            }
+            else{
                 return true;
             }
         }
@@ -1665,7 +1687,7 @@ class SyntaxGenerator
 
     public bool F1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("MDM") || token[index].Item2.Equals("PM") || token[index].Item2.Equals("RelationalOperator") ||
+        if (token[index].Item2.Equals("MultipyDivide") || token[index].Item2.Equals("PlusMinus") || token[index].Item2.Equals("RelationalOperator") ||
             token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") ||
             token[index].Item2.Equals("colon"))
         {
@@ -2025,8 +2047,7 @@ class SyntaxGenerator
         {
             // ClassTable ctable = new ClassTable();
             string mutableConst = token[index].Item3;
-            index++;
-            if (ATTR(ref token, ref dummyTable, ref mutableConst))
+            if (SST1(ref token))
             {
                 return true;
             }
@@ -2050,6 +2071,7 @@ class SyntaxGenerator
                 index++;
                 if (token[index].Item2.Equals("colon"))
                 {
+                    index++;
                     if (SST2(ref token))
                     {
                         return true;
@@ -2064,7 +2086,7 @@ class SyntaxGenerator
                 return true;
             }
         }
-        else if (token[index].Item2.Equals("+") || token[index].Item2.Equals("-") || token[index].Item2.Equals("*") || token[index].Item2.Equals("/"))
+        else if (token[index].Item2.Equals("PlusMinus") || token[index].Item2.Equals("PlusMinus") || token[index].Item2.Equals("MultipyDivide") || token[index].Item2.Equals("/"))
         {
             if (OE(ref token))
             {
@@ -2267,7 +2289,7 @@ class SyntaxGenerator
 
     bool INIT(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("="))
+        if (token[index].Item2.Equals("UnaryOperator"))
         {
             index++;
             if (OE(ref token))

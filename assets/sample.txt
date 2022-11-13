@@ -13,7 +13,7 @@ public static class X extends Yes implements J , K {
     var farooq , noor ,abbas : int
 
     public static func Q (x : int, y : float) -> float{
-        var i :int = 10
+        var i :int = 10;
          while(i == a){
         }
     
@@ -30,9 +30,8 @@ public static class X extends Yes implements J , K {
 
 struct W extends Yes implements J , K  {
     var farooq , noor ,abbas : int
-
     public static func Q (x : int){
-        var i :int = 10
+        var i :int = 10;
     }
     init(x : int){
         
@@ -53,51 +52,20 @@ struct W extends Yes implements J , K  {
 //}
 
 func work1(){
-    var r :int = a
-    var i :int = "str"
-    var c :int = 9.0
+    var r:int = 0;
+    var t:int;
 }
 
 func work(x : int){
-    var i :int = a
-    var i :int = "str"
-    var i :int = 9.0
+    //var i,j,k :int
+    var i: int = 0;
+    this.id.id
 }
 
 Main(){
-        var a: int = 4
+        var a: int = 4;
         let arr:[int];
         let arr:[[int]];
-        while(b.a.fn() == 10){
-            
-            if(b < 5){
-                let arr:[int];
-            }
-            else if(a > 4){
-                this.a++
-                ++b
-               let arr:int = work(x:int, 5:int);
-            }
-            continue;
-        }
-        if(b < 5){
-            while(b == 10){
-                if(b < 5){
-                    let arr:[int];
-                }
-                else if(a > 4){
-
-                }
-                continue;
-            }
-        }
-        else if(a > 4){
-
-        }
-        else{
-            
-        }
-        
         try{
             if(b < 5){
                     let arr:[int];
@@ -108,28 +76,6 @@ Main(){
         }
 
 }
-
-class P extends Yes {
-    var farooq , noor ,abbas : int
-
-    public static func Q (x : int){
-        var i :int = 10
-         while(i == a){
-        }
-    }
-
-    func K(a:int){
-
-    }
-
-    init(x : int){
-        
-    }
-
-    deinit{
-
-    }
-} 
 
 
 
