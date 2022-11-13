@@ -1,81 +1,106 @@
-protocol J{
+func gst(){
+    var a, y:int = 6;
+    var x : int = 3;
+    while(a < y){
+        var b : int = 10;
+        if(a == b && c == d){
 
-}
-protocol K{
-
-}
-
-class Yes {
-
-}
-
-public static class X extends Yes implements J , K {
-    var farooq , noor ,abbas : int
-
-    public static func Q (x : int, y : float) -> float{
-        var i :int = 10;
-         while(i == a){
         }
+}
     
-    }
-
-    init(x : int){
-        
-    }
-
-    deinit{
-
-    }
-} 
-
-struct W extends Yes implements J , K  {
-    var farooq , noor ,abbas : int
-    public static func Q (x : int){
-        var i :int = 10;
-    }
-    init(x : int){
-        
-    }
-
-    deinit{
-        
-    }
-} 
-
-//enum A : int {
-//case X
-  //  case Y
+}
+//class A {
+//    var farooq , noor ,abbas : int = 10
+//    var r , t ,d : int
+//    var w , e ,m : float
+//
+//func mst(){
+//    var a , n : int = 6;
+//    var q : int = 6;
+//    
 //}
-
-//protocol A implements X , Y ,Z{
-    
 //}
-
-func work1(){
-    var r:int = 0;
-    var t:int;
-}
-
-func work(x : int){
-    //var i,j,k :int
-    var i: int = 0;
-    this.id.id
-}
-
-Main(){
-        var a: int = 4;
-        let arr:[int];
-        let arr:[[int]];
-        try{
-            if(b < 5){
-                    let arr:[int];
-            }
-        }
-        catch(e){
-
-        }
-
-}
+//
+//
+//
+//protocol J{
+//
+//}
+//protocol K{
+//
+//}
+//
+//class Yes {
+//
+//}
+//
+//public static class L extends Yes implements J , K {
+//    var farooq , noor ,abbas : int
+//
+//    public static func Q (x : int, y : float) -> float{
+//        var i :int = 10;
+//        var a :int = 10;
+//         while(i == a){
+//        }
+//    
+//    }
+//
+//    init(x : int){
+//        
+//    }
+//
+//    deinit{
+//
+//    }
+//} 
+//
+//struct W extends Yes implements J , K  {
+//    var farooq , noor ,abbas : int
+//    public static func Q (x : int){
+//        var i :int = 10;
+//    }
+//    init(x : int){
+//        
+//    }
+//
+//    deinit{
+//        
+//    }
+//} 
+//
+////enum A : int {
+////case X
+//  //  case Y
+////}
+//
+////protocol A implements X , Y ,Z{
+//    
+////}
+//
+//func work1(){
+//    var r:int = 0;
+//    var t:int;
+//}
+//
+//func work(x : int){
+//    //var i,j,k :int
+//    var i: int = 0;
+//    this.id.id
+//}
+//
+//Main(){
+//        let arr:[[int]];
+//        try{
+//            var a: int = 4;
+//            if(a == 5){
+//                    let arr:[int];
+//            }
+//        }
+//        catch(e){
+//
+//        }
+//
+//}
 
 
 

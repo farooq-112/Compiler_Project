@@ -511,6 +511,15 @@ class SyntaxGenerator
                         }
                         else
                         {
+                            var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", ctable.name);
+                            if (data == null)
+                            {
+                                semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Variable Already Exist");
+                            }
                             if (token[index].Item2 == "{")
                             {
                                 semanticAnalyzer.createScope();
@@ -665,24 +674,30 @@ class SyntaxGenerator
         if (token[index].Item3 == "$")
         {
             Console.WriteLine($"No Syntax Error");
-           foreach (var item in semanticAnalyzer.mainTableList)
-          
+            foreach (var item in semanticAnalyzer.mainTableList)
+
             {
                 Console.WriteLine($" Generated Class -> {item.name} | {item.type} | {item.accessModifier} | {item.typeModifier} ");
-                 if(item.parent != null){
+                if (item.parent != null)
+                {
                     foreach (var j in item.parent)
+                    {
+                        Console.WriteLine($" parent  of : {item.name} -> {j}");
+                    }
+                }
+                if (item.refDT != null)
                 {
-                    Console.WriteLine($" parent  of : {item.name} -> {j}");
+                    foreach (var i in item.refDT)
+                    {
+                        Console.WriteLine($" Attributes and Methods of Class : {item.name} is -> {i.name} | {i.type} | {i.accessModifier} | {i.mutableConst} ");
+                    }
                 }
-                }
-               if (item.refDT != null)
-               {
-                 foreach (var i in item.refDT)
-                {
-                    Console.WriteLine($" Attributes of Class : {item.name} is -> {i.name} | {i.type} | {i.accessModifier} | {i.mutableConst} ");
-                }
-               }
-               
+
+            }
+            foreach (var n in semanticAnalyzer.functionTable)
+
+            {
+                Console.WriteLine($" Function and Attr with Scope -> {n.name} | {n.type} | {n.scope}");
             }
             return true;
         }
@@ -991,20 +1006,11 @@ class SyntaxGenerator
         ctable.mutableConst = mutableConst;
         if (token[index].Item2 == "identifier")
         {
-            ctable.name = token[index].Item3;
+            semanticAnalyzer.identifiers.Add(token[index].Item3);
             index++;
             if (token[index].Item2 == "comma")
             {
-                ctable.type = "-";
-                var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", ctable.name);
-                if (data == null)
-                {
-                    semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
-                }
-                else
-                {
-                    Console.WriteLine("Variable Already Exist");
-                }
+                
                 index++;
 
                 ATTR(ref token, ref dummyTable, ref mutableConst);
@@ -1025,17 +1031,25 @@ class SyntaxGenerator
                             index++;
                             if (token[index].Item2 == "int" || token[index].Item2 == "float" || token[index].Item2 == "char" || token[index].Item2 == "string" || token[index].Item2 == "identifier")
                             {
-                                if (token[index].Item2 == ctable.type){
-                                     var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", ctable.name);
-                                        if (data == null)
-                                        {
-                                            semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Variable Already Exist");
-                                        }
-                                }else{
+                                if (token[index].Item2 == ctable.type)
+                                {
+                                    foreach (var item in semanticAnalyzer.identifiers)
+                                    {
+                                        var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", item);
+                                    if (data == null)
+                                    {
+                                        ctable.name = item;
+                                        semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Variable Already Exist");
+                                    }
+                                    }
+                                    semanticAnalyzer.identifiers.Clear();
+                                }
+                                else
+                                {
                                     Console.WriteLine("DataType Mismatch Error at line " + token[index].Item1);
                                 }
                                 index++;
@@ -1060,6 +1074,20 @@ class SyntaxGenerator
                         }
                         else
                         {
+                             foreach (var item in semanticAnalyzer.identifiers)
+                                    {
+                                        var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", item);
+                                    if (data == null)
+                                    {
+                                        ctable.name = item;
+                                        semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Variable Already Exist");
+                                    }
+                                    }
+                                    semanticAnalyzer.identifiers.Clear();
                             return true;
                         }
                     }
@@ -1096,7 +1124,7 @@ class SyntaxGenerator
                     }
                     else
                     {
-                        Console.WriteLine("Dclaration Error" + token[index].Item3 , token[index].Item1);
+                        Console.WriteLine("Dclaration Error" + token[index].Item3, token[index].Item1);
                     }
                     index++;
                     if (IMP(ref token, ref dummyTable))
@@ -1459,7 +1487,7 @@ class SyntaxGenerator
 
     public bool OE1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        if (token[index].Item2.Equals("OR"))
+        if (token[index].Item2.Equals("Logical-Operator"))
         {
             index++;
             if (AE(ref token))
@@ -1505,7 +1533,7 @@ class SyntaxGenerator
                     return true;
             }
         }
-        else if (token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") || token[index].Item2.Equals("colon"))
+        else if (token[index].Item2.Equals("Logical-Operator") || token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") || token[index].Item2.Equals("colon"))
         {
             return true;
         }
@@ -1519,9 +1547,10 @@ class SyntaxGenerator
         token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
         token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
-            if (E(ref token))
+            CompatValues cValue = new CompatValues();
+            if (E(ref token, ref cValue))
             {
-                if (RE1(ref token))
+                if (RE1(ref token, ref cValue))
                     return true;
             }
 
@@ -1529,18 +1558,18 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool RE1(ref Dictionary<int, Tuple<int, string, string>> token)
+    public bool RE1(ref Dictionary<int, Tuple<int, string, string>> token , ref CompatValues cvalues)
     {
         if (token[index].Item2.Equals("RelationalOperator"))
         {
             index++;
-            if (E(ref token))
+            if (E(ref token, ref cvalues))
             {
-                if (RE1(ref token))
+                if (RE1(ref token,ref cvalues))
                     return true;
             }
         }
-        else if (token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") ||
+        else if (token[index].Item2.Equals("Logical-Operator") || token[index].Item2.Equals(")") ||
                 token[index].Item2.Equals("colon") || token[index].Item2.Equals("semi-colon"))
         {
             return true;
@@ -1549,15 +1578,15 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool E(ref Dictionary<int, Tuple<int, string, string>> token)
+    public bool E(ref Dictionary<int, Tuple<int, string, string>> token , ref CompatValues cvalues)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
             token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
-            if (T(ref token))
+            if (T(ref token, ref cvalues))
             {
-                if (E1(ref token))
+                if (E1(ref token, ref cvalues))
                     return true;
 
             }
@@ -1566,18 +1595,18 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool E1(ref Dictionary<int, Tuple<int, string, string>> token)
+    public bool E1(ref Dictionary<int, Tuple<int, string, string>> token,ref CompatValues cvalues)
     {
         if (token[index].Item2.Equals("PlusMinus"))
         {
             index++;
-            if (T(ref token))
+            if (T(ref token, ref cvalues))
             {
-                if (E1(ref token))
+                if (E1(ref token, ref cvalues))
                     return true;
             }
         }
-        else if (token[index].Item2.Equals("RelationalOperator") || token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") ||
+        else if (token[index].Item2.Equals("RelationalOperator") ||  token[index].Item2.Equals("Logical-Operator") ||
                 token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") || token[index].Item2.Equals("colon"))
         {
             // Console.WriteLine($"E1 NULL {token[index].Item2}");
@@ -1587,15 +1616,15 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool T(ref Dictionary<int, Tuple<int, string, string>> token)
+    public bool T(ref Dictionary<int, Tuple<int, string, string>> token,ref CompatValues cvalues)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
             token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
-            if (F(ref token))
+            if (F(ref token, ref cvalues))
             {
-                if (T1(ref token))
+                if (T1(ref token, ref cvalues))
                     return true;
             }
 
@@ -1603,19 +1632,19 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool T1(ref Dictionary<int, Tuple<int, string, string>> token)
+    public bool T1(ref Dictionary<int, Tuple<int, string, string>> token,ref CompatValues cvalues)
     {
         if (token[index].Item2.Equals("MultipyDivide"))
         {
             index++;
-            if (F(ref token))
+            if (F(ref token, ref cvalues))
             {
-                if (T1(ref token))
+                if (T1(ref token, ref cvalues))
                     return true;
             }
 
         }
-        if (token[index].Item2.Equals("PlusMinus") || token[index].Item2.Equals("RelationalOperator") || token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") ||
+        if (token[index].Item2.Equals("PlusMinus") || token[index].Item2.Equals("RelationalOperator") || token[index].Item2.Equals("Logical-Operator") ||
                 token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") || token[index].Item2.Equals("colon"))
         {
             return true;
@@ -1625,23 +1654,49 @@ class SyntaxGenerator
     }
 
 
-    public bool F(ref Dictionary<int, Tuple<int, string, string>> token)
+    public bool F(ref Dictionary<int, Tuple<int, string, string>> token, ref CompatValues cvalues)
     {
+        // T1 = ID;
+        // T2 = OperatingSystem ;
+        // T3 = IDictionary;
+        // T1 = compatibility(T1,T2,T3);
         if (token[index].Item2.Equals("identifier"))
         {
+            
+           for (int i = semanticAnalyzer.currentscope.Count; i > 0; i--)
+           {
+             var data = semanticAnalyzer.lookupFT(token[index].Item3, i);
+            if (data != null)
+            {   
+                if (cvalues.oper != ""){
+                    cvalues.right = token[index].Item3;
+                }else{
+                    cvalues.left = token[index].Item3;
+                }
+                break;
+            }
+            else
+            {
+                if(i == 1){
+                Console.WriteLine($"{token[index].Item3} : Not Initialized  at Line {token[index].Item1}");
+                }
+                
+            }
+           }
             index++;
             if (LHS(ref token))
             {
-                if (F1(ref token))
+                if (F1(ref token, ref cvalues))
                 {
                     return true;
                 }
             }
-            else if (F1(ref token))
+            else if (F1(ref token, ref cvalues))
             {
                 return true;
             }
-            else{
+            else
+            {
                 return true;
             }
         }
@@ -1685,12 +1740,13 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool F1(ref Dictionary<int, Tuple<int, string, string>> token)
+    public bool F1(ref Dictionary<int, Tuple<int, string, string>> token,ref CompatValues cvalues)
     {
         if (token[index].Item2.Equals("MultipyDivide") || token[index].Item2.Equals("PlusMinus") || token[index].Item2.Equals("RelationalOperator") ||
-            token[index].Item2.Equals("AND") || token[index].Item2.Equals("OR") || token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") ||
+            token[index].Item2.Equals("Logical-Operator")  || token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") ||
             token[index].Item2.Equals("colon"))
         {
+            cvalues.oper = token[index].Item3;
             return true;
         }
         else if (Inc_Dec(ref token))
@@ -2033,6 +2089,17 @@ class SyntaxGenerator
                         return true;
                     }
                 }
+            }else if(token[index].Item2.Equals("UnaryOperator")){
+                index++;
+                if(OE(ref token)){
+                     if (token[index].Item2.Equals("semi-colon"))
+                {
+                    index++;
+                   return true;
+                }
+                    
+                
+                }
             }
         }
 
@@ -2063,22 +2130,55 @@ class SyntaxGenerator
 
     bool SST1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
+        FunctionTable fTable = new FunctionTable();
         if (token[index].Item2.Equals("mutable-constant") || token[index].Item2.Equals("immutable-constant"))
         {
             index++;
             if (token[index].Item2.Equals("identifier"))
             {
+                semanticAnalyzer.identifiers.Add(token[index].Item3);
                 index++;
                 if (token[index].Item2.Equals("colon"))
                 {
                     index++;
-                    if (SST2(ref token))
+                    if (SST2(ref token, ref fTable))
+                    {
+                        return true;
+                    }
+                }
+                else if (token[index].Item2.Equals("comma"))
+                {
+                    index++;
+                    if (SST1(ref token))
                     {
                         return true;
                     }
                 }
             }
         }
+        else if (token[index].Item2.Equals("identifier"))
+        {
+            semanticAnalyzer.identifiers.Add(token[index].Item3);
+            index++;
+            if (token[index].Item2.Equals("colon"))
+            {
+                index++;
+                if (SST2(ref token, ref fTable))
+                {
+                    return true;
+                }
+            }
+            else if (token[index].Item2.Equals("comma"))
+            {
+                fTable.name = token[index].Item3;
+                index++;
+                if (SST1(ref token))
+                {
+                    return true;
+                }
+            }
+        }
+
         else if (token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("this"))
         {
             if (Inc_Dec(ref token))
@@ -2093,7 +2193,7 @@ class SyntaxGenerator
                 return true;
             }
         }
-        else if (token[index].Item2.Equals("="))
+        else if (token[index].Item2.Equals("UnaryOperator"))
         {
             index++;
             if (OE(ref token))
@@ -2107,13 +2207,14 @@ class SyntaxGenerator
 
     bool FUNC_IN(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-
+        FunctionTable fTable = new FunctionTable();
         if (token[index].Item2.Equals("identifier"))
         {
+            fTable.name = token[index].Item3;
             index++;
             if (token[index].Item2.Equals("colon"))
             {
-                if (SST2(ref token))
+                if (SST2(ref token, ref fTable))
                 {
                     return true;
                 }
@@ -2122,18 +2223,19 @@ class SyntaxGenerator
         return false;
     }
 
-    bool SST2(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool SST2(ref Dictionary<int, Tuple<int, string, string>> token, ref FunctionTable fTable)
     {
         if (token[index].Item2.Equals("data-type"))
         {
-            if (DEC(ref token))
+
+            if (DEC(ref token, ref fTable))
             {
                 return true;
             }
         }
         else if (token[index].Item2.Equals("identifier"))
         {
-            if (OBJ_DEC(ref token))
+            if (OBJ_DEC(ref token, ref fTable))
             {
                 return true;
             }
@@ -2145,7 +2247,7 @@ class SyntaxGenerator
                 return true;
             }
         }
-        else if (token[index].Item2.Equals("="))
+        else if (token[index].Item2.Equals("UnaryOperator"))
         {
             index++;
             if (OE(ref token))
@@ -2201,10 +2303,28 @@ class SyntaxGenerator
     }
 
     //Declaration
-    bool DEC(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool DEC(ref Dictionary<int, Tuple<int, string, string>> token, ref FunctionTable fTable)
     {
         if (token[index].Item2.Equals("data-type") || token[index].Item2.Equals("identifier"))
         {
+
+            foreach (var item in semanticAnalyzer.identifiers)
+            {
+                fTable.name = item;
+                fTable.type = token[index].Item3;
+                fTable.scope = semanticAnalyzer.scopenum;
+                var data = semanticAnalyzer.lookupFT(fTable.name, fTable.scope);
+                if (data != null)
+                {
+                    Console.WriteLine($"Already Exist in table : {item} at line {token[index].Item1}");
+                }
+                else
+                {
+                    semanticAnalyzer.insertFT(fTable.name, fTable.type, semanticAnalyzer.scopenum);
+                }
+            }
+            semanticAnalyzer.identifiers.Clear();
+
             if (DATA_TYPE(ref token))
             {
                 if (INIT(ref token))
@@ -2217,12 +2337,12 @@ class SyntaxGenerator
     }
 
     //Object Declaration
-    bool OBJ_DEC(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool OBJ_DEC(ref Dictionary<int, Tuple<int, string, string>> token, ref FunctionTable fTable)
     {
         if (token[index].Item2.Equals("identifier"))
         {
             index++;
-            if (token[index].Item2.Equals("="))
+            if (token[index].Item2.Equals("UnaryOperator"))
             {
                 index++;
                 if (token[index].Item2.Equals("identifier"))
@@ -2271,6 +2391,7 @@ class SyntaxGenerator
     {
         if (token[index].Item2.Equals("data-type") || token[index].Item2.Equals("identifier"))
         {
+
             index++;
             if (token[index].Item2.Equals("("))
             {
@@ -2315,7 +2436,7 @@ class SyntaxGenerator
         if (token[index].Item2 == "if" || token[index].Item2 == "while" || token[index].Item2 == "for" || token[index].Item2 == "try" ||
             token[index].Item2 == "inc-dec" || token[index].Item2 == "return" || token[index].Item2 == "continue" || token[index].Item2 == "break" ||
             token[index].Item2 == "access-modifier" || token[index].Item2 == "func" ||
-            token[index].Item2 == "DT" || token[index].Item2 == "identifier" || token[index].Item2 == "this" || token[index].Item2 == "[" || token[index].Item2.Equals("mutable-constant") || token[index].Item2.Equals("immutable-constant"))
+            token[index].Item2 == "data-type" || token[index].Item2 == "identifier" || token[index].Item2 == "this" || token[index].Item2 == "[" || token[index].Item2.Equals("mutable-constant") || token[index].Item2.Equals("immutable-constant"))
         {
             if (SST(ref token, ref dummyTable))
                 if (MST(ref token, ref dummyTable))

@@ -3,6 +3,7 @@
 class SemanticAnalyzer {
 
     public int scopenum = 0;
+    public List<string> identifiers = new List<string>();
     public Stack<int> currentscope = new Stack<int>();
     
     public List<MainTable> mainTableList = new List<MainTable>();
@@ -105,7 +106,7 @@ public MainTable? lookupMT(String name)
         }
         return null;
     }
-bool insertFT(String name, String type, int scope)
+public bool insertFT(String name, String type, int scope)
 {
 
         foreach(FunctionTable item in functionTable) {
@@ -114,17 +115,17 @@ bool insertFT(String name, String type, int scope)
             }
         }
 
-        functionTable.Append(new FunctionTable(name, type, scope));
+        functionTable.Add(new FunctionTable(name, type, scope));
         Console.WriteLine(name + " " + type + " " + scope);
         return true;
 }
-FunctionTable? lookupFT(String name,int scope, ref List<FunctionTable> functionTable)
+public FunctionTable? lookupFT(String name,int scope)
 {
-    for (int i = 0; i < functionTable.Count; i++) 
+    foreach (var item in functionTable) 
     {
-        if (functionTable[i].name.Equals(name) && functionTable[i].scope == scope) 
+        if (item.name.Equals(name) && item.scope == scope) 
         {
-            return functionTable[i];
+            return item;
         }
     }return null;
 }
