@@ -1,9 +1,12 @@
-public struct FunctionTable
+public class FunctionTable
 {
-    public string name;
-    public string type;
-    public int scope;
+    public string? name;
+    public string? type;
+    public int? scope;
 
+    public FunctionTable(){
+
+    }
 
     public FunctionTable(string name,string type,int scope)
    {

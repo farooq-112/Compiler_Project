@@ -1,11 +1,7 @@
 func gst(){
-    var a, y:int = 6;
-    var x : int = 3;
-    while(a < y){
-        var b : int = 10;
-        if(a == b && c == d){
-
-        }
+    var a:int = 9;
+    var y:int = 6.0;
+    var x : int = a + y;
 }
     
 }

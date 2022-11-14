@@ -10,7 +10,6 @@ namespace Program
         {
             string text = File.ReadAllText(textFile);
 
-
             // breakWord
             LexicalGenerartor program = new LexicalGenerartor();  // Creating Object  
             Dictionary<int, Tuple<int, string>> words = program.breakWord(ref text); // Calling Function    
@@ -27,6 +26,7 @@ namespace Program
             string tokenSet = File.ReadAllText(tokenFile);
             SyntaxGenerator syntaxGenerator = new SyntaxGenerator();
             syntaxGenerator.starting(ref classes);
+
         }
        
     }

@@ -1,9 +1,18 @@
+
+using System.Collections;
 class SyntaxGenerator
 {
     SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
     static int index = 1;
+    static string infix = "";
+    static string result = "";
+                
+    Stack<string> expression = new Stack<string>();
+    
     public void starting(ref Dictionary<int, Tuple<int, string, string>> token)
     {
+        //yaha nahi jaega 
+        
         // Console.WriteLine(token);
         if (checkRule(ref token))
         {
@@ -1547,10 +1556,10 @@ class SyntaxGenerator
         token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
         token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
-            CompatValues cValue = new CompatValues();
-            if (E(ref token, ref cValue))
+            // CompatValues cValues = new CompatValues();
+            if (E(ref token))
             {
-                if (RE1(ref token, ref cValue))
+                if (RE1(ref token))
                     return true;
             }
 
@@ -1558,14 +1567,14 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool RE1(ref Dictionary<int, Tuple<int, string, string>> token , ref CompatValues cvalues)
+    public bool RE1(ref Dictionary<int, Tuple<int, string, string>> token  )
     {
         if (token[index].Item2.Equals("RelationalOperator"))
         {
             index++;
-            if (E(ref token, ref cvalues))
+            if (E(ref token))
             {
-                if (RE1(ref token,ref cvalues))
+                if (RE1(ref token))
                     return true;
             }
         }
@@ -1578,15 +1587,15 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool E(ref Dictionary<int, Tuple<int, string, string>> token , ref CompatValues cvalues)
+    public bool E(ref Dictionary<int, Tuple<int, string, string>> token )
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
             token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
-            if (T(ref token, ref cvalues))
+            if (T(ref token))
             {
-                if (E1(ref token, ref cvalues))
+                if (E1(ref token ))
                     return true;
 
             }
@@ -1595,14 +1604,18 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool E1(ref Dictionary<int, Tuple<int, string, string>> token,ref CompatValues cvalues)
+    public bool E1(ref Dictionary<int, Tuple<int, string, string>> token )
     {
         if (token[index].Item2.Equals("PlusMinus"))
         {
+            
+            // expression.Push(token[index].Item3);
+            infix += " " + token[index].Item3;
+            // cvalues.oper = token[index].Item3;
             index++;
-            if (T(ref token, ref cvalues))
+            if (T(ref token))
             {
-                if (E1(ref token, ref cvalues))
+                if (E1(ref token))
                     return true;
             }
         }
@@ -1616,15 +1629,16 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool T(ref Dictionary<int, Tuple<int, string, string>> token,ref CompatValues cvalues)
+    public bool T(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
             token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
-            if (F(ref token, ref cvalues))
+            // CompatValues cValues = new CompatValues();
+            if (F(ref token))
             {
-                if (T1(ref token, ref cvalues))
+                if (T1(ref token))
                     return true;
             }
 
@@ -1632,14 +1646,21 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool T1(ref Dictionary<int, Tuple<int, string, string>> token,ref CompatValues cvalues)
+    public bool T1(ref Dictionary<int, Tuple<int, string, string>> token )
     {
         if (token[index].Item2.Equals("MultipyDivide"))
         {
+            // expression.Push(token[index].Item3);
+            
+            infix += " " + token[index].Item3;
+            // cvalues.oper = token[index].Item3;  
             index++;
-            if (F(ref token, ref cvalues))
+            if (F(ref token))
             {
-                if (T1(ref token, ref cvalues))
+                // if(cvalues.left != null && cvalues.right != null || cvalues.oper != null){
+                //     cvalues.result = semanticAnalyzer.compatibilityCheck(cvalues.left!, cvalues.right!,cvalues.oper!);
+                // }
+                if (T1(ref token))
                     return true;
             }
 
@@ -1647,6 +1668,7 @@ class SyntaxGenerator
         if (token[index].Item2.Equals("PlusMinus") || token[index].Item2.Equals("RelationalOperator") || token[index].Item2.Equals("Logical-Operator") ||
                 token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") || token[index].Item2.Equals("colon"))
         {
+
             return true;
         }
 
@@ -1654,11 +1676,11 @@ class SyntaxGenerator
     }
 
 
-    public bool F(ref Dictionary<int, Tuple<int, string, string>> token, ref CompatValues cvalues)
+    public bool F(ref Dictionary<int, Tuple<int, string, string>> token )
     {
         // T1 = ID;
         // T2 = OperatingSystem ;
-        // T3 = IDictionary;
+        // T3 = ID;
         // T1 = compatibility(T1,T2,T3);
         if (token[index].Item2.Equals("identifier"))
         {
@@ -1668,11 +1690,15 @@ class SyntaxGenerator
              var data = semanticAnalyzer.lookupFT(token[index].Item3, i);
             if (data != null)
             {   
-                if (cvalues.oper != ""){
-                    cvalues.right = token[index].Item3;
-                }else{
-                    cvalues.left = token[index].Item3;
-                }
+                // expression.Push(data.type);
+                
+                infix += " " + data.type;
+                Console.WriteLine(infix);
+                // if (cvalues.oper != ""){
+                //     cvalues.right = token[index].Item3;
+                // }else{
+                //     cvalues.left = token[index].Item3;
+                // }
                 break;
             }
             else
@@ -1686,12 +1712,12 @@ class SyntaxGenerator
             index++;
             if (LHS(ref token))
             {
-                if (F1(ref token, ref cvalues))
+                if (F1(ref token))
                 {
                     return true;
                 }
             }
-            else if (F1(ref token, ref cvalues))
+            else if (F1(ref token))
             {
                 return true;
             }
@@ -1740,13 +1766,13 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool F1(ref Dictionary<int, Tuple<int, string, string>> token,ref CompatValues cvalues)
+    public bool F1(ref Dictionary<int, Tuple<int, string, string>> token )
     {
         if (token[index].Item2.Equals("MultipyDivide") || token[index].Item2.Equals("PlusMinus") || token[index].Item2.Equals("RelationalOperator") ||
             token[index].Item2.Equals("Logical-Operator")  || token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") ||
             token[index].Item2.Equals("colon"))
         {
-            cvalues.oper = token[index].Item3;
+            // cvalues.oper = token[index].Item3;
             return true;
         }
         else if (Inc_Dec(ref token))
@@ -2090,6 +2116,7 @@ class SyntaxGenerator
                     }
                 }
             }else if(token[index].Item2.Equals("UnaryOperator")){
+
                 index++;
                 if(OE(ref token)){
                      if (token[index].Item2.Equals("semi-colon"))
@@ -2205,7 +2232,7 @@ class SyntaxGenerator
     }
 
 
-    bool FUNC_IN(ref Dictionary<int, Tuple<int, string, string>> token)
+    bool FUNC_IN(ref Dictionary<int, Tuple<int, string, string>> token )
     {
         FunctionTable fTable = new FunctionTable();
         if (token[index].Item2.Equals("identifier"))
@@ -2313,7 +2340,7 @@ class SyntaxGenerator
                 fTable.name = item;
                 fTable.type = token[index].Item3;
                 fTable.scope = semanticAnalyzer.scopenum;
-                var data = semanticAnalyzer.lookupFT(fTable.name, fTable.scope);
+                var data = semanticAnalyzer.lookupFT(fTable.name, fTable.scope ?? 0);
                 if (data != null)
                 {
                     Console.WriteLine($"Already Exist in table : {item} at line {token[index].Item1}");
@@ -2329,6 +2356,10 @@ class SyntaxGenerator
             {
                 if (INIT(ref token))
                 {
+                    var data = semanticAnalyzer.lookupFT(token[index].Item3,  semanticAnalyzer.scopenum);
+                    if(data?.type != result){
+                        Console.WriteLine("Type Mismatched!");
+                    }
                     return true;
                 }
             }
@@ -2417,6 +2448,24 @@ class SyntaxGenerator
             {
                 if (token[index].Item2.Equals("semi-colon"))
                 {
+                    var postfix = semanticAnalyzer.convert(ref infix).Split(" ");
+                    for (int i = 0; i < postfix.Length-1; i++)
+                    {
+                        if(postfix[i] == "+" || postfix[i] == "-" || postfix[i] == "*" || postfix[i] == "/")
+                        {
+                            var right = expression.Pop();
+                            var left = expression.Pop();
+                            result = semanticAnalyzer.compatibilityCheck(left, right, postfix[i]);
+                            if(result == ""){
+                                Console.WriteLine("Type Mismatched!");
+                            }else{
+                                expression.Push(result);
+                            }
+                        }
+                        else{
+                            expression.Push(postfix[i]);
+                        }
+                    }
                     index++;
                     return true;
                 }

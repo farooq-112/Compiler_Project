@@ -61,6 +61,8 @@ public MainTable? lookupMT(String name)
             {
                 for (int j = 0; j < m.refDT?.Count(); j++) 
                 {
+
+                    //Ab Kya problem hai ??   agai type bstheek ha
                     ClassTable c = m.refDT[j];
                     if (c.name.Equals(name)) 
                     {
@@ -78,17 +80,24 @@ public MainTable? lookupMT(String name)
     3. float + int = float
     4. float + float = float
     */
-    public String? compatibilityCheck(String leftType, String rightType, String operAtor) 
+    public String compatibilityCheck(String leftType, String rightType, String operAtor) 
     {
         if (operAtor.Equals("+") || operAtor.Equals("-") || operAtor.Equals("*") || operAtor.Equals("/") || operAtor.Equals("%")) {
             
             // String compatibility
-            if ( operAtor.Equals("+") && leftType.Equals("str") && rightType.Equals("str") )
+            if ( operAtor.Equals("+") && leftType.Equals("string") && rightType.Equals("string") )
             {
                 String type = "str";
                 return type;
             }
-
+            else if(operAtor.Equals("-") || operAtor.Equals("*") || operAtor.Equals("/") || operAtor.Equals("%") && leftType.Equals("string") && rightType.Equals("string")) 
+            {
+                return "";
+            }
+            else if(leftType.Equals("float") && rightType.Equals("string") || leftType.Equals("int") && rightType.Equals("string") || leftType.Equals("string") && rightType.Equals("float") || leftType.Equals("string") && rightType.Equals("int")) 
+            {
+                return "";
+            }
             // case 1
             if (leftType.Equals("int") && rightType.Equals("int")) 
             {
@@ -104,13 +113,13 @@ public MainTable? lookupMT(String name)
                 return type;            
             }
         }
-        return null;
+        return "-";
     }
 public bool insertFT(String name, String type, int scope)
 {
 
         foreach(FunctionTable item in functionTable) {
-            if (item.name.Equals(name) && item.scope == scope) {
+            if (item.name!.Equals(name) && item.scope == scope) {
                 return false;
             }
         }
@@ -123,7 +132,7 @@ public FunctionTable? lookupFT(String name,int scope)
 {
     foreach (var item in functionTable) 
     {
-        if (item.name.Equals(name) && item.scope == scope) 
+        if (item.name!.Equals(name) && item.scope == scope) 
         {
             return item;
         }
@@ -140,4 +149,62 @@ public void destroyScope()
     currentscope.Pop();
     Console.WriteLine(scopenum);
 }
+
+public string convert(ref string infix)
+{
+
+    int prio = 0;
+    var postfix = "";
+    var array = infix.Split(' ');
+    Stack<string> s1 = new Stack<string>();
+    for (int i = 1; i < array.Length; i++)
+    {
+            string ch = array[i];
+            if (ch == "+" || ch == "-" || ch == "*" || ch == "/")
+            {
+                if (s1.Count <= 0)
+                    s1.Push(ch);
+            else
+            {
+                if (s1.Peek() == "*" || s1.Peek() == "/")
+                    prio = 1;
+                else
+                    prio = 0;
+                if (prio == 1)
+                {
+                    if (ch == "+" || ch == "-")
+                    {
+                        postfix += s1.Pop() + " ";
+                        i--;
+                    }
+                    else
+                    { 
+                        postfix += s1.Pop() + " ";
+                        i--;
+                    }
+                }
+                else
+                {
+                    if (ch == "+" || ch == "-")
+                    {
+                        postfix += s1.Pop() + " ";
+                        s1.Push(ch);
+
+                    }
+                    else
+                        s1.Push(ch);
+                }
+            }
+        }
+        else
+        {
+            postfix += ch + " ";
+        }
+    }
+    int len = s1.Count;
+    for (int j = 0; j < len; j++)
+        postfix += s1.Pop() + " ";
+    return postfix;
+}
+
 }
