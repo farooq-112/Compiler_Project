@@ -1,10 +1,38 @@
 func gst(){
-    var a:int = 9;
-    var y:int = 6.0;
-    var x : int = a + y;
+    var a:int =  9 + 6 * 3;
+    var y:int = 12;
+    var x: int = a + y;
+    x = 5;
 }
-    
+class Z {
+
 }
+
+class Yes extends Z{
+
+}
+
+Main(){
+    var obj: Z = Yes.init();
+}
+//protocol K{
+//
+//}
+//
+//struct W implements K  {
+//    var farooq , noor ,abbas : int
+//    public static func Q (x : int){
+//        var i :int = 10;
+//    }
+//    init(x : int){
+//        
+//    }
+//
+//    deinit{
+//        
+//    }
+//}     
+//
 //class A {
 //    var farooq , noor ,abbas : int = 10
 //    var r , t ,d : int
@@ -22,13 +50,9 @@ func gst(){
 //protocol J{
 //
 //}
-//protocol K{
 //
-//}
 //
-//class Yes {
 //
-//}
 //
 //public static class L extends Yes implements J , K {
 //    var farooq , noor ,abbas : int
@@ -50,19 +74,19 @@ func gst(){
 //    }
 //} 
 //
-//struct W extends Yes implements J , K  {
-//    var farooq , noor ,abbas : int
-//    public static func Q (x : int){
-//        var i :int = 10;
-//    }
-//    init(x : int){
-//        
-//    }
-//
-//    deinit{
-//        
-//    }
-//} 
+////struct W extends Yes implements J , K  {
+////    var farooq , noor ,abbas : int
+////    public static func Q (x : int){
+////        var i :int = 10;
+////    }
+////    init(x : int){
+////        
+////    }
+////
+////    deinit{
+////        
+////    }
+////} 
 //
 ////enum A : int {
 ////case X

@@ -6,13 +6,14 @@ class SyntaxGenerator
     static int index = 1;
     static string infix = "";
     static string result = "";
-                
+    static string leftResult = "";
+
     Stack<string> expression = new Stack<string>();
-    
+
     public void starting(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         //yaha nahi jaega 
-        
+
         // Console.WriteLine(token);
         if (checkRule(ref token))
         {
@@ -45,7 +46,7 @@ class SyntaxGenerator
                     }
                     else if (token[index].Item2 == "struct")
                     {
-                        dummyTable.accessModifier = token[index].Item3;
+                        
                         if (STRUCT_SET(ref token, ref dummyTable))
                         {
                             checkRule(ref token);
@@ -54,7 +55,6 @@ class SyntaxGenerator
                     }
                     else if (token[index].Item2 == "func")
                     {
-                        dummyTable.accessModifier = token[index].Item3;
                         if (FUNC_SET(ref token, ref dummyTable))
                         {
                             checkRule(ref token);
@@ -189,6 +189,7 @@ class SyntaxGenerator
                 if (data != null)
                 {
                     Console.WriteLine("Already Exist at path");
+                    System.Environment.Exit(0);
                     return false;
                 }
                 else
@@ -270,6 +271,7 @@ class SyntaxGenerator
                 if (data != null)
                 {
                     Console.WriteLine("Already Exist at path");
+                    System.Environment.Exit(0);
                     return false;
                 }
                 else
@@ -434,6 +436,7 @@ class SyntaxGenerator
                             else
                             {
                                 Console.WriteLine("Variable Already Exist");
+                                System.Environment.Exit(0);
                             }
                             if (token[index].Item2 == "{")
                             {
@@ -465,7 +468,8 @@ class SyntaxGenerator
                             }
                             else
                             {
-                                Console.WriteLine("Variable Already Exist");
+                                Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                System.Environment.Exit(0);
                             }
                             if (token[index].Item2 == "{")
                             {
@@ -527,7 +531,8 @@ class SyntaxGenerator
                             }
                             else
                             {
-                                Console.WriteLine("Variable Already Exist");
+                                Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                System.Environment.Exit(0);
                             }
                             if (token[index].Item2 == "{")
                             {
@@ -591,14 +596,15 @@ class SyntaxGenerator
         // {
         if (token[index].Item2 == "struct")
         {
-            dummyTable.type = token[index].Item3;
+            dummyTable.type = token[index].Item2;
             index++;
             if (token[index].Item2 == "identifier")
             {
                 var data = semanticAnalyzer.lookupMT(token[index].Item3);
                 if (data != null)
                 {
-                    Console.WriteLine("Already Exist at path");
+                    Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                    System.Environment.Exit(0);
                     return false;
                 }
                 else
@@ -606,8 +612,9 @@ class SyntaxGenerator
                     dummyTable.name = token[index].Item3;
                 }
                 index++;
-                if (INH(ref token, ref dummyTable))
+                if (IMP(ref token, ref dummyTable))
                 {
+                    // if(dummyTable)
                     semanticAnalyzer.insertMT(ref dummyTable);
                     if (token[index].Item2 == "{")
                     {
@@ -637,6 +644,7 @@ class SyntaxGenerator
                 }
                 else
                 {
+                    semanticAnalyzer.insertMT(ref dummyTable);
                     if (token[index].Item2 == "{")
                     {
                         semanticAnalyzer.createScope();
@@ -684,30 +692,12 @@ class SyntaxGenerator
         {
             Console.WriteLine($"No Syntax Error");
             foreach (var item in semanticAnalyzer.mainTableList)
-
             {
                 Console.WriteLine($" Generated Class -> {item.name} | {item.type} | {item.accessModifier} | {item.typeModifier} ");
-                if (item.parent != null)
-                {
-                    foreach (var j in item.parent)
-                    {
-                        Console.WriteLine($" parent  of : {item.name} -> {j}");
-                    }
-                }
-                if (item.refDT != null)
-                {
-                    foreach (var i in item.refDT)
-                    {
-                        Console.WriteLine($" Attributes and Methods of Class : {item.name} is -> {i.name} | {i.type} | {i.accessModifier} | {i.mutableConst} ");
-                    }
-                }
-
+                item.parent?.ForEach(j => Console.WriteLine($" parent  of : {item.name} -> {j}"));
+                item.refDT?.ForEach(i => Console.WriteLine($" Attributes and Methods of Class : {item.name} is -> {i.name} | {i.type} | {i.accessModifier} | {i.mutableConst} "));
             }
-            foreach (var n in semanticAnalyzer.functionTable)
-
-            {
-                Console.WriteLine($" Function and Attr with Scope -> {n.name} | {n.type} | {n.scope}");
-            }
+            semanticAnalyzer.functionTable.ForEach(n => Console.WriteLine($" Function and Attr with Scope -> {n.name} | {n.type} | {n.scope}"));
             return true;
         }
         else
@@ -734,7 +724,8 @@ class SyntaxGenerator
                 var data = semanticAnalyzer.lookupMT(token[index].Item3);
                 if (data != null)
                 {
-                    Console.WriteLine("Already Exist at path");
+                    Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                    System.Environment.Exit(0);
                     return false;
                 }
                 else
@@ -938,7 +929,8 @@ class SyntaxGenerator
                             }
                             else
                             {
-                                Console.WriteLine("Variable Already Exist");
+                                Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                System.Environment.Exit(0);
                             }
                             semanticAnalyzer.createScope();
                             index++;
@@ -963,7 +955,8 @@ class SyntaxGenerator
                             }
                             else
                             {
-                                Console.WriteLine("Variable Already Exist");
+                                Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                System.Environment.Exit(0);
                             }
                             semanticAnalyzer.createScope();
                             index++;
@@ -1019,7 +1012,7 @@ class SyntaxGenerator
             index++;
             if (token[index].Item2 == "comma")
             {
-                
+
                 index++;
 
                 ATTR(ref token, ref dummyTable, ref mutableConst);
@@ -1045,21 +1038,22 @@ class SyntaxGenerator
                                     foreach (var item in semanticAnalyzer.identifiers)
                                     {
                                         var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", item);
-                                    if (data == null)
-                                    {
-                                        ctable.name = item;
-                                        semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Variable Already Exist");
-                                    }
+                                        if (data == null)
+                                        {
+                                            ctable.name = item;
+                                            semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                            System.Environment.Exit(0);
+                                        }
                                     }
                                     semanticAnalyzer.identifiers.Clear();
                                 }
                                 else
                                 {
-                                    Console.WriteLine("DataType Mismatch Error at line " + token[index].Item1);
+                                    Console.WriteLine($"DataType Mismatch Error at line --> {token[index].Item1}");
                                 }
                                 index++;
                                 if (token[index].Item2 == "(")
@@ -1083,20 +1077,21 @@ class SyntaxGenerator
                         }
                         else
                         {
-                             foreach (var item in semanticAnalyzer.identifiers)
-                                    {
-                                        var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", item);
-                                    if (data == null)
-                                    {
-                                        ctable.name = item;
-                                        semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Variable Already Exist");
-                                    }
-                                    }
-                                    semanticAnalyzer.identifiers.Clear();
+                            foreach (var item in semanticAnalyzer.identifiers)
+                            {
+                                var data = semanticAnalyzer.lookupCT(dummyTable.name ?? "", item);
+                                if (data == null)
+                                {
+                                    ctable.name = item;
+                                    semanticAnalyzer.insertCT(ctable, dummyTable.name ?? "");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                    System.Environment.Exit(0);
+                                }
+                            }
+                            semanticAnalyzer.identifiers.Clear();
                             return true;
                         }
                     }
@@ -1122,14 +1117,23 @@ class SyntaxGenerator
                     var data = semanticAnalyzer.lookupMT(token[index].Item3);
                     if (data != null)
                     {
-                        if (data.type == "class")
+                        if (dummyTable.type == "struct")
                         {
-                            dummyTable.parent?.Add(data.name ?? "");
+                            Console.WriteLine($"struct cannot be SubType at line --> {token[index].Item1}");
+                            System.Environment.Exit(1);
                         }
                         else
                         {
-                            Console.WriteLine("Type must be Class");
+                            if (data.type == "class")
+                            {
+                                dummyTable.parent?.Add(data.name ?? "");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Type must be Class");
+                            }
                         }
+
                     }
                     else
                     {
@@ -1187,7 +1191,8 @@ class SyntaxGenerator
                 var data = semanticAnalyzer.lookupMT(token[index].Item3);
                 if (data != null)
                 {
-                    Console.WriteLine("type Already Exist at path" + data.name);
+                    Console.WriteLine($"type Already Exist at path -->  {data.name}");
+                    System.Environment.Exit(0);
                     return false;
                 }
                 else
@@ -1229,12 +1234,14 @@ class SyntaxGenerator
                     }
                     else
                     {
-                        Console.WriteLine("Type must be Interface" + token[index].Item3, token[index].Item1);
+                        Console.WriteLine($"Type must be Interface --> {token[index].Item3} {token[index].Item1}");
+                        System.Environment.Exit(0);
                     }
                 }
                 else
                 {
                     Console.WriteLine("Dclaration Error");
+                    System.Environment.Exit(0);
                 }
                 index++;
                 if (OTHER(ref token, ref dummyTable))
@@ -1266,12 +1273,14 @@ class SyntaxGenerator
                     }
                     else
                     {
-                        Console.WriteLine("Type must be Interface");
+                        Console.WriteLine($"Type must be Interface at line --> {token[index].Item1}");
+                        System.Environment.Exit(0);
                     }
                 }
                 else
                 {
                     Console.WriteLine("Dclaration Error");
+                    System.Environment.Exit(0);
                 }
                 index++;
                 if (OTHER(ref token, ref dummyTable))
@@ -1567,7 +1576,7 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool RE1(ref Dictionary<int, Tuple<int, string, string>> token  )
+    public bool RE1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("RelationalOperator"))
         {
@@ -1587,7 +1596,7 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool E(ref Dictionary<int, Tuple<int, string, string>> token )
+    public bool E(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("identifier") || token[index].Item2.Equals("this") || token[index].Item2.Equals("!") ||
             token[index].Item2.Equals("inc-dec") || token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
@@ -1595,7 +1604,7 @@ class SyntaxGenerator
         {
             if (T(ref token))
             {
-                if (E1(ref token ))
+                if (E1(ref token))
                     return true;
 
             }
@@ -1604,11 +1613,11 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool E1(ref Dictionary<int, Tuple<int, string, string>> token )
+    public bool E1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("PlusMinus"))
         {
-            
+
             // expression.Push(token[index].Item3);
             infix += " " + token[index].Item3;
             // cvalues.oper = token[index].Item3;
@@ -1619,7 +1628,7 @@ class SyntaxGenerator
                     return true;
             }
         }
-        else if (token[index].Item2.Equals("RelationalOperator") ||  token[index].Item2.Equals("Logical-Operator") ||
+        else if (token[index].Item2.Equals("RelationalOperator") || token[index].Item2.Equals("Logical-Operator") ||
                 token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") || token[index].Item2.Equals("colon"))
         {
             // Console.WriteLine($"E1 NULL {token[index].Item2}");
@@ -1646,12 +1655,12 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool T1(ref Dictionary<int, Tuple<int, string, string>> token )
+    public bool T1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("MultipyDivide"))
         {
             // expression.Push(token[index].Item3);
-            
+
             infix += " " + token[index].Item3;
             // cvalues.oper = token[index].Item3;  
             index++;
@@ -1676,39 +1685,30 @@ class SyntaxGenerator
     }
 
 
-    public bool F(ref Dictionary<int, Tuple<int, string, string>> token )
+    public bool F(ref Dictionary<int, Tuple<int, string, string>> token)
     {
-        // T1 = ID;
-        // T2 = OperatingSystem ;
-        // T3 = ID;
-        // T1 = compatibility(T1,T2,T3);
         if (token[index].Item2.Equals("identifier"))
         {
-            
-           for (int i = semanticAnalyzer.currentscope.Count; i > 0; i--)
-           {
-             var data = semanticAnalyzer.lookupFT(token[index].Item3, i);
-            if (data != null)
-            {   
-                // expression.Push(data.type);
-                
-                infix += " " + data.type;
-                Console.WriteLine(infix);
-                // if (cvalues.oper != ""){
-                //     cvalues.right = token[index].Item3;
-                // }else{
-                //     cvalues.left = token[index].Item3;
-                // }
-                break;
-            }
-            else
+
+            for (int i = semanticAnalyzer.currentscope.Count - 1; i >= 0; i--)
             {
-                if(i == 1){
-                Console.WriteLine($"{token[index].Item3} : Not Initialized  at Line {token[index].Item1}");
+                var data = semanticAnalyzer.lookupFT(token[index].Item3, semanticAnalyzer.currentscope.ElementAt(i));
+                if (data != null)
+                {
+                    infix += " " + data.type;
+                    break;
                 }
-                
+                else
+                {
+                    if (i == 0)
+                    {
+                        // semanticAnalyzer.functionTable.ForEach(i => Console.WriteLine(i));
+                        Console.WriteLine($" Value {token[index].Item3} : Not Initialized  at Line {token[index].Item1}");
+                        System.Environment.Exit(1);
+                    }
+
+                }
             }
-           }
             index++;
             if (LHS(ref token))
             {
@@ -1749,6 +1749,27 @@ class SyntaxGenerator
         else if (token[index].Item2.Equals("int") || token[index].Item2.Equals("bool-const") ||
             token[index].Item2.Equals("string") || token[index].Item2.Equals("float"))
         {
+            // result = token[index].Item2;
+
+            for (int i = semanticAnalyzer.currentscope.Count - 1; i >= 0; i--)
+            {
+                // var data = semanticAnalyzer.lookupFT(token[index].Item3, semanticAnalyzer.currentscope.ElementAt(i));
+                // if (data != null)
+                // {
+                infix += " " + token[index].Item2;
+                // break;
+                // }
+                // else
+                // {
+                // if (i == 0)
+                // {
+                // semanticAnalyzer.functionTable.ForEach(i => Console.WriteLine(i));
+                // Console.WriteLine($" Value {token[index].Item3} : Not Initialized  at Line {token[index].Item1}");
+                // System.Environment.Exit(1);
+                // }
+
+                // }
+            }
             index++;
             return true;
         }
@@ -1766,10 +1787,10 @@ class SyntaxGenerator
         return false;
     }
 
-    public bool F1(ref Dictionary<int, Tuple<int, string, string>> token )
+    public bool F1(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         if (token[index].Item2.Equals("MultipyDivide") || token[index].Item2.Equals("PlusMinus") || token[index].Item2.Equals("RelationalOperator") ||
-            token[index].Item2.Equals("Logical-Operator")  || token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") ||
+            token[index].Item2.Equals("Logical-Operator") || token[index].Item2.Equals(")") || token[index].Item2.Equals("semi-colon") ||
             token[index].Item2.Equals("colon"))
         {
             // cvalues.oper = token[index].Item3;
@@ -2115,17 +2136,20 @@ class SyntaxGenerator
                         return true;
                     }
                 }
-            }else if(token[index].Item2.Equals("UnaryOperator")){
+            }
+            else if (token[index].Item2.Equals("UnaryOperator"))
+            {
 
                 index++;
-                if(OE(ref token)){
-                     if (token[index].Item2.Equals("semi-colon"))
+                if (OE(ref token))
                 {
-                    index++;
-                   return true;
-                }
-                    
-                
+                    if (token[index].Item2.Equals("semi-colon"))
+                    {
+                        index++;
+                        return true;
+                    }
+
+
                 }
             }
         }
@@ -2162,7 +2186,8 @@ class SyntaxGenerator
         {
             index++;
             if (token[index].Item2.Equals("identifier"))
-            {
+            {   
+                leftResult = token[index].Item3;
                 semanticAnalyzer.identifiers.Add(token[index].Item3);
                 index++;
                 if (token[index].Item2.Equals("colon"))
@@ -2232,7 +2257,7 @@ class SyntaxGenerator
     }
 
 
-    bool FUNC_IN(ref Dictionary<int, Tuple<int, string, string>> token )
+    bool FUNC_IN(ref Dictionary<int, Tuple<int, string, string>> token)
     {
         FunctionTable fTable = new FunctionTable();
         if (token[index].Item2.Equals("identifier"))
@@ -2344,6 +2369,7 @@ class SyntaxGenerator
                 if (data != null)
                 {
                     Console.WriteLine($"Already Exist in table : {item} at line {token[index].Item1}");
+                    System.Environment.Exit(0);
                 }
                 else
                 {
@@ -2356,10 +2382,6 @@ class SyntaxGenerator
             {
                 if (INIT(ref token))
                 {
-                    var data = semanticAnalyzer.lookupFT(token[index].Item3,  semanticAnalyzer.scopenum);
-                    if(data?.type != result){
-                        Console.WriteLine("Type Mismatched!");
-                    }
                     return true;
                 }
             }
@@ -2372,18 +2394,57 @@ class SyntaxGenerator
     {
         if (token[index].Item2.Equals("identifier"))
         {
+
+             var data = semanticAnalyzer.lookupMT(token[index].Item3);
+                if (data == null)
+                {
+                    Console.WriteLine($"{token[index].Item2} is not Defined at line -->  {token[index].Item1} ");
+                    System.Environment.Exit(0);
+                    return false;
+                }else if(data.type == "protocol"){
+                    Console.WriteLine($"{data.type} is not Defined at line -->  {token[index].Item1} ");
+                    System.Environment.Exit(0);
+                }
             index++;
             if (token[index].Item2.Equals("UnaryOperator"))
             {
                 index++;
                 if (token[index].Item2.Equals("identifier"))
                 {
+                     var data1 = semanticAnalyzer.lookupMT(token[index].Item3);
+                if (data1 == null)
+                {
+                    Console.WriteLine($"{token[index].Item2} is not Defined at line -->  {token[index].Item1} ");
+                    System.Environment.Exit(0);
+                    return false;
+                }else if(data1.type == "protocol"){
+                    Console.WriteLine($"{data1.type} is not Defined at line -->  {token[index].Item1} ");
+                    System.Environment.Exit(0);
+                }else if (data1.type == "struct" && data1.name == token[index-2].Item3){
+                    // OK
+                }else if (data1.type == "class" && data1.name == token[index-2].Item3){
+                    // OK
+                }else if (data1.type == "class" && data1.name != token[index-2].Item3){
+                   if (data1.parent != null){
+                     if (data1.parent!.Contains(token[index-2].Item3)){
+                            //OK
+                    }else{
+                        Console.WriteLine($"{data1.type} type mismatch at line -->  {token[index].Item1} ");
+                        System.Environment.Exit(0);
+                    }
+
+                   }
+                }else{
+                    Console.WriteLine($"{data1.type} type mismatch at line -->  {token[index].Item1} ");
+                    System.Environment.Exit(0);
+                }
                     index++;
                     if (token[index].Item2.Equals("dot"))
                     {
                         index++;
                         if (token[index].Item2.Equals("init"))
                         {
+                            
                             index++;
                             if (token[index].Item2.Equals("("))
                             {
@@ -2402,6 +2463,17 @@ class SyntaxGenerator
 
                                     }
 
+                                }else{
+                                    if (token[index].Item2.Equals(")"))
+                                    {
+                                        index++;
+                                        if (token[index].Item2.Equals("semi-colon"))
+                                        {
+                                            index++;
+                                            return true;
+                                        }
+
+                                    }
                                 }
 
                             }
@@ -2443,28 +2515,57 @@ class SyntaxGenerator
     {
         if (token[index].Item2.Equals("UnaryOperator"))
         {
+            
             index++;
             if (OE(ref token))
             {
                 if (token[index].Item2.Equals("semi-colon"))
                 {
                     var postfix = semanticAnalyzer.convert(ref infix).Split(" ");
-                    for (int i = 0; i < postfix.Length-1; i++)
+                    for (int i = 0; i < postfix.Length - 1; i++)
                     {
-                        if(postfix[i] == "+" || postfix[i] == "-" || postfix[i] == "*" || postfix[i] == "/")
+                        if (postfix[i] == "+" || postfix[i] == "-" || postfix[i] == "*" || postfix[i] == "/")
                         {
                             var right = expression.Pop();
                             var left = expression.Pop();
                             result = semanticAnalyzer.compatibilityCheck(left, right, postfix[i]);
-                            if(result == ""){
-                                Console.WriteLine("Type Mismatched!");
-                            }else{
+                            if (result == "")
+                            {
+                                Console.WriteLine($"Type Mismatched! at Line No --> {token[index].Item1}");
+                                System.Environment.Exit(0);
+                            }
+                            else
+                            {
                                 expression.Push(result);
                             }
                         }
-                        else{
+                        else
+                        {
                             expression.Push(postfix[i]);
                         }
+                    }
+
+                    for (int i = semanticAnalyzer.currentscope.Count-1; i >= 0; i--)
+                    {
+                        var data = semanticAnalyzer.lookupFT(leftResult, semanticAnalyzer.currentscope.ElementAt(i));
+                        if (data?.type != result)
+                        {
+                            Console.WriteLine($"Type Mismatched at line --> {token[index].Item1}");
+                            System.Environment.Exit(0);
+                        }
+                        else
+                        {   if( data?.type == result){
+                            //Matched Correctly
+                            
+                            }
+                            else if(i == 0)
+                            {
+                                Console.WriteLine($"{token[index].Item3} : Not Initialized  at Line {token[index].Item1}");
+                                System.Environment.Exit(0);
+                            }
+                        }
+
+                        
                     }
                     index++;
                     return true;

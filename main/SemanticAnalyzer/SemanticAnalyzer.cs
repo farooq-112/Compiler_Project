@@ -90,11 +90,11 @@ public MainTable? lookupMT(String name)
                 String type = "str";
                 return type;
             }
-            else if(operAtor.Equals("-") || operAtor.Equals("*") || operAtor.Equals("/") || operAtor.Equals("%") && leftType.Equals("string") && rightType.Equals("string")) 
+            else if((operAtor.Equals("-") && leftType.Equals("string") && rightType.Equals("string")) || (operAtor.Equals("*") && leftType.Equals("string") && rightType.Equals("string")) || (operAtor.Equals("/") && leftType.Equals("string") && rightType.Equals("string")) || (operAtor.Equals("%") && leftType.Equals("string") && rightType.Equals("string"))) 
             {
                 return "";
             }
-            else if(leftType.Equals("float") && rightType.Equals("string") || leftType.Equals("int") && rightType.Equals("string") || leftType.Equals("string") && rightType.Equals("float") || leftType.Equals("string") && rightType.Equals("int")) 
+            else if((leftType.Equals("float") && rightType.Equals("string")) || (leftType.Equals("int") && rightType.Equals("string")) || (leftType.Equals("string") && rightType.Equals("float")) || (leftType.Equals("string") && rightType.Equals("int"))) 
             {
                 return "";
             }
@@ -125,7 +125,7 @@ public bool insertFT(String name, String type, int scope)
         }
 
         functionTable.Add(new FunctionTable(name, type, scope));
-        Console.WriteLine(name + " " + type + " " + scope);
+        // Console.WriteLine(name + " " + type + " " + scope);
         return true;
 }
 public FunctionTable? lookupFT(String name,int scope)
@@ -147,7 +147,7 @@ public void createScope()
 public void destroyScope()
 {
     currentscope.Pop();
-    Console.WriteLine(scopenum);
+    // Console.WriteLine(scopenum);
 }
 
 public string convert(ref string infix)
