@@ -1756,7 +1756,7 @@ class SyntaxGenerator
                 // var data = semanticAnalyzer.lookupFT(token[index].Item3, semanticAnalyzer.currentscope.ElementAt(i));
                 // if (data != null)
                 // {
-                infix += " " + token[index].Item2;
+                infix = " " + token[index].Item2;
                 // break;
                 // }
                 // else
@@ -2522,33 +2522,39 @@ class SyntaxGenerator
                 if (token[index].Item2.Equals("semi-colon"))
                 {
                     var postfix = semanticAnalyzer.convert(ref infix).Split(" ");
-                    for (int i = 0; i < postfix.Length - 1; i++)
-                    {
-                        if (postfix[i] == "+" || postfix[i] == "-" || postfix[i] == "*" || postfix[i] == "/")
+                    if(postfix.Length-1 == 1){
+                        result = postfix[0];
+                    }
+                    else{
+                        for (int i = 0; i < postfix.Length - 1; i++)
                         {
-                            var right = expression.Pop();
-                            var left = expression.Pop();
-                            result = semanticAnalyzer.compatibilityCheck(left, right, postfix[i]);
-                            if (result == "")
+                            if (postfix[i] == "+" || postfix[i] == "-" || postfix[i] == "*" || postfix[i] == "/")
                             {
-                                Console.WriteLine($"Type Mismatched! at Line No --> {token[index].Item1}");
-                                System.Environment.Exit(0);
+                                var right = expression.Pop();
+                                var left = expression.Pop();
+                                result = semanticAnalyzer.compatibilityCheck(left, right, postfix[i]);
+                                if (result == "")
+                                {
+                                    Console.WriteLine($"Type Mismatched! at Line No --> {token[index].Item1}");
+                                    System.Environment.Exit(0);
+                                }
+                                else
+                                {
+                                    expression.Push(result);
+                                }
                             }
                             else
                             {
-                                expression.Push(result);
+                                expression.Push(postfix[i]);
                             }
-                        }
-                        else
-                        {
-                            expression.Push(postfix[i]);
                         }
                     }
 
                     for (int i = semanticAnalyzer.currentscope.Count-1; i >= 0; i--)
                     {
                         var data = semanticAnalyzer.lookupFT(leftResult, semanticAnalyzer.currentscope.ElementAt(i));
-                        if (data?.type != result)
+                        if (data != null){
+                            if (data?.type != result)
                         {
                             Console.WriteLine($"Type Mismatched at line --> {token[index].Item1}");
                             System.Environment.Exit(0);
@@ -2564,6 +2570,11 @@ class SyntaxGenerator
                                 System.Environment.Exit(0);
                             }
                         }
+                        }else if(i == 0)
+                            {
+                                Console.WriteLine($"{token[index].Item3} : Not Initialized  at Line {token[index].Item1}");
+                                System.Environment.Exit(0);
+                            }
 
                         
                     }
