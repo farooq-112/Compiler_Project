@@ -1,19 +1,21 @@
 func gst(){
     var a:int =  9 + 6 * 3;
-    var y:int = 12;
-    var x: int = a + y;
-    x = 5;
+    var y:float = 12.0;
+    var x: float = a + y;
+    //x = 5;
+    while(a ){
+
+    }
 }
 class Z {
 
 }
 
-class Yes extends Z{
 
-}
 
-Main(){
-    var obj: Z = Yes.init();
+
+public final class Yes extends Z{
+
 }
 protocol K{
 
@@ -21,6 +23,10 @@ protocol K{
 
 struct W implements K  {
     var farooq , noor ,abbas : int
+    var noor : int
+    public static func Q (x : int){
+        var i :int = 10;
+    }
     public static func Q (x : int){
         var i :int = 10;
     }
@@ -110,11 +116,15 @@ func work(x : int){
 
 Main(){
         let arr:[[int]];
+        var obj: Yes = Z.init();
+
         try{
-            var a: int = 4;
-            if(a == 5){
-                    let arr:[int];
-            }
+           // var a: int = 4;
+           // var b: string = "hgg";
+           // var c: string = a + b;
+           // if(a + b){
+           //         let arr:[int];
+           // }
         }
         catch(e){
 
@@ -122,6 +132,19 @@ Main(){
 
 }
 
-
+//Main(){
+//        let arr:[[int]];
+//        var obj: Yes = Yes.init();
+//        try{
+//            var a: int = 4;
+//            if(a != 5){
+//                    let arr:[int];
+//            }
+//        }
+//        catch(e){
+//
+//        }
+//
+//}
 
 $

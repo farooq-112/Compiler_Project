@@ -21,7 +21,7 @@
             {"public","access-modifier"},{"private","access-modifier"},{"filePrivate","access-modifier"},{"open","access-modifier"},{"internal","access-modifier"}
             };
          public static IDictionary<string, string> keywords = new Dictionary<string, string>(){
-             {"static","static"}, {"class","class"},{"init","init"},{"deinit","deinit"},
+             {"final","final"}, {"static","static"}, {"class","class"},{"init","init"},{"deinit","deinit"},
             {"while","while"}, {"for","for"}, {"struct","struct" },{"abstract","abstract" },{"implements","keyword" },{"extends","keyword" },{"enum","enum" },
             {"if","if"}, {"else","else"}, {"break","break"}, {"continous","continous"},{"var","mutable-constant"},{"let","immutable-constant"},{"Main","Main"},{"switch","Switch"},
             {"true","bool-const"}, {"false","bool-const"}, {"protocol","interface"}, {"case","keyword"}, {"default","keyword"},{"continue","continue"}, {"func","func"}, {"->","ret-type"}

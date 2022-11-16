@@ -7,6 +7,7 @@ class SyntaxGenerator
     static string infix = "";
     static string result = "";
     static string leftResult = "";
+    int mainWork = 0;
 
     Stack<string> expression = new Stack<string>();
 
@@ -231,8 +232,11 @@ class SyntaxGenerator
 
     private bool MAIN_SET(ref Dictionary<int, Tuple<int, string, string>> token, ref MainTable dummyTable)
     {
-        if (token[index].Item2 == "Main")
+        if(mainWork == 0){
+            if (token[index].Item2 == "Main")
         {
+            
+            mainWork = 1;
             index++;
             if (token[index].Item2 == "(")
             {
@@ -255,6 +259,11 @@ class SyntaxGenerator
         }
         else
         {
+            return false;
+        }
+        }else{
+            Console.WriteLine($"Main Already Exist! Error at line ---> {token[index].Item1}");
+            System.Environment.Exit(0);
             return false;
         }
     }
@@ -435,7 +444,7 @@ class SyntaxGenerator
                             }
                             else
                             {
-                                Console.WriteLine("Variable Already Exist");
+                                Console.WriteLine($"{token[index].Item3} Already Exist");
                                 System.Environment.Exit(0);
                             }
                             if (token[index].Item2 == "{")
@@ -468,7 +477,7 @@ class SyntaxGenerator
                             }
                             else
                             {
-                                Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                Console.WriteLine($"{token[index].Item3} Already Exist at line --> {token[index].Item1}");
                                 System.Environment.Exit(0);
                             }
                             if (token[index].Item2 == "{")
@@ -531,7 +540,7 @@ class SyntaxGenerator
                             }
                             else
                             {
-                                Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                Console.WriteLine($"{token[index].Item3} Already Exist at line --> {token[index].Item1}");
                                 System.Environment.Exit(0);
                             }
                             if (token[index].Item2 == "{")
@@ -603,7 +612,7 @@ class SyntaxGenerator
                 var data = semanticAnalyzer.lookupMT(token[index].Item3);
                 if (data != null)
                 {
-                    Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                    Console.WriteLine($"{token[index].Item3} Already Exist at line --> {token[index].Item1}");
                     System.Environment.Exit(0);
                     return false;
                 }
@@ -724,7 +733,7 @@ class SyntaxGenerator
                 var data = semanticAnalyzer.lookupMT(token[index].Item3);
                 if (data != null)
                 {
-                    Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                    Console.WriteLine($"{token[index].Item3} Already Exist at line --> {token[index].Item1}");
                     System.Environment.Exit(0);
                     return false;
                 }
@@ -929,7 +938,7 @@ class SyntaxGenerator
                             }
                             else
                             {
-                                Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                Console.WriteLine($"{token[index].Item3} Already Exist at line --> {token[index].Item1}");
                                 System.Environment.Exit(0);
                             }
                             semanticAnalyzer.createScope();
@@ -955,7 +964,7 @@ class SyntaxGenerator
                             }
                             else
                             {
-                                Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                Console.WriteLine($"{token[index].Item3} Already Exist at line --> {token[index].Item1}");
                                 System.Environment.Exit(0);
                             }
                             semanticAnalyzer.createScope();
@@ -1045,7 +1054,7 @@ class SyntaxGenerator
                                         }
                                         else
                                         {
-                                            Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                            Console.WriteLine($"{token[index].Item3} Already Exist at line --> {token[index].Item1}");
                                             System.Environment.Exit(0);
                                         }
                                     }
@@ -1087,7 +1096,7 @@ class SyntaxGenerator
                                 }
                                 else
                                 {
-                                    Console.WriteLine($"Variable Already Exist at line --> {token[index].Item1}");
+                                    Console.WriteLine($"{token[index].Item3} Already Exist at line --> {token[index].Item1}");
                                     System.Environment.Exit(0);
                                 }
                             }
@@ -1507,6 +1516,10 @@ class SyntaxGenerator
     {
         if (token[index].Item2.Equals("Logical-Operator"))
         {
+            if(!token[index+1].Item2.Equals("UnaryOperator")){
+                Console.WriteLine($" Value {token[index].Item3} : Not Allowed  at Line {token[index].Item1}");
+                        System.Environment.Exit(1);
+            }
             index++;
             if (AE(ref token))
             {
